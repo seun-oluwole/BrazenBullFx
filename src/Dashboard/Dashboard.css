@@ -1,0 +1,115 @@
+.dashboard_container {
+  margin-left: 230px;
+  margin-top: 30px;
+  margin-right: 50px;
+  padding: 30px;
+}
+
+.dashboard_title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+
+.dashboard_balance-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 35px;
+  margin-top: 25px;
+  padding: 12px;
+}
+
+.dashboard_balance-card {
+  height: 185px;
+  width: 320px;
+  padding: 22px;
+  border: 1px solid var(--green-200);
+  border-radius: 8px;
+}
+
+.dashboard_cryptocurrency {
+  display: flex;
+  background-color: var(--green-100);
+  color: var(--green-400);
+  width: fit-content;
+  padding: 4px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.crypto-img {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+.dashboard_balance-title {
+  margin-top: 25px;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+.dashboard_button-cont {
+  display: flex;
+}
+
+.dashboard_btn { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-50);
+  background: var(--green-500);
+  border: none;
+  padding: 12px 22px;
+  margin-left: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.withdraw-btn, .deposit-btn {
+  width: 1.3em;
+  height: 1.3em;
+  margin-right: 5px;
+}
+.dashboard_balance-amount {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.dashboard_greeting, .dashboard_username {
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.dashboard_welcome-remark {
+  color:rgb(133, 146, 173);
+  font-weight: 400;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+.dashboard_recent-activity {
+  margin-top: 25px;
+  padding: 12px;
+}
+
+.dashboard_recent-activity-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  background-color: var(--green-50);
+  color: var(--green-400);
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.dashboard_recent-activity-cont {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  color: #aaa;
+} 
+

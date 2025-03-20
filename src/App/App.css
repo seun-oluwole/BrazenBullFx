@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.app {
+  height: 100vh;
+  background-color: #fff;
+  max-width: 1920px;
+  
+}
+
+@media (max-width: 768px) {
+  .dashboard_container {
+    display: block;
+    margin: 3px 0 0 0;
+    padding: 10px;
+  }
+
+  .dashboard_button-cont, .header-icon-container {
+    display: none;
+  }
+
+  .dashboard_balance-container {
+    flex-direction: row;
+    
+  }
+
+  .dashboard_balance-card {
+    height: 185px;
+    width: 400px;
+  }
+
+  header {
+    justify-content: center;
+    border: none;
+  }
+}
