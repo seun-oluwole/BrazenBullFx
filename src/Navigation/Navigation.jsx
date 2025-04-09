@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { HiArrowDownTray, HiArrowsRightLeft, HiChatBubbleLeftEllipsis, HiCog6Tooth, HiOutlineChatBubbleLeftEllipsis, HiOutlineCog6Tooth, HiOutlineWallet, HiWallet } from 'react-icons/hi2';
+import { HiArrowDownTray, HiArrowUpTray, HiChatBubbleLeftEllipsis, HiCog6Tooth, HiOutlineChatBubbleLeftEllipsis, HiOutlineCog6Tooth, HiOutlineWallet, HiWallet } from 'react-icons/hi2';
+import { PiPaperPlaneTilt, PiPaperPlaneTiltFill } from 'react-icons/pi';
 import '../Navigation/Navigation.css';
 
 const Navigation = () => {
@@ -54,12 +55,12 @@ const Navigation = () => {
         </div>
 
         <div className={`nav-icon-container ${active[1] ? 'active' : ''}`} onClick={() => {handleActiveState("transactions")}}>
-          <HiArrowsRightLeft className='nav-icon'/>
-          <span className="nav-icon-label">Transactions</span>
+          <HiArrowUpTray className='nav-icon'/>
+          <span className="nav-icon-label">Deposit</span>
         </div>
 
         <div className={`nav-icon-container ${active[2] ? 'active' : ''}`} onClick={() => {handleActiveState("withdrawal")}}>
-          <HiArrowDownTray className='nav-icon'/>
+          {active[2] ? <PiPaperPlaneTiltFill className='nav-icon' /> : <PiPaperPlaneTilt className='nav-icon' />}
           <span className="nav-icon-label">Withdrawal</span>
         </div>
 
