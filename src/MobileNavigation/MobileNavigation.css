@@ -1,0 +1,32 @@
+.mobile-nav {
+  display: none;
+}
+
+.mobile_nav-container {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--green-200);
+  border-radius: 10px;
+  padding: 20px 0;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+}
+
+.mobile_icon-container {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav {
+    display: block;
+  }
+
+  .nav-icon {
+    width: 1.7em;
+    height: 1.7em;
+  }
+}
+

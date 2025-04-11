@@ -12,7 +12,9 @@ const Header = () => {
           <HiBell className='notification-icon'/>
           <div className="notification-count">1</div>
         </div>
-       <div className="profile-img"></div> 
+        <div className="profile-img-container">
+          <img className='profile-img' src="src/assets/profile-pic.JPG" alt="" />
+        </div> 
       </div>
     </header>
   )

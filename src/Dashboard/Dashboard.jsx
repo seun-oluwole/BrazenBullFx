@@ -26,19 +26,19 @@ const Dashboard = () => {
       </div>
       <div className="dashboard_balance-container">
         <BalanceCard 
-        cryptocurrency={"USDT"}
+        cryptocurrency={"BTC"}
         balanceTitle={"Available Balance"}
         balanceAmount={"120,000"}
         balanceCurrency={" USD "}/>
         
         <BalanceCard
-        cryptocurrency={"USDT"} 
+        cryptocurrency={"BTC"} 
         balanceTitle={"Total Deposit"} 
         balanceAmount={"52,000"}
         balanceCurrency={" USD "}/>
         
         <BalanceCard 
-        cryptocurrency={"USDT"}
+        cryptocurrency={"BTC"}
         balanceTitle={"Total Withdrawn"}
         balanceAmount={0}
         balanceCurrency={" USD "}/>

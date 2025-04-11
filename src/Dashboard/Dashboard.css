@@ -1,6 +1,5 @@
 .dashboard_container {
   margin-left: 230px;
-  margin-top: 30px;
   margin-right: 50px;
   padding: 30px;
 }
@@ -14,15 +13,22 @@
 
 .dashboard_balance-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 35px;
   margin-top: 25px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.dashboard_balance-container::-webkit-scrollbar {
+  display: none;
 }
 
 .dashboard_balance-card {
   height: 170px;
-  width: 300px;
+  min-width: 300px;
   padding: 22px;
   border: 1px solid var(--green-200);
   border-radius: 8px;
@@ -85,10 +91,11 @@
   font-weight: 600;
 }
 
-.dashboard_greeting, .dashboard_username {
+.dashboard_greeting {
   font-family: "Funnel Display", sans-serif;
   font-weight: 500;
   font-size: 1.5rem;
+  min-width: 223px;
 }
 
 .dashboard_welcome-remark {
@@ -119,3 +126,34 @@
   color: #aaa;
 } 
 
+@media (max-width: 768px) {
+  .dashboard_container {
+    margin: 0;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .dashboard_button-cont {
+    display: none;
+  }
+
+  .dashboard_balance-container {
+    margin-left: 15px;
+    gap: 16px; 
+  }
+
+  .dashboard_balance-card {
+    flex: 0 0 auto;
+    height: 195px;
+    width: 335px; 
+  }
+}
+
+@media(max-width: 1310px) {
+  .dashboard_container {
+    margin-right: 0;
+  }
+  .dashboard_balance-container {
+    justify-content: flex-start;
+  }
+}
