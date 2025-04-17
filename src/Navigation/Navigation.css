@@ -2,7 +2,7 @@
   display: none;
   background-color: #fff;
   position: absolute;
-  border-right: 1px solid #def2d5;
+  border-right: 1px solid #f3f3f3;
   height: 100%;
   width: fit-content;
 }
@@ -49,7 +49,7 @@
 
 @media (min-width: 1024px) {
   .navigation {
-    display: block;
+    display: initial;
   }
 }
 
@@ -59,7 +59,7 @@
   }
 
   .nav-icon-label  {
-    display: block;
+    display: initial;
   }
 
   .nav-icon {

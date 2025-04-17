@@ -1,8 +1,8 @@
 /*  Dashboard Styles */
 .dashboard_title-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 3px;
   padding: 5px 25px 0 25px;
   margin-top: 25px;
 }
@@ -24,16 +24,29 @@
 }
 
 .dashboard_balance-card {
+  z-index: 1;
+  position: relative;
   height: 170px;
-  min-width: 280px;
+  min-width: 310px;
   padding: 22px;
-  border: 1px solid rgb(225, 228, 235);
+  border: 1px solid var(--green-200);
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.dashboard_balance-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('src/assets/balancebackground.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
 }
 
 .dashboard_cryptocurrency {
   display: flex;
-  background-color: var(--green-100);
+  background-color: var(--grey);
   color: var(--grey-950);
   width: fit-content;
   padding: 4px;
@@ -47,7 +60,7 @@
  justify-content: space-between;
  align-items: center;
  margin-top: 10px;
- margin-bottom: 15px;
+ margin-bottom: 5px;
 }
 
 .crypto-img {
@@ -56,6 +69,7 @@
   height: 1.1rem;
 }
 .dashboard_balance-title {
+  color: rgb(133, 146, 173);
   font-weight: 400;
 }
 
@@ -80,11 +94,22 @@
 }
 
 .dashboard_balance-amount {
+  display: flex;
+  gap: 5px;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: rgb(57, 60, 68);
+}
+
+.balance-icon {
+  color:rgb(133, 146, 173);
+  height: 1.5rem;
 }
 
 .dashboard_greeting {
+  display: flex;
+  gap: 5px;
+  align-items: center;
   font-family: "Funnel Display", sans-serif;
   font-weight: 500;
   font-size: 1.5rem;
@@ -99,8 +124,13 @@
 }
 
 .dashboard_account-tier {
-  margin-top: 10px;
+  padding: 5px;
+  background-color: var(--green-200);
+  color: var(--grey-950);
+  margin-left: 10px;
   font-size: 0.8rem;
+  width: fit-content;
+  border-radius: 5px;
 }
 
 /* Recent Activity Style */
@@ -205,9 +235,14 @@
   }
 
   .dashboard_container {
-    width: 964px;
+    width: 1160px;
     margin: 0 auto 0 auto;
-    padding-left: 60px;
+    padding-left: 130px;
+    padding-right: 10px;
+  }
+
+  .dashboard_balance-container {
+    gap: 25px;
   }
 
   .dashboard_title-container {
