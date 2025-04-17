@@ -26,8 +26,8 @@
 .dashboard_balance-card {
   z-index: 1;
   position: relative;
-  height: 170px;
-  min-width: 310px;
+  height: 185px;
+  min-width: 320px;
   padding: 22px;
   border: 1px solid var(--green-200);
   border-radius: 8px;
@@ -223,30 +223,36 @@
   }
 }
 
-@media(min-width: 900px) {
-  .dashboard_balance-container {
-    justify-content: center;
-  }
-}
-
 @media(min-width: 1024px) {
   .quicklink{
     display: none;
   }
 
   .dashboard_container {
-    width: 1160px;
+    width: 1140px;
     margin: 0 auto 0 auto;
-    padding-left: 130px;
+    padding-left: 80px;
     padding-right: 10px;
   }
 
   .dashboard_balance-container {
+    justify-content: center;
     gap: 25px;
   }
 
   .dashboard_title-container {
     padding-left: 20px;
+  }
+
+  .dashboard_balance-card {
+    min-width: 320px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard_container {
+    margin-left: 150px;
+
   }
 }
 
