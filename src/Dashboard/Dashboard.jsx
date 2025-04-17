@@ -1,6 +1,8 @@
 import BalanceCard from '../Components/BalanceCard';
 import { HiArrowDownTray, HiArrowUpTray } from 'react-icons/hi2'
 import '../Dashboard/Dashboard.css';
+import RecentActivity from './RecentActivity';
+import QuickLinks from './QuickLinks';
 
 const Dashboard = () => {
   return (
@@ -11,16 +13,9 @@ const Dashboard = () => {
           <div className="dashboard_welcome-remark">
             How are you doing today?
           </div>
-        </div>
-
-        <div className="dashboard_button-cont">
-          <div className="dashboard_btn">
-            <HiArrowDownTray className='withdraw-btn'/>
-            <span>Withdraw</span> 
-          </div>
-          <div className='dashboard_btn'>
-            <HiArrowUpTray className='deposit-btn'/>
-            <span>Deposit</span>
+          <div className="dashboard_account-tier">
+            Trading Account:
+            Tier 1
           </div>
         </div>
       </div>
@@ -43,15 +38,8 @@ const Dashboard = () => {
         balanceAmount={0}
         balanceCurrency={" USD "}/>
       </div>
-      <div className="dashboard_recent-activity">
-        <div className="dashboard_recent-activity-title">
-          Recent activity
-        </div>
-        <div className="dashboard_recent-activity-cont">
-          <div className="dashboard_recent-activiy-name">Profit generated</div>
-          <div className="dashboard_recent-activity-time">12:34 AM</div>
-        </div>
-      </div>
+      <QuickLinks />
+      <RecentActivity cryptocurrency="BTC"/>
     </div>
   )
 }

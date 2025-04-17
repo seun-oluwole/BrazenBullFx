@@ -1,54 +1,68 @@
 .navigation {
+  display: none;
+  background-color: #fff;
   position: absolute;
   border-right: 1px solid #def2d5;
-  width: 215px;
-  height: 100vh;
+  height: 100%;
+  width: fit-content;
 }
 
 .nav-container {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .nav-icon-container {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 100%;
-  margin-bottom: 5px;
   padding: 18px;
   cursor: pointer;
   color: rgb(133, 146, 173);
 }
 
 .nav-icon-container:first-child {
- margin-top: 55px;
+ margin-top: 18px;
 }
 
 .nav-icon-container:hover {
-  background-color: var(--green-50);
-  color: var(--green-300);
+  background-color: var(--green-300);
+  color: black;
 
 }
 
 .nav-icon {
-  margin-left: 10px;
   width: 1.4em;
   height: 1.4em;
 }
 
 .nav-icon-label {
+  display: none;
   font-size: 0.85rem;
 }
 
 .active {
-  background-color: var(--green-50);
-  color: var(--green-300);
+  background-color: var(--green-300);
+  color: black;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
   .navigation {
-    display: none;
+    display: block;
   }
 }
 
+@media (min-width: 1280px) {
+  .navigation {
+    width: 195px;
+  }
+
+  .nav-icon-label  {
+    display: block;
+  }
+
+  .nav-icon {
+   margin-left: 15px;
+  }
+}

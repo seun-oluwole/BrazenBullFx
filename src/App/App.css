@@ -15,6 +15,7 @@
   height: 100vh;
   background-color: #fff;
   max-width: 1920px;
+  width: 100%;
 }
 
 .app::-webkit-scrollbar {
