@@ -1,23 +1,32 @@
-import { HiBell } from 'react-icons/hi2';
-import '../Header/Header.css';
+import { HiBell } from "react-icons/hi2";
+import { useNavigate } from "react-router";
+import styles from "./header.module.css";
 
-const Header = () => {
+export default function Header() {
+  const navigate = useNavigate();
+
   return (
-    <header>
-      <div className='logo-container'>
-        <img className='logo' src="../src/assets/brazenbull.svg" alt="" />
+    <header className={styles.headerContainer}>
+      <div className={styles.logoContainer}>
+        <img
+          className={styles.logo}
+          src="../src/assets/brazenbull.svg"
+          alt=""
+        />
       </div>
-      <div className="header-icon-container">
-        <div className='notification-container'>
-          <HiBell className='notification-icon'/>
-          <div className="notification-count">1</div>
+      <div className={styles.iconContainer}>
+        <div className={styles.notificationContainer}>
+          <HiBell className={styles.notificationIcon} />
+          <div className={styles.notificationCount}>1</div>
         </div>
-        <div className="profile-img-container">
-          <img className='profile-img' src="src/assets/profile-pic.JPG" alt="" />
-        </div> 
+        <div className={styles.profileImgContainer}  onClick={() => navigate("settings")}>
+          <img
+            className={styles.profileImg}
+            src="../src/assets/profile-pic.JPG"
+            alt=""
+          />
+        </div>
       </div>
     </header>
-  )
+  );
 }
-
-export default Header

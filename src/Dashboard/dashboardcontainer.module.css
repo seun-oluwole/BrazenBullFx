@@ -1,0 +1,18 @@
+.dashboardContainer {
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+@media(min-width: 1024px) {
+  .dashboardContainer {
+    width: 1140px;
+    /* padding-left: 20px; */
+    /* padding-right: 10px; */
+  }
+}
+
+@media (min-width: 1280px) {
+  /* .dashboardContainer {
+    margin-left: 150px;
+  } */
+}

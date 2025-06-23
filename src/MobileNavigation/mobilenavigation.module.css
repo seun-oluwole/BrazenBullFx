@@ -1,11 +1,11 @@
-.mobile_nav {
+.mainContainer {
   position: fixed;
   left: 10px;
   right: 10px;
   bottom: 10px;
 }
 
-.mobile_nav-container {
+.contentContainer {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -14,13 +14,21 @@
   padding: 20px 0; 
 }
 
-.mobile_nav-icon {
+.navIcon {
   width: 1.5rem;
   height: 1.5rem;
 }
 
+.navLinkContainer {
+  text-decoration: none;  
+}
+
+.iconContainer {
+  color: var(--grey-950);
+}
+
 @media(min-width: 1024px) {
-  .mobile_nav{
+  .mainContainer{
     display: none;
   }
 }

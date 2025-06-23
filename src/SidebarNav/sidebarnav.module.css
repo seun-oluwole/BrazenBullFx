@@ -1,19 +1,20 @@
-.navigation {
+.sidebarMainContainer{
   display: none;
   background-color: #fff;
-  position: absolute;
-  border-right: 1px solid #f3f3f3;
-  height: 100%;
+  margin-left: 12px;
+  border-radius: 12px;
+  padding-bottom: 20px;
   width: fit-content;
+  height: fit-content;
 }
 
-.nav-container {
+.sidebarContentContainer {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.nav-icon-container {
+.iconContainer {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -22,47 +23,58 @@
   color: rgb(133, 146, 173);
 }
 
-.nav-icon-container:first-child {
+.iconContainer:first-child {
  margin-top: 18px;
 }
 
-.nav-icon-container:hover {
-  background-color: var(--green-300);
-  color: black;
-
+.iconContainer:hover {
+  color: var(--green-400);
 }
 
-.nav-icon {
+.navLinkContainer {
+  text-decoration: none;  
+}
+
+.navIcon {
   width: 1.4em;
   height: 1.4em;
 }
 
-.nav-icon-label {
+.iconLabel {
   display: none;
   font-size: 0.85rem;
 }
 
 .active {
-  background-color: var(--green-300);
-  color: black;
+  color: var(--green-500)
 }
 
+.logout {
+  margin-top: 55px;
+  color: #ff303c;
+}
+
+.logout:hover {
+  color: #f1111e;
+}
+
+
 @media (min-width: 1024px) {
-  .navigation {
+  .sidebarMainContainer {
     display: initial;
   }
 }
 
 @media (min-width: 1280px) {
-  .navigation {
+  .sidebarMainContainer {
     width: 195px;
   }
 
-  .nav-icon-label  {
+  .iconLabel  {
     display: initial;
   }
 
-  .nav-icon {
+  .navIcon {
    margin-left: 15px;
   }
 }

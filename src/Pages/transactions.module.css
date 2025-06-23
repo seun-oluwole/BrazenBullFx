@@ -1,0 +1,29 @@
+/* .transactionsContainer {
+  padding: 15px;
+} */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.title {
+  font-size: 1.6rem;
+  font-family: "Funnel Display", sans-serif;
+  color: var(---grey-950);
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 1.3;
+  font-family: "Funnel Display", sans-serif;
+  color: var(---grey-950);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.historyContainer {
+  padding: 10px;
+  border: 1px solid var(--grey);
+  border-radius: 12px;
+  padding: 100px;
+}

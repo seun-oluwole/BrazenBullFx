@@ -1,0 +1,72 @@
+.container {
+  padding-top: 8px;
+  height: 100%;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px 25px 0 25px;
+  /* margin-top: 25px; */
+}
+
+.greeting {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  min-width: 223px;
+}
+
+.accountTier {
+  padding: 5px;
+  background-color: var(--green-200);
+  color: var(--grey-950);
+  margin-left: 10px;
+  font-size: 0.8rem;
+  width: fit-content;
+  border-radius: 5px;
+}
+
+.welcomeRemark {
+  color:rgb(133, 146, 173);
+  font-weight: 400;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+.balanceContainer {
+  display: flex;
+  align-items: center;
+  height: 200px;
+  gap: 15px;
+  margin-top: 10px;
+  padding: 0 20px 0 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.balanceContainer::-webkit-scrollbar {
+  display: none;
+}
+
+@media(min-width: 1024px) {
+  .container {
+    padding: 25px 10px 0 10px;
+  }
+
+  .balanceContainer {
+    justify-content: center;
+    gap: 25px;
+    margin-top: 35px;
+  }
+
+  .titleContainer {
+    padding-left: 20px;
+  }
+}

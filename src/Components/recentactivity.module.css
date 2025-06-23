@@ -1,0 +1,45 @@
+.recentActivityContainer {
+  margin-top: 8px;
+  padding: 12px;
+  height: 300px;
+}
+
+.activityTitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: var(--grey);
+  color: var(--grey-950);
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.recentActivity {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.activityName {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cryptoImgContainer {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.cryptoImgContainer img {
+  width: 100%;
+}
+
+.transactionStatus {
+  font-size: 0.6rem;
+  padding: 3px;
+  border-radius: 5px;
+  background-color: var(--green-100);
+  color: var(--green-500);
+}

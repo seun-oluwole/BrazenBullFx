@@ -1,61 +1,32 @@
-import { useState } from 'react';
-import Header from '../Header/Header';
-import Dashboard from '../Dashboard/Dashboard';
-import Navigation from '../Navigation/Navigation';
-import MobileNavigation from '../MobileNavigation/MobileNavigation';
-import '../App/App.css';
-import '../global.css';
+import { BrowserRouter, Route, Routes } from "react-router";
+import Wallet from "../Pages/Wallet";
+import Dashboard from "../Dashboard/Dashboard";
+import LandingPage from "../LandingPage/LandingPage";
+import Transactions from "../Pages/Transactions";
+import Investment from "../Pages/Investment";
+import Support from "../Pages/Support";
+import Settings from "../Pages/Settings";
+import WalletContextProvider from "../context/WalletContextProvider";
+import "../global.css";
 
-const App = () =>  {
-  const [active, setActive] = useState(Array(5).fill(false));
-
-  const handleActiveState = (activeState) => {
-    // Creates copy of array...
-    const newActive = active.slice();
-
-    if (activeState === 'wallet') {
-      // Updates new array based on index...
-      newActive[0] = true;
-    } else {
-      newActive[0] = false;
-    }
-
-    if (activeState === 'transactions') {
-      newActive[1] = true;
-    } else {
-      newActive[1] = false;
-    }
-
-    if (activeState === 'withdrawal') {
-      newActive[2] = true;
-    } else {
-      newActive[2] = false;
-    }
-
-    if (activeState === 'support') {
-      newActive[3] = true;
-    } else {
-      newActive[3] = false;
-    }
-
-    if (activeState === 'settings') {
-      newActive[4] = true;
-    } else {
-      newActive[4] = false;
-    }
-    
-    //Merges new updated array with initial array...
-    setActive(newActive);
-  };
-
+export default function App() {
   return (
-    <div className='app'>
-      <Header />
-      <Navigation active={active} setActive={setActive} handleActiveState={handleActiveState}/>
-      <Dashboard />
-      <MobileNavigation active={active} handleActiveState={handleActiveState}/>
-    </div>
-  )
-}
+      <BrowserRouter>
+      <WalletContextProvider>
+      <Routes>
+        {/* <Route path="/" element={<LandingPage />}/> */}
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<Wallet />}/>
+          <Route path="wallet" element={<Wallet />}/>
+          <Route path="transactions" element={<Transactions />}/>
+          <Route path="investment" element={<Investment />} />
+          {/* <Route path="support" element={<Support />} /> */}
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+      </WalletContextProvider>
+      </BrowserRouter>
+  );
+};
 
-export default App;
+

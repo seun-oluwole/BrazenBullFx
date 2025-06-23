@@ -1,0 +1,13 @@
+.viewContainer {
+  padding: 15px;
+  padding-bottom: 100px;
+  background: #FFF;
+  border-radius: 12px;
+  height: 100%;
+}
+
+@media(min-width: 1024px) {
+  .viewContainer {
+    padding: 28px 30px 100px 30px;
+  }
+}

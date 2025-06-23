@@ -1,0 +1,49 @@
+.quicklinkContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+  margin: 8px auto 0 auto;
+  padding: 0 8px 0 8px;
+}
+
+.quicklinkIcon {
+  height: 1.4rem;
+  width: 1.4rem;
+}
+
+.iconLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.iconContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--green-100);
+  min-width: 110px;
+  height: 65px;
+}
+
+.quicklink {
+  text-decoration: none;
+  color: var(--grey-950);
+}
+
+@media (min-width: 640px) {
+  .quicklinkContainer {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .quicklinkContainer {
+    display: none;
+  }
+}

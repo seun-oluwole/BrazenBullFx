@@ -1,33 +1,43 @@
-import { useState } from "react";
-import { HiEye, HiEyeSlash } from "react-icons/hi2";
+import { LuEye, LuEyeClosed } from "react-icons/lu";
+import { useWallet } from "../context/WalletContextProvider";
+import styles from "./balancecard.module.css";
 
-const BalanceCard = ({ 
-  balanceTitle, 
-  balanceAmount, 
-  balanceCurrency, 
-  cryptocurrency,
-  showBalance,
-  toggleShowBalance}) => {
+export default function BalanceCard({
+  balanceTitle,
+  balanceAmount
+}) {
+
+  const {
+    balanceCurrency,
+    cryptocurrency,
+    showBalance,
+    toggleShowBalance,
+  } = useWallet();
 
   return (
-    <div className="dashboard_balance-card">
-      {/* <img className="dashboard_balance-background" src="src/assets/balancebackground.svg" alt="" /> */}
-      <div className="dashboard_crypto-container">
-        <div className="dashboard_balance-title">{balanceTitle}</div>
-        <div className="dashboard_cryptocurrency">
-          <img src={`src/assets/${cryptocurrency.toLowerCase()}.png`} alt="" className="crypto-img"/>
+    <div className={styles.balanceCard}>
+      <div className={styles.cryptoContainer}>
+        <div className={styles.balanceTitle}>{balanceTitle}</div>
+        <div className={styles.cryptoImgContainer}>
+          <img
+            src={`../src/assets/${cryptocurrency.toLowerCase()}.png`}
+            alt=""
+            className={styles.cryptoImg}
+          />
           {cryptocurrency}
         </div>
       </div>
-      <div className="dashboard_balance-amount">
+      <div className={styles.balanceAmount}>
         {balanceAmount}
-        <div className="dashboard_balance-currency">{balanceCurrency}</div>
+        <div className={styles.balanceCurrency}>{balanceCurrency}</div>
         <div className="dashboard_show-balance" onClick={toggleShowBalance}>
-        {showBalance ? <HiEye className="balance-icon"/> : <HiEyeSlash className="balance-icon"/> }
+          {showBalance ? (
+            <LuEye className={styles.balanceIcon} />
+          ) : (
+            <LuEyeClosed className={styles.balanceIcon} />
+          )}
         </div>
-      </div>  
+      </div>
     </div>
-  )
+  );
 }
-
-export default BalanceCard;

@@ -1,0 +1,10 @@
+.supportContainer {
+  padding: 15px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-family: "Funnel Display", sans-serif;
+  color: var(---grey-950);
+  font-weight: 600;
+}
