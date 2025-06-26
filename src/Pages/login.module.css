@@ -1,0 +1,102 @@
+.container {
+  margin: 80px auto;
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 70px 30px;
+  max-width: 500px;
+  -webkit-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, 0.08),
+    0 1px 2px 0 rgba(88, 102, 126, 0.12);
+  -moz-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, 0.08),
+    0 1px 2px 0 rgba(88, 102, 126, 0.12);
+  box-shadow: 0 4px 24px 0 rgba(88, 102, 126, 0.08);
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 35px;
+}
+
+.titleContainer div {
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 600;
+  font-size: 1.8rem;
+  color: var(--grey-950);
+}
+
+.titleContainer p {
+  color: #595b61;
+  font-weight: 500;
+}
+
+.formContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.formContainer input {
+  width: 100%;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #595b61;
+  outline: none;
+  font-size: 1rem;
+  color: #666d7c;
+}
+
+.formContainer input::placeholder {
+  font-size: 0.9rem;
+}
+
+.formContainer input:focus {
+  border: 1px solid var(--green-300);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
+  box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
+}
+
+.authDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.authDetails div {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666d7c;
+}
+
+.button {
+  background-color: var(--green-300);
+  color: var(--grey-950);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.formContainer p {
+  margin: 0 auto;
+}
+
+.resetDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-top: 35px;
+  cursor: pointer;
+}
+
+.signupText {
+  color: var(--green-500);
+}
+
+.resetText {
+  color: #595b61;;
+}

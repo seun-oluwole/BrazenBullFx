@@ -1,0 +1,10 @@
+.selector {
+  font-weight: 500;
+  color: #666d7c;
+  border: 1px solid #595b61;
+  border-radius: 8px;
+  max-width: 105px;
+  padding: 10px;
+  appearance: none;
+  font-size: 0.9rem;
+}

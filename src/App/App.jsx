@@ -7,26 +7,28 @@ import Investment from "../Pages/Investment";
 import Support from "../Pages/Support";
 import Settings from "../Pages/Settings";
 import WalletContextProvider from "../context/WalletContextProvider";
+import Login from "../Pages/Login";
+import Signup from "../Pages/Signup";
 import "../global.css";
 
 export default function App() {
   return (
-      <BrowserRouter>
+    <BrowserRouter>
       <WalletContextProvider>
-      <Routes>
-        {/* <Route path="/" element={<LandingPage />}/> */}
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<Wallet />}/>
-          <Route path="wallet" element={<Wallet />}/>
-          <Route path="transactions" element={<Transactions />}/>
-          <Route path="investment" element={<Investment />} />
-          {/* <Route path="support" element={<Support />} /> */}
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
+        <Routes>
+          {/* <Route path="/" element={<LandingPage />}/> */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<Wallet />} />
+            <Route path="wallet" element={<Wallet />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="investment" element={<Investment />} />
+            {/* <Route path="support" element={<Support />} /> */}
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+        </Routes>
       </WalletContextProvider>
-      </BrowserRouter>
+    </BrowserRouter>
   );
-};
-
-
+}
