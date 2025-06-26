@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import CountrySelector from "../Components/CountrySelector";
 import countryList from "country-calling-code";
 import styles from "./signup.module.css";
+import { LuEye, LuEyeClosed } from "react-icons/lu";
 
 export default function Signup() {
-  const [selectedCountryCode, setSelectedCountryCode] = useState("");
+  const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
+  const [callingCode, setCallingCode] = useState("63");
   const [countryDetails, setCountryDetails] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [matchingPassword, setMatchingPassword] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    phonenumber: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  // Using Effect to track current state of confirmPassword so that it can be validated.
+  useEffect(() => {
+    handleConfirmPassword();
+    validateEmail();
+  }, [userDetails.password, userDetails.confirmPassword, userDetails.email]);
 
   const handleSelectCountry = (e) => {
     const countryCode = e.target.value;
@@ -15,7 +33,34 @@ export default function Signup() {
 
     const filteredCountry = countryList.find(({ isoCode3 }) => isoCode3 === countryCode);
     setCountryDetails(filteredCountry);
-    console.log(filteredCountry);
+    setCallingCode(filteredCountry?.countryCodes[0]);
+  };
+
+  const handleUserInput = (e) => {
+    const { name, value } = e.target;
+    setUserDetails((details) => ({ ...details, [name]: value }));
+  };
+
+  const handleConfirmPassword = () => {
+    if (userDetails.password === userDetails.confirmPassword) {
+      setMatchingPassword(true);
+    } else {
+      setMatchingPassword(false);
+    }
+  };
+
+  const toggleShowPassword = () => {
+    if (!isPasswordVisible) {
+      setIsPasswordVisible(true);
+    } else {
+      setIsPasswordVisible(false);
+    }
+  };
+
+  const validateEmail = () => {
+    if (userDetails.email) {
+      setIsEmailValid(userDetails.email.includes("@"));
+    }
   };
 
   return (
@@ -30,16 +75,44 @@ export default function Signup() {
           <div className={`${styles.nameContainer}`}>
             <div className={styles.authDetails}>
               <div>First Name</div>
-              <input type="text" placeholder="Enter your first name." required />
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  name="firstname"
+                  value={userDetails.firstname}
+                  placeholder="Enter your first name."
+                  onChange={handleUserInput}
+                  required
+                />
+              </div>
             </div>
             <div className={styles.authDetails}>
               <div>Last Name</div>
-              <input type="text" placeholder="Enter your last name." required />
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  name="lastname"
+                  value={userDetails.lastname}
+                  placeholder="Enter your last name."
+                  onChange={handleUserInput}
+                  required
+                />
+              </div>
             </div>
           </div>
           <div className={styles.authDetails}>
             <div>Email Address</div>
-            <input type="email" placeholder="Enter your email address." required />
+            <div className={styles.inputContainer}>
+              <input
+                type="email"
+                name="email"
+                value={userDetails.email}
+                placeholder="Enter your email address."
+                onChange={handleUserInput}
+                required
+              />
+            </div>
+            {!isEmailValid && <div className={styles.error}>Your email is not valid. Enter a valid email.</div>}
           </div>
           <div className={styles.authDetails}>
             <div>Phone Number</div>
@@ -49,24 +122,62 @@ export default function Signup() {
                 countryDetails={countryDetails}
                 handleSelectCountry={handleSelectCountry}
               />
-              <input
-                type="text"
-                value={phoneNumber}
-                placeholder="Enter your phone number."
-                required
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  name="phonenumber"
+                  value={userDetails.phonenumber}
+                  placeholder="Enter your phone number."
+                  onChange={handleUserInput}
+                  required
+                />
+              </div>
             </div>
           </div>
           <div className={styles.authDetails}>
             <div>Password</div>
-            <input type="password" placeholder="Enter your password." required />
+            <div className={styles.inputContainer}>
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                name="password"
+                value={userDetails.password}
+                placeholder="Enter your password."
+                onChange={handleUserInput}
+                required
+              />
+              <span className={styles.iconContainer}>
+                {isPasswordVisible ? (
+                  <LuEye className={styles.icon} onClick={toggleShowPassword} />
+                ) : (
+                  <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
+                )}
+              </span>
+            </div>
           </div>
           <div className={styles.authDetails}>
             <div>Confirm Password</div>
-            <input type="password" placeholder="Enter your password again." required />
+            <div className={styles.inputContainer}>
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                name="confirmPassword"
+                value={userDetails.confirmPassword}
+                placeholder="Enter your password again."
+                onChange={handleUserInput}
+                required
+              />
+              <span className={styles.iconContainer}>
+                {isPasswordVisible ? (
+                  <LuEye className={styles.icon} onClick={toggleShowPassword} />
+                ) : (
+                  <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
+                )}
+              </span>
+            </div>
+            {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
           </div>
-          <button className={styles.button}>Create Account</button>
+          <button className={styles.button} disabled={!matchingPassword}>
+            Create Account
+          </button>
         </form>
         <div className={styles.resetDetails}>
           <NavLink to="/login" className="link">

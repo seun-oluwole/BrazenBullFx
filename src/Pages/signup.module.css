@@ -38,24 +38,34 @@
 }
 
 .formContainer input {
+  appearance: auto;
+  padding: 15px;
   width: 100%;
-  padding: 18px;
+  border: none;
+  outline: none;
   border-radius: 8px;
   border: 1px solid #595b61;
-  outline: none;
-  font-size: 1rem;
   color: #666d7c;
+   font-size: 1rem;
 }
 
 .formContainer input::placeholder {
   font-size: 0.9rem;
 }
 
+
 .formContainer input:focus {
   border: 1px solid var(--green-300);
   -webkit-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
   -moz-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
   box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .authDetails {
@@ -87,6 +97,22 @@
   cursor: pointer;
 }
 
+.icon {
+  height: 1.4rem;
+  width: 1.4rem;
+  margin-right: 5px;
+}
+
+.iconContainer {
+  position: absolute;
+  right: 10px;
+}
+
+.button:disabled {
+  background-color: var(--grey);
+  color: #666d7c;
+}
+
 .formContainer p {
   margin: 0 auto;
 }
@@ -108,6 +134,7 @@
   gap: 5px;
 }
 
-.selectorContainer input {
-  flex: 1;
+.authDetails .error {
+  color: red;
+  font-size: 0.8rem;
 }
