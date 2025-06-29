@@ -62,6 +62,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .logout div, .editProfile div{

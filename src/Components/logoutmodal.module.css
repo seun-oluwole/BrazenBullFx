@@ -1,0 +1,58 @@
+.container {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.title {
+  font-size: 1.3rem;
+  font-family: "Funnel Display", sans-serif;
+  color: var(---grey-950);
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: rgb(133, 146, 173);
+}
+
+.buttonContainer {
+  padding: 5px;
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.spinnerContainer {
+  padding: 5px;
+}
+
+.button {
+  background-color: var(--green-300);
+  color: var(--grey-950);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 38px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.logoutButton {
+  border: 1px solid red;
+  background-color: #FFF;
+  color: red;
+}
+
+.error {
+  margin-top: 8px;
+  color: red;
+  font-size: 0.9rem;
+  font-weight: 500;
+}

@@ -1,6 +1,5 @@
 .balanceCard {
   flex: 1 1 300px;
-  z-index: 1;
   position: relative;
   height: 185px;
   min-width: 320px;

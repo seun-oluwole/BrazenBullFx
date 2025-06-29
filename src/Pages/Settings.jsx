@@ -1,12 +1,14 @@
-import {
-  HiArrowRightEndOnRectangle,
-  HiChevronRight,
-  HiPencilSquare,
-} from "react-icons/hi2";
+import { HiArrowRightEndOnRectangle, HiChevronRight, HiPencilSquare } from "react-icons/hi2";
+import { userAuth } from "../context/AuthContext";
 import ViewContainer from "../Components/ViewContainer";
 import styles from "./settings.module.css";
 
-export default function Settings() {
+
+
+export default function Settings({ setIsModalOpen}) {
+  const { userData } = userAuth();
+  const { firstName, lastName, email, phoneNumber} = userData || "";
+  
   return (
     <ViewContainer>
       <h1 className={styles.title}>Settings</h1>
@@ -19,15 +21,15 @@ export default function Settings() {
           <div className={styles.profileTitle}>My Profile</div>
           <div className={styles.userDetail}>
             <span>Name</span>
-            Chukwuemeka Gideon Oluwole
+            {`${firstName} ${lastName}`}
           </div>
           <div className={styles.userDetail}>
             <span>Email</span>
-            oluwolegideon00@gmail.com
+            {`${email}`}
           </div>
           <div className={styles.userDetail}>
             <span>Phone Number</span>
-            +2349033952740
+            {`${phoneNumber}`}
           </div>
           <div className={`${styles.userDetail} ${styles.editProfile}`}>
             <div>
@@ -36,7 +38,7 @@ export default function Settings() {
             </div>
             <HiChevronRight className={styles.icon} />
           </div>
-          <div className={styles.logout}>
+          <div className={styles.logout} onClick={() => setIsModalOpen(true)}>
             <div>
               <HiArrowRightEndOnRectangle className={styles.icon} />
               Logout

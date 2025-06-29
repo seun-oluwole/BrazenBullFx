@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { NavLink } from "react-router";
 import {
   HiArrowRightEndOnRectangle,
   HiArrowsUpDown,
@@ -9,45 +11,26 @@ import {
   HiOutlineWallet,
   HiWallet,
 } from "react-icons/hi2";
-import { NavLink } from "react-router";
 import styles from "./sidebarnav.module.css";
 
-export default function SidebarNav() {
+
+export default function SidebarNav({ setIsModalOpen }) {
   return (
     <nav className={styles.sidebarMainContainer}>
       <div className={styles.sidebarContentContainer}>
         <NavLink to="/dashboard/wallet" className={styles.navLinkContainer}>
           {({ isActive }) => (
-            <div
-              className={`${styles.iconContainer} ${
-                isActive ? `${styles.active}` : ""
-              }`}
-            >
-              {isActive ? (
-                <HiWallet className={styles.navIcon} />
-              ) : (
-                <HiOutlineWallet className={styles.navIcon} />
-              )}
+            <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
+              {isActive ? <HiWallet className={styles.navIcon} /> : <HiOutlineWallet className={styles.navIcon} />}
               <span className={styles.iconLabel}>Wallet</span>
             </div>
           )}
         </NavLink>
 
-        <NavLink
-          to="/dashboard/transactions"
-          className={styles.navLinkContainer}
-        >
+        <NavLink to="/dashboard/transactions" className={styles.navLinkContainer}>
           {({ isActive }) => (
-            <div
-              className={`${styles.iconContainer} ${
-                isActive ? `${styles.active}` : ""
-              }`}
-            >
-              {isActive ? (
-                <HiArrowsUpDown className={styles.navIcon} />
-              ) : (
-                <HiArrowsUpDown className={styles.navIcon} />
-              )}
+            <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
+              {isActive ? <HiArrowsUpDown className={styles.navIcon} /> : <HiArrowsUpDown className={styles.navIcon} />}
               <span className={styles.iconLabel}>Transactions</span>
             </div>
           )}
@@ -55,20 +38,11 @@ export default function SidebarNav() {
 
         <NavLink to="/dashboard/investment" className={styles.navLinkContainer}>
           {({ isActive }) => (
-            <div
-              className={`${styles.iconContainer} ${
-                isActive ? `${styles.active}` : ""
-              }`}
-            >
-              {isActive ? (
-                <HiOutlineCube className={styles.navIcon} />
-              ) : (
-                <HiOutlineCube className={styles.navIcon} />
-              )}
+            <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
+              {isActive ? <HiOutlineCube className={styles.navIcon} /> : <HiOutlineCube className={styles.navIcon} />}
               <span className={styles.iconLabel}>Investment</span>
             </div>
           )}
-          
         </NavLink>
 
         {/* <NavLink to="/dashboard/support" className={styles.navLinkContainer}>
@@ -90,11 +64,7 @@ export default function SidebarNav() {
 
         <NavLink to="/dashboard/settings" className={styles.navLinkContainer}>
           {({ isActive }) => (
-            <div
-              className={`${styles.iconContainer} ${
-                isActive ? `${styles.active}` : ""
-              }`}
-            >
+            <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
               {isActive ? (
                 <HiCog6Tooth className={styles.navIcon} />
               ) : (
@@ -105,10 +75,10 @@ export default function SidebarNav() {
           )}
         </NavLink>
 
-        <div className={`${styles.iconContainer} ${styles.logout}`}>
-            <HiArrowRightEndOnRectangle className={styles.navIcon} />
-            <span className={styles.iconLabel}>Logout</span>
-          </div>
+        <div className={`${styles.iconContainer} ${styles.logout}`} onClick={() => setIsModalOpen(true)}>
+          <HiArrowRightEndOnRectangle className={styles.navIcon} />
+          <span className={styles.iconLabel}>Logout</span>
+        </div>
       </div>
     </nav>
   );

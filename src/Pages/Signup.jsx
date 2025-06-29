@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { LuEye, LuEyeClosed } from "react-icons/lu";
+import { userAuth } from "../context/AuthContext";
+import { toCapitalize } from "../Utils/toCapitalize";
 import CountrySelector from "../Components/CountrySelector";
 import countryList from "country-calling-code";
 import styles from "./signup.module.css";
-import { LuEye, LuEyeClosed } from "react-icons/lu";
 
 export default function Signup() {
   const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
@@ -12,6 +14,8 @@ export default function Signup() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [matchingPassword, setMatchingPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
@@ -20,6 +24,9 @@ export default function Signup() {
     password: "",
     confirmPassword: "",
   });
+
+  const { signUpNewUser } = userAuth();
+  const navigate = useNavigate();
 
   // Using Effect to track current state of confirmPassword so that it can be validated.
   useEffect(() => {
@@ -63,6 +70,29 @@ export default function Signup() {
     }
   };
 
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const completePhoneNumber = `+${callingCode}${userDetails.phonenumber}`;
+    try {
+      const { success } = await signUpNewUser(
+        userDetails.email.toLowerCase(),
+        userDetails.confirmPassword,
+        toCapitalize(userDetails.firstname),
+        toCapitalize(userDetails.lastname),
+        completePhoneNumber
+      );
+
+      if (success) {
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError('Something went wrong. Try again. :', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
@@ -71,7 +101,7 @@ export default function Signup() {
       </div>
 
       <div className={styles.formContainer}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSignUp}>
           <div className={`${styles.nameContainer}`}>
             <div className={styles.authDetails}>
               <div>First Name</div>
@@ -175,11 +205,12 @@ export default function Signup() {
             </div>
             {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
           </div>
-          <button className={styles.button} disabled={!matchingPassword}>
-            Create Account
+          <button className={styles.button} disabled={!matchingPassword || isLoading}>
+            {isLoading ? "Loading..." : "Create Account"}
           </button>
         </form>
         <div className={styles.resetDetails}>
+          <div>{error}</div>
           <NavLink to="/login" className="link">
             <p className={styles.signupText}>Already have an account? Login.</p>
           </NavLink>

@@ -97,6 +97,11 @@
   cursor: pointer;
 }
 
+.button:disabled {
+  background-color: var(--grey);
+  color: #666d7c;
+}
+
 .icon {
   height: 1.4rem;
   width: 1.4rem;
@@ -108,10 +113,6 @@
   right: 10px;
 }
 
-.button:disabled {
-  background-color: var(--grey);
-  color: #666d7c;
-}
 
 .formContainer p {
   margin: 0 auto;
