@@ -27,7 +27,6 @@ export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
         navigate("/login");
       } else {
         setError(handleErrorMessages(error.message));
-        console.log(error.message)
       }
     } finally {
       setIsLoading(false);

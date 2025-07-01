@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { NavLink, useNavigate } from "react-router";
 import { userAuth } from "../context/AuthContext";
@@ -14,8 +14,15 @@ export default function Login() {
     password: "",
   });
 
-  const { signIn } = userAuth();
+  const { session, signIn, isSessionLoading } = userAuth();
   const navigate = useNavigate();
+
+  // Redirects to dashboard if user is already logged in or has an active session...
+  useEffect(() => {
+    if (!isSessionLoading && session) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isSessionLoading, session, navigate]);
 
   const toggleShowPassword = () => {
     if (!isPasswordVisible) {
@@ -39,8 +46,7 @@ export default function Login() {
       if (success) {
         navigate("/dashboard");
       } else {
-        setError(handleErrorMessages(error.message))
-        console.log(error.message)
+        setError(handleErrorMessages(error.message));
       }
     } finally {
       setIsLoading(false);
@@ -89,7 +95,9 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <button className={styles.button} disabled={isLoading}>{isLoading ? "Loading..." : "Login"}</button>
+          <button className={styles.button} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Login"}
+          </button>
         </form>
 
         <div className={styles.resetDetails}>

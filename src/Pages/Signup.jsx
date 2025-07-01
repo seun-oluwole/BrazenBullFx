@@ -88,7 +88,6 @@ export default function Signup() {
         navigate("/dashboard");
       } else {
         setError(handleErrorMessages(error.message));
-        console.log(error.message)
       }
     } finally {
       setIsLoading(false);

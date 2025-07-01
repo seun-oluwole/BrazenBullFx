@@ -11,6 +11,7 @@ import Settings from "../Pages/Settings";
 import WalletContextProvider from "../context/WalletContextProvider";
 import Login from "../Pages/Login";
 import Signup from "../Pages/Signup";
+import PrivateRoute from "../Pages/PrivateRoute";
 import "../global.css";
 
 
@@ -23,7 +24,7 @@ export default function App() {
         <WalletContextProvider>
           <Routes>
             {/* <Route path="/" element={<LandingPage />}/> */}
-            <Route path="/dashboard" element={<Dashboard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>}>
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/></PrivateRoute>}>
               <Route index element={<Wallet />} />
               <Route path="wallet" element={<Wallet />} />
               <Route path="transactions" element={<Transactions />} />
