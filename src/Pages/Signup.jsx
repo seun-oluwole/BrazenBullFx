@@ -5,8 +5,9 @@ import { userAuth } from "../context/AuthContext";
 import { toCapitalize } from "../Utils/toCapitalize";
 import CountrySelector from "../Components/CountrySelector";
 import countryList from "country-calling-code";
-import styles from "./signup.module.css";
 import handleErrorMessages from "../Utils/errorMessages";
+import LoadingSpinner from "../Components/LoadingSpinner";
+import styles from "./signup.module.css";
 
 export default function Signup() {
   const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
@@ -207,7 +208,7 @@ export default function Signup() {
             {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
           </div>
           <button className={styles.button} disabled={!matchingPassword || isLoading}>
-            {isLoading ? "Loading..." : "Create Account"}
+            {isLoading ? (<LoadingSpinner width="30" height="30"/>) : "Create Account"}
           </button>
         </form>
         <div className={styles.resetDetails}>

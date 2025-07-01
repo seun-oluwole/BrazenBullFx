@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { userAuth } from "../context/AuthContext";
 import styles from "./login.module.css";
 import handleErrorMessages from "../Utils/errorMessages";
+import LoadingSpinner from "../Components/LoadingSpinner";
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -96,7 +97,7 @@ export default function Login() {
             </div>
           </div>
           <button className={styles.button} disabled={isLoading}>
-            {isLoading ? "Loading..." : "Login"}
+            {isLoading ? (<LoadingSpinner width="30" height="30" />) : "Login"}
           </button>
         </form>
 
