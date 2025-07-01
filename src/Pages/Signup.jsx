@@ -6,6 +6,7 @@ import { toCapitalize } from "../Utils/toCapitalize";
 import CountrySelector from "../Components/CountrySelector";
 import countryList from "country-calling-code";
 import styles from "./signup.module.css";
+import handleErrorMessages from "../Utils/errorMessages";
 
 export default function Signup() {
   const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
@@ -15,7 +16,7 @@ export default function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [matchingPassword, setMatchingPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
@@ -75,7 +76,7 @@ export default function Signup() {
     setIsLoading(true);
     const completePhoneNumber = `+${callingCode}${userDetails.phonenumber}`;
     try {
-      const { success } = await signUpNewUser(
+      const { success, error } = await signUpNewUser(
         userDetails.email.toLowerCase(),
         userDetails.confirmPassword,
         toCapitalize(userDetails.firstname),
@@ -85,9 +86,10 @@ export default function Signup() {
 
       if (success) {
         navigate("/dashboard");
+      } else {
+        setError(handleErrorMessages(error.message));
+        console.log(error.message)
       }
-    } catch (err) {
-      setError('Something went wrong. Try again. :', err);
     } finally {
       setIsLoading(false);
     }
@@ -210,7 +212,7 @@ export default function Signup() {
           </button>
         </form>
         <div className={styles.resetDetails}>
-          <div>{error}</div>
+          <div className={styles.error}>{error ? `${error}` : ""}</div>
           <NavLink to="/login" className="link">
             <p className={styles.signupText}>Already have an account? Login.</p>
           </NavLink>

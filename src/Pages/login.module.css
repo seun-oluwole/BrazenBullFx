@@ -122,3 +122,9 @@
 .resetText {
   color: #595b61;;
 }
+
+.resetDetails .error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}

@@ -4,14 +4,16 @@ import { useNavigate } from "react-router";
 import LoadingSpinner from "./LoadingSpinner";
 import CustomModal from "./CustomModal";
 import styles from "./logoutmodal.module.css";
+import handleErrorMessages from "../Utils/errorMessages";
 
 export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { signOut, supabaseError, setSupabaseError } = userAuth();
+  const [error, setError] = useState(null);
+  const { signOut } = userAuth();
 
   const closeModal = () => {
     setIsModalOpen(false);
-    if (supabaseError) setSupabaseError(null);
+    if (error) setError(null);
   };
 
   const navigate = useNavigate();
@@ -19,12 +21,14 @@ export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
   const handleLogout = async () => {
     setIsLoading(true);
     try {
-      const { success } = await signOut();
+      const { success, error } = await signOut();
       if (success) {
         setIsModalOpen(false);
         navigate("/login");
+      } else {
+        setError(handleErrorMessages(error.message));
+        console.log(error.message)
       }
-    } catch (err) {
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +55,7 @@ export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
                 Logout
               </button>
             </div>
-            <div className={styles.error}>{supabaseError ? "Sorry, something went wrong!" : ""}</div>
+            <div className={styles.error}>{error ? `${error}` : ""}</div>
           </>
         )}
       </div>

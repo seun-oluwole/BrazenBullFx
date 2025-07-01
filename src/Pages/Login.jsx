@@ -3,11 +3,12 @@ import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { NavLink, useNavigate } from "react-router";
 import { userAuth } from "../context/AuthContext";
 import styles from "./login.module.css";
+import handleErrorMessages from "../Utils/errorMessages";
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
@@ -33,13 +34,14 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const { success } = await signIn(loginDetails.email.toLowerCase(), loginDetails.password);
+      const { success, error } = await signIn(loginDetails.email.toLowerCase(), loginDetails.password);
 
       if (success) {
         navigate("/dashboard");
+      } else {
+        setError(handleErrorMessages(error.message))
+        console.log(error.message)
       }
-    } catch (err) {
-      setError('Something went wrong. Try again.', err);
     } finally {
       setIsLoading(false);
     }
@@ -91,6 +93,7 @@ export default function Login() {
         </form>
 
         <div className={styles.resetDetails}>
+          <div className={styles.error}>{error ? `${error}` : ""}</div>
           <NavLink to="/signup" className="link">
             <p className={styles.signupText}>Don't have an account? SignUp.</p>
           </NavLink>

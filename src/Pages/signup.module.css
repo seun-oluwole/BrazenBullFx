@@ -120,7 +120,9 @@
 
 .resetDetails {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 25px;
   margin-top: 35px;
   cursor: pointer;
@@ -139,3 +141,10 @@
   color: red;
   font-size: 0.8rem;
 }
+
+.resetDetails .error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+ 

@@ -6,16 +6,18 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [session, setSession] = useState(undefined);
   const [userData, setUserData] = useState({});
-  const [supabaseError, setSupabaseError] = useState(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      console.log(session)
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const {data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+
+    return () => listener.subscription.unsubscribe()
   }, []);
 
   useEffect(() => {
@@ -37,8 +39,7 @@ export const AuthContextProvider = ({ children }) => {
     });
 
     if (error) {
-      setSupabaseError(error);
-      return { success: false };
+      return { success: false, error };
     }
 
     return { success: true };
@@ -52,8 +53,7 @@ export const AuthContextProvider = ({ children }) => {
     });
 
     if (error) {
-      setSupabaseError(error);
-      return { success: false };
+      return { success: false, error };
     }
 
     return { success: true };
@@ -64,16 +64,17 @@ export const AuthContextProvider = ({ children }) => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      setSupabaseError(error);
-      return { success: false };
+      return { success: false, error };
     }
-
+    
+    console.log(session)
     return { success: true };
+    
   };
 
   return (
     <AuthContext.Provider
-      value={{ session, signIn, signUpNewUser, signOut, userData, supabaseError, setSupabaseError }}
+      value={{ session, signIn, signUpNewUser, signOut, userData }}
     >
       {children}
     </AuthContext.Provider>
