@@ -6,11 +6,12 @@ import styles from "./withdrawablebalance.module.css";
 
 export default function WithdrawableBalance() {
   const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency } = useWallet();
+  
   return (
     <div className={styles.container}>
       <div className={styles.title}>Withdrawable Balance</div>
       <div className={styles.balanceContainer}>
-        <div className={styles.amount}>{withdrawableBalance}</div>
+        <div className={styles.amount}>{showBalance ? withdrawableBalance : "*****"}</div>
         <span>{ balanceCurrency }</span>
         <div className="" onClick={toggleShowBalance}>
           {showBalance ? (

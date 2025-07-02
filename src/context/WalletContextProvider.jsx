@@ -1,6 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import useLocalStorage from "../Utils/useLocalStorage";
 
 const walletContext = createContext();
+const [getItem, setItem] = useLocalStorage();
 
 export default function WalletContextProvider({ children }) {
   const [availableBalance, setAvailableBalance] = useState("120,000");
@@ -11,21 +13,23 @@ export default function WalletContextProvider({ children }) {
   const [cryptocurrency, setCryptocurrency] = useState("BTC");
   const [showBalance, setShowBalance] = useState(true);
 
-  const toggleShowBalance = () => {
-    if (showBalance) {
-      setShowBalance(!showBalance);
-      setAvailableBalance("*****");
-      setTotalDeposit("*****");
-      setTotalWithdrawn("*****");
-      setWithdrawableBalance("*****");
-    } else {
-      setShowBalance(true);
-      setAvailableBalance("120,000");
-      setTotalDeposit("52,000");
-      setTotalWithdrawn("0");
-      setWithdrawableBalance("75000");
+  //Checks for a saved preference...
+  useEffect(() => {
+    const savedPreference = getItem("balanceVisible");
+    if (savedPreference !== null) {
+      setShowBalance(savedPreference);
     }
+  }, []);
+
+  // Persists showBalance state to localStorage...
+  useEffect(() => {
+    setItem("balanceVisible", showBalance);
+  }, [showBalance]);
+
+  const toggleShowBalance = () => {
+    setShowBalance((prev) => !prev);
   };
+
   return (
     <walletContext.Provider
       value={{
