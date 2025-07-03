@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Lexend:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Lexend:wght@100..900&display=swap");
 
 * {
   margin: 0;
@@ -13,7 +13,7 @@
 
 :root {
   --green-50: #f6ffe5;
-  --green-100: #e9ffc7; 
+  --green-100: #e9ffc7;
   --green-200: #d2ff95;
   --green-300: #b9ff66;
   --green-400: #94f625;
@@ -22,19 +22,28 @@
   --green-700: #57b100;
   --grey: #f3f3f3;
   --grey-400: #808080;
-  --grey-950: #191A23;
+  --grey-950: #191a23;
 }
 
 body {
-  background-color: #F2F2F2; 
+  background-color: #f2f2f2;
+  overflow: auto;
 }
 
 body::-webkit-scrollbar {
-  display: none;
+  width: 0.1em;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  border: 2px solid transparent;
 }
 
 .link {
   text-decoration: none;
 }
-
-
