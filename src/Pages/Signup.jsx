@@ -172,6 +172,7 @@ export default function Signup() {
               <input
                 type={isPasswordVisible ? "text" : "password"}
                 name="password"
+                minLength={6}
                 value={userDetails.password}
                 placeholder="Enter your password."
                 onChange={handleUserInput}
@@ -192,6 +193,7 @@ export default function Signup() {
               <input
                 type={isPasswordVisible ? "text" : "password"}
                 name="confirmPassword"
+                minLength={6}
                 value={userDetails.confirmPassword}
                 placeholder="Enter your password again."
                 onChange={handleUserInput}
