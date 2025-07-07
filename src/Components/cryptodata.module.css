@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--grey);
+}
+
+.container:last-child {
+  border-bottom: none;
+}
+
+.dataContainer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.imgContainer{
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  margin-right: 8px;
+}
+
+.imgContainer img {
+  width: 100%;
+  height: auto;
+}
+
+.name, .price {
+  font-weight: 500;
+  color: var(--grey-950);
+}
+
+.index {
+  font-weight: 600;
+  color:rgb(133, 146, 173);
+}
+
+.symbol {
+  color: rgb(133, 146, 173);
+}

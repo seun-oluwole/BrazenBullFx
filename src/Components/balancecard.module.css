@@ -1,12 +1,32 @@
+.balanceCardContainer {
+  margin-top: 10px;
+  margin: 15px auto;
+  padding: 5px;
+  padding-left: 20px;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+  
 .balanceCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
   flex: 1 1 300px;
   position: relative;
-  height: 185px;
   min-width: 320px;
-  padding: 22px;
+  padding: 12px 22px 22px 22px;
   background-color: #fff;
   border-radius: 8px;
-  overflow: hidden;
   -webkit-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
   -moz-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
   box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
@@ -16,7 +36,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 18px;
+  /* margin-top: 18px; */
   margin-bottom: 5px;
 }
 
@@ -58,10 +78,4 @@
 .balanceIcon {
   color: rgb(133, 146, 173);
   height: 1.5rem;
-}
-
-@media (min-width: 1024px) {
-  .balanceCard {
-    min-width: 320px;
-  }
 }

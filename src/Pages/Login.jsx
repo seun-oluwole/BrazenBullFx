@@ -97,17 +97,16 @@ export default function Login() {
             </div>
           </div>
           <button className={styles.button} disabled={isLoading}>
-            {isLoading ? (<LoadingSpinner width="30" height="30" />) : "Login"}
+            {isLoading ? <LoadingSpinner width="30" height="30" /> : "Login"}
           </button>
         </form>
-
-        <div className={styles.resetDetails}>
-          <div className={styles.error}>{error ? `${error}` : ""}</div>
-          <NavLink to="/signup" className="link">
-            <p className={styles.signupText}>Don't have an account? SignUp.</p>
-          </NavLink>
-          <p className={styles.resetText}>Forgot Password? Reset Now.</p>
-        </div>
+      </div>
+      <div className={styles.resetDetails}>
+        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <NavLink to="/signup" className="link">
+          <p className={styles.signupText}>Don't have an account? SignUp.</p>
+        </NavLink>
+        <p className={styles.resetText}>Forgot Password? Reset Now.</p>
       </div>
     </div>
   );

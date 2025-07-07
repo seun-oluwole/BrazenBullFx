@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.2",
+    "@tanstack/react-query": "^5.81.5",
+    "axios": "^1.10.0",
     "country-calling-code": "^0.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

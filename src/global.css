@@ -27,7 +27,8 @@
 
 body {
   background-color: #f2f2f2;
-  overflow: auto;
+  max-width: 1378px;
+  margin: 0 auto;
 }
 
 body::-webkit-scrollbar {

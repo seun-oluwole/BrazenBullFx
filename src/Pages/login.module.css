@@ -1,8 +1,8 @@
 .container {
-  margin: 80px auto;
+  margin: 60px auto;
   background-color: #fff;
   border-radius: 24px;
-  padding: 70px 30px;
+  padding: 35px 30px 60px 30px;
   max-width: 500px;
   -webkit-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, 0.08),
     0 1px 2px 0 rgba(88, 102, 126, 0.12);

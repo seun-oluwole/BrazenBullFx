@@ -1,4 +1,5 @@
 .sidebarMainContainer{
+  position: absolute;
   display: none;
   background-color: #fff;
   margin-left: 12px;

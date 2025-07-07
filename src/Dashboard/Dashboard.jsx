@@ -9,7 +9,7 @@ import LogoutModal from "../Components/LogoutModal";
 
 export default function Dashboard({ isModalOpen, setIsModalOpen }) {
   return (
-    <>
+    <div className={styles.mainContainer}>
       <Header />
       <div className={styles.container}>
         <SidebarNav setIsModalOpen={setIsModalOpen}/>
@@ -19,6 +19,6 @@ export default function Dashboard({ isModalOpen, setIsModalOpen }) {
         </DashboardContainer>
       </div>
       <MobileNavigation />
-    </>
+    </div>
   );
 }

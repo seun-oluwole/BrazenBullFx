@@ -210,15 +210,15 @@ export default function Signup() {
             {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
           </div>
           <button className={styles.button} disabled={!matchingPassword || isLoading}>
-            {isLoading ? (<LoadingSpinner width="30" height="30"/>) : "Create Account"}
+            {isLoading ? <LoadingSpinner width="30" height="30" /> : "Create Account"}
           </button>
         </form>
-        <div className={styles.resetDetails}>
-          <div className={styles.error}>{error ? `${error}` : ""}</div>
-          <NavLink to="/login" className="link">
-            <p className={styles.signupText}>Already have an account? Login.</p>
-          </NavLink>
-        </div>
+      </div>
+      <div className={styles.resetDetails}>
+        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <NavLink to="/login" className="link">
+          <p className={styles.signupText}>Already have an account? Login.</p>
+        </NavLink>
       </div>
     </div>
   );
