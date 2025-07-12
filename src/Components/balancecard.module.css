@@ -12,7 +12,7 @@
   scrollbar-width: none;
 }
 
-.scroll-container::-webkit-scrollbar {
+.balanceCardContainer::-webkit-scrollbar {
   display: none;
 }
   
@@ -24,6 +24,7 @@
   flex: 1 1 300px;
   position: relative;
   min-width: 320px;
+  min-height: 110px;
   padding: 12px 22px 22px 22px;
   background-color: #fff;
   border-radius: 8px;
@@ -36,7 +37,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* margin-top: 18px; */
   margin-bottom: 5px;
 }
 
@@ -78,4 +78,14 @@
 .balanceIcon {
   color: rgb(133, 146, 173);
   height: 1.5rem;
+}
+
+.spinner {
+  margin-right: 15px;
+}
+
+.error {
+  color: red;
+  font-size: 0.7rem;
+  font-weight: 400;
 }

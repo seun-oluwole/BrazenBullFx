@@ -6,17 +6,22 @@ import SidebarNav from "../SidebarNav/SidebarNav";
 import DashboardContainer from "./DashboardContainer";
 import styles from "./dashboard.module.css";
 import LogoutModal from "../Components/LogoutModal";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Dashboard({ isModalOpen, setIsModalOpen }) {
   return (
     <div className={styles.mainContainer}>
       <Header />
       <div className={styles.container}>
-        <SidebarNav setIsModalOpen={setIsModalOpen}/>
-        <DashboardContainer>
-          <Outlet />
-          <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-        </DashboardContainer>
+        <SidebarNav setIsModalOpen={setIsModalOpen} />
+        <QueryClientProvider client={queryClient}>
+          <DashboardContainer>
+            <Outlet />
+            <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          </DashboardContainer>
+        </QueryClientProvider>
       </div>
       <MobileNavigation />
     </div>

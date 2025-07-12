@@ -5,13 +5,10 @@ import CryptoDataList from "../Components/CryptoDataList";
 import QuickLinks from "../Components/QuickLinks";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import styles from "./wallet.module.css";
 
-const queryClient = new QueryClient();
-
 export default function Wallet() {
-  const { availableBalance, totalDeposit, totalWithdrawn, cryptocurrency } = useWallet();
+  const { availableBalance, totalDeposit, totalWithdrawn } = useWallet();
 
   const { userData } = userAuth();
   const { firstName } = userData || "";
@@ -35,11 +32,9 @@ export default function Wallet() {
         <BalanceCard balanceTitle={"Total Withdrawn"} balanceAmount={totalWithdrawn} />
       </BalanceCardContainer>
       <QuickLinks />
-      <QueryClientProvider client={queryClient}>
-        <CryptoDataContainer>
-          <CryptoDataList />
-        </CryptoDataContainer>
-      </QueryClientProvider>
+      <CryptoDataContainer>
+        <CryptoDataList />
+      </CryptoDataContainer>
     </div>
   );
 }

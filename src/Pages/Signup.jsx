@@ -77,7 +77,7 @@ export default function Signup() {
     setIsLoading(true);
     const completePhoneNumber = `+${callingCode}${userDetails.phonenumber}`;
     try {
-      const { success, error } = await signUpNewUser(
+      const { success: signUpSuccess, error: signUpError } = await signUpNewUser(
         userDetails.email.toLowerCase(),
         userDetails.confirmPassword,
         toCapitalize(userDetails.firstname),
@@ -85,10 +85,10 @@ export default function Signup() {
         completePhoneNumber
       );
 
-      if (success) {
+      if (signUpSuccess) {
         navigate("/dashboard");
       } else {
-        setError(handleErrorMessages(error.message));
+        setError(handleErrorMessages(signUpError.message));
       }
     } finally {
       setIsLoading(false);

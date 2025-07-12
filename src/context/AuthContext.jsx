@@ -4,46 +4,101 @@ import { supabase } from "../Utils/supabaseClient";
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [session, setSession] = useState(undefined);
+  const [session, setSession] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [isSessionLoading, setIsSessionLoading] = useState(true);
-  const [userData, setUserData] = useState({});
 
+  // Get and set user session on page load...
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setIsSessionLoading(false);
+      setUserData(session?.user?.user_metadata);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      setUserData(session?.user?.user_metadata);
+
+      setTimeout(async () => {
+        if (event === "SIGNED_IN" && session?.user?.id) {
+          // Check if wallet already exists
+
+          const { data: walletData } = await supabase
+            .from("wallet")
+            .select("*")
+            .eq("user_id", session.user.id)
+            .single();
+
+          if (!walletData) await createWallet(session.user.id);
+
+          if (walletData) {
+            setIsWalletCreated(true);
+          } else {
+            setIsWalletCreated(false);
+          }
+        } else {
+          setIsWalletCreated(false);
+        }
+      }, 0);
     });
 
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    setUserData(session?.user?.user_metadata);
-  }, [session]);
+  async function createWallet(user) {
+    if (!user) return;
+    const { error: walletError } = await supabase.from("wallet").insert({
+      user_id: user.id,
+      available_balance: 0,
+      total_deposit: 0,
+      total_withdrawn: 0,
+      withdrawable_balance: 0,
+      currency: "USD",
+      cryptocurrency: "USDT",
+    });
+
+    if (walletError) {
+      return { success: false, walletError };
+    }
+    return { success: true };
+  }
 
   // Sign up...
   const signUpNewUser = async (email, password, firstName, lastName, phoneNumber) => {
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: phoneNumber,
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            role: "user",
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
+      if (authError) {
+        throw new Error(authError.message);
+      }
+
+      const user = authData.user;
+
+      // Create wallet data...
+      const { success: walletCreated, error: walletError } = await createWallet(user);
+
+      if (walletCreated) {
+        setIsWalletCreated(true);
+        return { success: true };
+      } else {
+        throw new Error(walletError.message);
+      }
+    } catch (error) {
       return { success: false, error };
     }
-
-    return { success: true };
   };
 
   //Sign In
@@ -62,17 +117,20 @@ export const AuthContextProvider = ({ children }) => {
 
   //Sign Out
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut({ scope: "local" });
 
     if (error) {
       return { success: false, error };
     }
 
+    setUserData(null);
     return { success: true };
   };
 
   return (
-    <AuthContext.Provider value={{ session, signIn, signUpNewUser, signOut, userData, isSessionLoading }}>
+    <AuthContext.Provider
+      value={{ session, signIn, signUpNewUser, signOut, userData, isSessionLoading, isWalletCreated }}
+    >
       {children}
     </AuthContext.Provider>
   );

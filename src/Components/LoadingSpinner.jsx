@@ -1,9 +1,9 @@
-import './loadingspinner.css'
-export default function LoadingSpinner({height, width}) {
+import "./loadingspinner.css";
+export default function LoadingSpinner({ height, width }) {
   const styles = {
     height: `${height}px`,
-    width: `${width}px`
-  }
+    width: `${width}px`,
+  };
 
   return (
     <div className="lds-ring" style={styles}>
@@ -14,3 +14,4 @@ export default function LoadingSpinner({height, width}) {
     </div>
   );
 }
+

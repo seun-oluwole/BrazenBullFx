@@ -6,6 +6,6 @@ export default function handleErrorMessages(errorMessage) {
   } else if (errorMessage === "Failed to fetch") {
     return "Something went wrong. Check your internet connection and try again.";
   } else {
-    return "Something went wrong! Try again.";
+    return `${errorMessage}`;
   }
 }
