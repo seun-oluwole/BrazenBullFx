@@ -1,49 +1,43 @@
 import { NavLink } from "react-router";
+import SidebarContainer from "../SidebarNav/SidebarContainer";
 import {
   HiArrowRightEndOnRectangle,
-  HiArrowsUpDown,
   HiCog6Tooth,
+  HiHome,
   HiOutlineCog6Tooth,
-  HiOutlineCube,
-  HiOutlineWallet,
-  HiWallet,
+  HiOutlineHome,
+  HiOutlineUserGroup,
+  HiUserGroup,
 } from "react-icons/hi2";
-import styles from "./sidebarnav.module.css";
-import SidebarContainer from "./SidebarContainer";
+import styles from "../SidebarNav/sidebarnav.module.css";
 
-
-export default function SidebarNav({ setIsModalOpen }) {
+export default function AdminSideBar() {
   return (
     <SidebarContainer>
       <div className={styles.sidebarContentContainer}>
-        <NavLink to="/dashboard/wallet" className={styles.navLinkContainer}>
+        <NavLink to="/admin/dashboard" className={styles.navLinkContainer}>
           {({ isActive }) => (
             <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
-              {isActive ? <HiWallet className={styles.navIcon} /> : <HiOutlineWallet className={styles.navIcon} />}
-              <span className={styles.iconLabel}>Wallet</span>
+              {isActive ? <HiHome className={styles.navIcon} /> : <HiOutlineHome className={styles.navIcon} />}
+              <span className={styles.iconLabel}>Dashboard</span>
             </div>
           )}
         </NavLink>
 
-        <NavLink to="/dashboard/transactions" className={styles.navLinkContainer}>
+        <NavLink to="/admin/investors" className={styles.navLinkContainer}>
           {({ isActive }) => (
             <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
-              {isActive ? <HiArrowsUpDown className={styles.navIcon} /> : <HiArrowsUpDown className={styles.navIcon} />}
-              <span className={styles.iconLabel}>Transactions</span>
+              {isActive ? (
+                <HiUserGroup className={styles.navIcon} />
+              ) : (
+                <HiOutlineUserGroup className={styles.navIcon} />
+              )}
+              <span className={styles.iconLabel}>Investors</span>
             </div>
           )}
         </NavLink>
 
-        <NavLink to="/dashboard/investment" className={styles.navLinkContainer}>
-          {({ isActive }) => (
-            <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
-              {isActive ? <HiOutlineCube className={styles.navIcon} /> : <HiOutlineCube className={styles.navIcon} />}
-              <span className={styles.iconLabel}>Investment</span>
-            </div>
-          )}
-        </NavLink>
-        
-        <NavLink to="/dashboard/settings" className={styles.navLinkContainer}>
+        <NavLink to="/admin/settings" className={styles.navLinkContainer}>
           {({ isActive }) => (
             <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>
               {isActive ? (

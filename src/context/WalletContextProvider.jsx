@@ -13,6 +13,7 @@ export default function WalletContextProvider({ children }) {
   const [fetchWalletError, setFetchWalletError] = useState(null);
   const [updateWalletError, setUpdateWalletError] = useState(null);
   const [walletData, setWalletData] = useState({
+    tier: "",
     availableBalance: 0,
     totalDeposit: 0,
     totalWithdrawn: 0,
@@ -38,7 +39,7 @@ export default function WalletContextProvider({ children }) {
   }, [showBalance]);
 
   useEffect(() => {
-    fetchWallet();
+    fetchUserWallet();
 
     // Reset wallet state when a user logs out...
     if (!session) {
@@ -57,7 +58,7 @@ export default function WalletContextProvider({ children }) {
     setShowBalance((prev) => !prev);
   };
 
-  async function fetchWallet() {
+  async function fetchUserWallet() {
     if (!userId) return; // Prevents function from executing if there is no userId...
 
     setIsWalletLoading(true);
@@ -69,13 +70,14 @@ export default function WalletContextProvider({ children }) {
         .single();
 
       if (walletError) {
-        setFetchWalletError(error.message);
+        setFetchWalletError(walletError.message);
         return;
       }
 
       if (walletData) {
         setWalletData((prevData) => ({
           ...prevData,
+          tier: walletData?.tier,
           availableBalance: walletData?.available_balance,
           totalDeposit: walletData?.total_deposit,
           totalWithdrawn: walletData?.total_withdrawn,
@@ -89,7 +91,7 @@ export default function WalletContextProvider({ children }) {
     }
   }
 
-  const updateWallet = async (newAvailableBal) => {
+  const updateUserWallet = async (newAvailableBal) => {
     if (!userId || !newAvailableBal) return;
     try {
       setUpdatingWallet(true);
@@ -103,7 +105,7 @@ export default function WalletContextProvider({ children }) {
 
       if (error) {
         setUpdateWalletError(error.message);
-      } else await fetchWallet();
+      } else await fetchUserWallet();
     } finally {
       setUpdatingWallet(false);
     }
@@ -119,8 +121,8 @@ export default function WalletContextProvider({ children }) {
         updatingWallet,
         fetchWalletError,
         updateWalletError,
-        updateWallet,
-        fetchWallet,
+        updateUserWallet,
+        fetchUserWallet,
       }}
     >
       {children}

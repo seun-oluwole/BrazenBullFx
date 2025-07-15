@@ -1,0 +1,42 @@
+.title {
+  font-family: Funnel Display, "sans-serif";
+  margin-left: 5px;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding: 12px;
+  border-bottom: 2px solid var(--grey);
+}
+
+.titleContainer span {
+  color: rgb(133, 146, 173);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.mainContainer {
+  border: 1px solid var(--grey);
+  padding: 15px 25px;
+  margin-top: 15px;
+  border-radius: 16px;
+}
+
+.spiralContainer, .error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+
+.selectTier {
+  border: 2px solid var(--grey);
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 20px;
+  width: 100%;
+  background-color: transparent;
+}

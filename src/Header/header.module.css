@@ -1,16 +1,16 @@
 .headerContainer {
-  position: absolute;
+  /* position: absolute; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 0 10px 0;
   background: #fff;
   border-radius: 28px;
-  top: 7px;
   z-index: -2;
-  max-width: 1365px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 .logo {
@@ -69,6 +69,10 @@
 }
 
 @media (min-width: 1024px) {
+  .headerContainer {
+    min-height: 63px;
+  }
+
   .profileImgContainer {
     display: initial;
   }

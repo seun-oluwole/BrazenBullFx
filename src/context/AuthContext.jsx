@@ -23,15 +23,16 @@ export const AuthContextProvider = ({ children }) => {
 
       setTimeout(async () => {
         if (event === "SIGNED_IN" && session?.user?.id) {
-          // Check if wallet already exists
 
+          // Check if wallet already exists
           const { data: walletData } = await supabase
             .from("wallet")
             .select("*")
             .eq("user_id", session.user.id)
             .single();
 
-          if (!walletData) await createWallet(session.user.id);
+          const userMetaData = session?.user?.user_metadata
+          if (!walletData && userMetaData?.role === "user") await createWallet(userMetaData);
 
           if (walletData) {
             setIsWalletCreated(true);
@@ -49,15 +50,18 @@ export const AuthContextProvider = ({ children }) => {
 
   async function createWallet(user) {
     if (!user) return;
-    const { error: walletError } = await supabase.from("wallet").insert({
-      user_id: user.id,
+    const { error: walletError } = await supabase.from("wallet").insert([{
+      user_id: user?.sub,
       available_balance: 0,
       total_deposit: 0,
       total_withdrawn: 0,
       withdrawable_balance: 0,
       currency: "USD",
       cryptocurrency: "USDT",
-    });
+      tier: "1",
+      first_name: user?.firstName,
+      last_name: user?.lastName,
+    }]);
 
     if (walletError) {
       return { success: false, walletError };
@@ -85,16 +89,18 @@ export const AuthContextProvider = ({ children }) => {
         throw new Error(authError.message);
       }
 
-      const user = authData.user;
+      const userMetaData = authData.user.user_metadata;
 
       // Create wallet data...
-      const { success: walletCreated, error: walletError } = await createWallet(user);
+      if (userMetaData?.role === "user") {
+        const { success: walletCreated, error: walletError } = await createWallet(userMetaData);
 
-      if (walletCreated) {
-        setIsWalletCreated(true);
-        return { success: true };
-      } else {
-        throw new Error(walletError.message);
+        if (walletCreated) {
+          setIsWalletCreated(true);
+          return { success: true };
+        } else {
+          throw new Error(walletError.message);
+        }
       }
     } catch (error) {
       return { success: false, error };

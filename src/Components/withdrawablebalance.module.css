@@ -56,3 +56,7 @@
   display: flex;
   gap: 10px;
 }
+
+.spinner {
+  padding: 5px;
+}

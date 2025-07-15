@@ -1,12 +1,12 @@
-.sidebarMainContainer{
-  position: absolute;
+.sidebarMainContainer {
   display: none;
   background-color: #fff;
-  margin-left: 12px;
+  margin-top: 20px;
   border-radius: 12px;
   padding-bottom: 20px;
   width: fit-content;
   height: fit-content;
+  flex: 1 1 auto;
 }
 
 .sidebarContentContainer {
@@ -25,7 +25,7 @@
 }
 
 .iconContainer:first-child {
- margin-top: 18px;
+  margin-top: 18px;
 }
 
 .iconContainer:hover {
@@ -33,7 +33,7 @@
 }
 
 .navLinkContainer {
-  text-decoration: none;  
+  text-decoration: none;
 }
 
 .navIcon {
@@ -47,7 +47,7 @@
 }
 
 .active {
-  color: var(--green-500)
+  color: var(--green-500);
 }
 
 .logout {
@@ -59,7 +59,6 @@
   color: #f1111e;
 }
 
-
 @media (min-width: 1024px) {
   .sidebarMainContainer {
     display: initial;
@@ -68,14 +67,14 @@
 
 @media (min-width: 1280px) {
   .sidebarMainContainer {
-    width: 195px;
+    width: 250px;
   }
 
-  .iconLabel  {
+  .iconLabel {
     display: initial;
   }
 
   .navIcon {
-   margin-left: 15px;
+    margin-left: 15px;
   }
 }

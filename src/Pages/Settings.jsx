@@ -2,20 +2,20 @@ import { HiArrowRightEndOnRectangle, HiChevronRight, HiPencilSquare } from "reac
 import { userAuth } from "../context/AuthContext";
 import ViewContainer from "../Components/ViewContainer";
 import styles from "./settings.module.css";
+import { useWallet } from "../context/WalletContextProvider";
 
-
-
-export default function Settings({ setIsModalOpen}) {
+export default function Settings({ setIsModalOpen }) {
   const { userData } = userAuth();
-  const { firstName, lastName, email, phoneNumber} = userData || "";
-  
+  const { tier } = useWallet();
+  const { firstName, lastName, email, phoneNumber } = userData || "";
+
   return (
     <ViewContainer>
       <h1 className={styles.title}>Settings</h1>
       <div className={styles.container}>
         <div className={styles.displayPicture}>
           <img src={`../src/assets/profile-pic.JPG`} alt="" />
-          <div className={styles.tierBadge}>TIER 1</div>
+          <div className={styles.tierBadge}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
         </div>
         <div className={styles.profileDetails}>
           <div className={styles.profileTitle}>My Profile</div>

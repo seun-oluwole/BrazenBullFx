@@ -1,0 +1,62 @@
+.mainContainer {
+  padding-bottom: 100px;
+}
+
+.cardContainer {
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.cardContainer:-webkit-scrollbar {
+  display: none;
+}
+
+.cardContent {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 300px;
+  padding: 25px 15px;
+  margin-left: 10px;
+}
+
+.title {
+  font-family: Funnel Display, "sans-serif";
+  margin-left: 5px;
+}
+
+.cardTitle {
+  color: rgb(133, 146, 173);
+  font-weight: 400;
+}
+
+.count {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--grey-950);
+}
+
+.walletBalance {
+  display: flex;
+  gap: 3px;
+}
+
+@media (min-width: 1024px) {
+  .cardContainer {
+    flex-direction: row;
+  }
+
+  .mainContainer {
+    padding-bottom: 0;
+  }
+}

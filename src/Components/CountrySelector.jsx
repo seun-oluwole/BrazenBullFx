@@ -11,7 +11,7 @@ export default function CountrySelector({ value, countryDetails, handleSelectCou
 
   return (
     <select value={value} onChange={handleSelectCountry} className={styles.selector} name={isoCode3} autoFocus>
-      <option value={isoCode3 || "PHP"}>{`${isoCode3 || "PHP "} (+${countryCode || "63"})`}</option>
+      <option value={isoCode3 || "PHL"}>{`${isoCode3 || "PHL "} (+${countryCode || "63"})`}</option>
       {countryList.map(({ country, isoCode3, countryCodes }) => (
         <option key={isoCode3} value={isoCode3}>
           {`${country} (+${countryCodes[0]})`}

@@ -3,23 +3,31 @@ import BalanceCardContainer from "../Components/BalanceCardContainer";
 import CryptoDataContainer from "../Components/CryptoDataContainer";
 import CryptoDataList from "../Components/CryptoDataList";
 import QuickLinks from "../Components/QuickLinks";
+import SpiralSpinner from "../Components/SpiralSpinner";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
 import styles from "./wallet.module.css";
 
 export default function Wallet() {
-  const { availableBalance, totalDeposit, totalWithdrawn } = useWallet();
+  const { availableBalance, totalDeposit, totalWithdrawn, tier, isWalletLoading } = useWallet();
 
   const { userData } = userAuth();
   const { firstName } = userData || "";
 
+  console.log(userData);
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <div className={styles.greeting}>
           Welcome
           <div className="">{firstName}</div>
-          <div className={styles.accountTier}>TIER 1</div>
+          {!isWalletLoading ? (
+            <div className={styles.accountTier}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
+          ) : (
+            <div className={styles.spinner}>
+              <SpiralSpinner width={15} height={15} />
+            </div>
+          )}
         </div>
         <div className={styles.welcomeRemark}>How are you doing today? 👋</div>
       </div>

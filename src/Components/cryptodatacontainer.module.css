@@ -5,10 +5,17 @@
 }
 
 .title {
+  display: flex;
+  gap: 5px;
+  align-items: center;
   font-family: "Funnel Display", sans-serif;
   font-size: 1.2rem;
   margin-bottom: 15px;
   margin-left: 5px;
+}
+
+.title span {
+  margin-top: 4px;
 }
 
 .cryptoContainer {
@@ -31,5 +38,10 @@
   justify-content: center;
   padding: 50px;
   margin: 0 auto;
+}
+
+.icon {
+  height: 1.8rem;
+  width: 1.8rem;
 }
 
