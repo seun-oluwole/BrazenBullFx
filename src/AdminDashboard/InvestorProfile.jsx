@@ -5,6 +5,7 @@ import { SelectCryptoCurrency, SelectCurrency, SelectTier } from "../Components/
 import SpiralSpinner from "../Components/SpiralSpinner";
 import ViewContainer from "../Components/ViewContainer";
 import styles from "./investorprofile.module.css";
+import { userAuth } from "../context/AuthContext";
 
 export default function InvestorProfile() {
   const { userId } = useParams();
@@ -29,6 +30,8 @@ export default function InvestorProfile() {
     totalWithdrawn: false,
     withdrawableBal: false,
   });
+  const { session } = userAuth();
+  const userMetaData = session?.user?.user_metadata;
 
   function reducer(isLoading, action) {
     if (action.type === "investor") {
@@ -59,7 +62,7 @@ export default function InvestorProfile() {
   }
 
   useEffect(() => {
-    fetchInvestor().then((data) => console.log(data));
+    if (userMetaData?.role === "admin") fetchInvestor()
   }, []);
 
   const fetchInvestor = async () => {
@@ -204,7 +207,7 @@ export default function InvestorProfile() {
       dispatch({ type: `${walletColumn}`, payload: false });
     }
   };
-  
+
   const updateWithdrawableBal = async (walletColumn) => {
     dispatch({ type: `${walletColumn}`, payload: true });
     try {
@@ -323,7 +326,8 @@ export default function InvestorProfile() {
                 </div>
                 <div>
                   <div className={styles.subTitle}>
-                    Withdrawable Balance: {`${investorData?.withdrawable_balance?.toLocaleString()} ${investorData?.currency}`}
+                    Withdrawable Balance:{" "}
+                    {`${investorData?.withdrawable_balance?.toLocaleString()} ${investorData?.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
                     <input

@@ -11,7 +11,7 @@ import {
 } from "react-icons/hi2";
 import styles from "../SidebarNav/sidebarnav.module.css";
 
-export default function AdminSideBar() {
+export default function AdminSideBar({ setIsModalOpen }) {
   return (
     <SidebarContainer>
       <div className={styles.sidebarContentContainer}>

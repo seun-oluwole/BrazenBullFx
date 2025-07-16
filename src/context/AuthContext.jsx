@@ -8,7 +8,8 @@ export const AuthContextProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [isSessionLoading, setIsSessionLoading] = useState(true);
-
+  const role = session?.user?.user_metadata?.role
+ 
   // Get and set user session on page load...
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -22,7 +23,7 @@ export const AuthContextProvider = ({ children }) => {
       setUserData(session?.user?.user_metadata);
 
       setTimeout(async () => {
-        if (event === "SIGNED_IN" && session?.user?.id) {
+        if (event === "SIGNED_IN" && session?.user?.id && role === "user" ) {
 
           // Check if wallet already exists
           const { data: walletData } = await supabase
@@ -32,7 +33,7 @@ export const AuthContextProvider = ({ children }) => {
             .single();
 
           const userMetaData = session?.user?.user_metadata
-          if (!walletData && userMetaData?.role === "user") await createWallet(userMetaData);
+          if (!walletData && role === "user") await createWallet(userMetaData);
 
           if (walletData) {
             setIsWalletCreated(true);
@@ -70,14 +71,14 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   // Sign up...
-  const signUpNewUser = async (email, password, firstName, lastName, phoneNumber) => {
+  const signUpNewUser = async (email, password, firstName, lastName, phoneNumber, role) => {
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
           data: {
-            role: "user",
+            role: role.role,
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,
@@ -86,7 +87,7 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       if (authError) {
-        throw new Error(authError.message);
+        return { success: false, error: authError }
       }
 
       const userMetaData = authData.user.user_metadata;
@@ -102,14 +103,15 @@ export const AuthContextProvider = ({ children }) => {
           throw new Error(walletError.message);
         }
       }
+      return { success: true, error: authError}
     } catch (error) {
-      return { success: false, error };
+      throw new Error(error)
     }
   };
 
-  //Sign In
-  const signIn = async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({
+  //Sign In User
+  const signInUser = async (email, password) => {
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
@@ -118,8 +120,36 @@ export const AuthContextProvider = ({ children }) => {
       return { success: false, error };
     }
 
-    return { success: true };
-  };
+    const authRole = authData?.user?.user_metadata?.role
+
+    if (authRole === "user") {
+      return { success: true };
+    } else {
+      await signOut()
+      return { success: false }
+    } 
+  }
+  //Sign In Admin
+  const signInAdmin = async (email, password) => {
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      return { success: false, error };
+    }
+
+    const authRole = authData?.user?.user_metadata?.role
+
+    if (authRole === "admin") {
+      return { success: true };
+    } else {
+      await signOut()
+      return { success: false }
+    } 
+  }
+
 
   //Sign Out
   const signOut = async () => {
@@ -135,7 +165,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, signIn, signUpNewUser, signOut, userData, isSessionLoading, isWalletCreated }}
+      value={{ session, signInUser, signInAdmin, signUpNewUser, signOut, userData, isSessionLoading, isWalletCreated }}
     >
       {children}
     </AuthContext.Provider>

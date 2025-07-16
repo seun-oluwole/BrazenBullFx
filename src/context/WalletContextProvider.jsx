@@ -9,9 +9,7 @@ const [getItem, setItem] = useLocalStorage();
 export default function WalletContextProvider({ children }) {
   const [showBalance, setShowBalance] = useState(true);
   const [isWalletLoading, setIsWalletLoading] = useState(false);
-  const [updatingWallet, setUpdatingWallet] = useState(false);
   const [fetchWalletError, setFetchWalletError] = useState(null);
-  const [updateWalletError, setUpdateWalletError] = useState(null);
   const [walletData, setWalletData] = useState({
     tier: "",
     availableBalance: 0,
@@ -24,6 +22,7 @@ export default function WalletContextProvider({ children }) {
 
   const { userData, session } = userAuth();
   const { sub: userId } = userData || {};
+  const userMetaData = session?.user?.user_metadata
 
   // Checks for a saved preference...
   useEffect(() => {
@@ -39,7 +38,7 @@ export default function WalletContextProvider({ children }) {
   }, [showBalance]);
 
   useEffect(() => {
-    fetchUserWallet();
+    if (userMetaData?.role === "user") fetchUserWallet();
 
     // Reset wallet state when a user logs out...
     if (!session) {
@@ -91,25 +90,6 @@ export default function WalletContextProvider({ children }) {
     }
   }
 
-  const updateUserWallet = async (newAvailableBal) => {
-    if (!userId || !newAvailableBal) return;
-    try {
-      setUpdatingWallet(true);
-      const { error } = await supabase
-        .from("wallet")
-        .update({
-          cryptocurrency: "BTC",
-          available_balance: newAvailableBal,
-        })
-        .eq("user_id", userId);
-
-      if (error) {
-        setUpdateWalletError(error.message);
-      } else await fetchUserWallet();
-    } finally {
-      setUpdatingWallet(false);
-    }
-  };
 
   return (
     <walletContext.Provider
@@ -118,10 +98,7 @@ export default function WalletContextProvider({ children }) {
         showBalance,
         toggleShowBalance,
         isWalletLoading,
-        updatingWallet,
         fetchWalletError,
-        updateWalletError,
-        updateUserWallet,
         fetchUserWallet,
       }}
     >

@@ -16,11 +16,11 @@ export default function PrivateRoute({ children }) {
   }
 
   if (!session) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/login" replace />;
   }
 
-  if (role !== "user") {
-    return <Navigate to="/login" replace />;
+  if (role !== "admin") {
+    return <Navigate to="/admin/login" replace />;
   }
 
   return children;

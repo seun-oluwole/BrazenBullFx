@@ -8,8 +8,7 @@ import { useAdmin } from "../context/AdminContext";
 export default function AdminDashboard() {
   const { totalInvestors, totalWallets, walletsBalance, currency, isFetchingAllWallet, fetchAllWalletError } =
     useAdmin();
-
-  console.log(fetchAllWalletError);
+    
   return (
     <ViewContainer>
       <div className={styles.mainContainer}>

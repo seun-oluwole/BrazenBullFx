@@ -1,10 +1,9 @@
 import ViewContainer from "../Components/ViewContainer";
+import Settings from "../Pages/Settings";
 import styles from "./adminsettings.module.css"
 
-export default function AdminSettings() {
+export default function AdminSettings({ setIsModalOpen}) {
   return (
-    <ViewContainer>
-      <h2 className={styles.title}>Settings</h2>
-    </ViewContainer>
+   <Settings setIsModalOpen={setIsModalOpen} isAdmin={true}/>
   )
 }

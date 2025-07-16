@@ -4,7 +4,7 @@ import ViewContainer from "../Components/ViewContainer";
 import styles from "./settings.module.css";
 import { useWallet } from "../context/WalletContextProvider";
 
-export default function Settings({ setIsModalOpen }) {
+export default function Settings({ setIsModalOpen, isAdmin = false }) {
   const { userData } = userAuth();
   const { tier } = useWallet();
   const { firstName, lastName, email, phoneNumber } = userData || "";
@@ -13,12 +13,14 @@ export default function Settings({ setIsModalOpen }) {
     <ViewContainer>
       <h1 className={styles.title}>Settings</h1>
       <div className={styles.container}>
+        {!isAdmin ? (
         <div className={styles.displayPicture}>
           <img src={`../src/assets/profile-pic.JPG`} alt="" />
           <div className={styles.tierBadge}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
         </div>
+        ) : ""}
         <div className={styles.profileDetails}>
-          <div className={styles.profileTitle}>My Profile</div>
+          <div className={styles.profileTitle}>{isAdmin ? "Admin" : "My"} Profile</div>
           <div className={styles.userDetail}>
             <span>Name</span>
             {`${firstName} ${lastName}`}

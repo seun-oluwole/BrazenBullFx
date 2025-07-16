@@ -6,7 +6,7 @@ import CustomModal from "./CustomModal";
 import styles from "./logoutmodal.module.css";
 import handleErrorMessages from "../Utils/errorMessages";
 
-export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
+export default function LogoutModal({ isModalOpen, setIsModalOpen, isAdmin=false }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { signOut } = userAuth();
@@ -18,20 +18,53 @@ export default function LogoutModal({ isModalOpen, setIsModalOpen }) {
 
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
+  const handleUserLogout = async () => {
     setIsLoading(true);
     try {
-      const { success, error } = await signOut();
+      const { success, error: signOutError } = await signOut();
+
+      if (signOutError) {
+        setError(handleErrorMessages(signOutError.message));
+        throw new Error(signOutError.message)
+      }
+
       if (success) {
         setIsModalOpen(false);
         navigate("/login");
-      } else {
-        setError(handleErrorMessages(error.message));
-      }
+      } 
+
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleAdminLogout = async () => {
+    setIsLoading(true);
+    try {
+      const { success, error: signOutError } = await signOut();
+
+      if (signOutError) {
+        setError(handleErrorMessages(signOutError.message));
+        throw new Error(signOutError.message)
+      }
+
+      if (success) {
+        setIsModalOpen(false);
+        navigate("/admin/login");
+      } 
+
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    if (!isAdmin) {
+      handleUserLogout()
+    } else {
+      handleAdminLogout()
+    }
+  }
 
   return (
     <CustomModal isOpen={isModalOpen} onClose={closeModal}>

@@ -14,7 +14,6 @@ export default function Wallet() {
   const { userData } = userAuth();
   const { firstName } = userData || "";
 
-  console.log(userData);
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>

@@ -28,7 +28,6 @@ export default function AdminContextProvider({ children }) {
       if (fetchError) throw new Error(fetchError);
 
       if (walletDetails.length > 0) {
-        console.log(walletDetails);
         setDashboardDetails((details) => ({
           ...details,
           totalInvestors: walletDetails.length,

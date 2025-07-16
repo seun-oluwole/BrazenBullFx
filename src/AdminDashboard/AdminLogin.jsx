@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { userAuth } from "../context/AuthContext";
 import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import styles from "./login.module.css";
+import styles from "../Pages/login.module.css";
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -15,17 +15,17 @@ export default function Login() {
     password: "",
   });
 
-  const { session, signInUser, isSessionLoading } = userAuth();
+  const { session, signInAdmin, isSessionLoading } = userAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (
       !isSessionLoading &&
       session &&
-      session.user?.user_metadata?.role === "user" &&
-      window.location.pathname !== "/dashboard"
+      session.user?.user_metadata?.role === "admin" &&
+      window.location.pathname !== "/admin"
     ) {
-      navigate("/dashboard", { replace: true });
+      navigate("/admin", { replace: true });
     }
   }, [isSessionLoading, session, navigate]);
 
@@ -43,7 +43,7 @@ export default function Login() {
     setIsLoading(true);
     setError(null);
     try {
-      const { error: signInError } = await signInUser(
+      const { error: signInError } = await signInAdmin(
         loginDetails.email.toLowerCase(),
         loginDetails.password
       );
@@ -60,8 +60,8 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
-        <div>Login</div>
-        <p>Securely login to your BrazenBullFX💚</p>
+        <div>Login Admin</div>
+        <p>Login into your admin account</p>
       </div>
 
       <div className={styles.formContainer}>
@@ -70,7 +70,7 @@ export default function Login() {
             <div>Email Address</div>
             <div className={styles.inputContainer}>
               <input
-                type="email"
+                type="text"
                 value={loginDetails.email}
                 name="email"
                 placeholder="Enter your email address."
@@ -83,7 +83,7 @@ export default function Login() {
             <div>Password</div>
             <div className={styles.inputContainer}>
               <input
-                type={isPasswordVisible ? "text" : "password"}
+                type={`${isPasswordVisible ? "text" : "password"}`}
                 name="password"
                 value={loginDetails.password}
                 placeholder="Enter your password."
@@ -105,13 +105,11 @@ export default function Login() {
         </form>
       </div>
       <div className={styles.resetDetails}>
-        <div className={styles.error}>{error}</div>
-        <NavLink to="/signup" className="link">
+        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <NavLink to="/admin/signup" className="link">
           <p className={styles.signupText}>Don't have an account? SignUp.</p>
         </NavLink>
-        <NavLink to="/reset-password" className={styles.resetText}>
-          Forgot Password? Reset Now.
-        </NavLink>
+        <p className={styles.resetText}>Forgot Password? Reset Now.</p>
       </div>
     </div>
   );

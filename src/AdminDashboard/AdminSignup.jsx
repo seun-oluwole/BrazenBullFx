@@ -7,9 +7,9 @@ import CountrySelector from "../Components/CountrySelector";
 import countryList from "country-calling-code";
 import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import styles from "./signup.module.css";
+import styles from "../Pages/signup.module.css";
 
-export default function Signup() {
+export default function AdminSignup() {
   const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
   const [callingCode, setCallingCode] = useState("63");
   const [countryDetails, setCountryDetails] = useState(null);
@@ -83,14 +83,10 @@ export default function Signup() {
         toCapitalize(userDetails.firstname),
         toCapitalize(userDetails.lastname),
         completePhoneNumber,
-        { role: "user" }
+        { role: "admin" }
       );
 
-      if (signUpSuccess) {
-        navigate("/dashboard");
-      } else {
-        setError(handleErrorMessages(signUpError.message));
-      }
+      if (signUpError) setError(handleErrorMessages(signUpError.message));
     } finally {
       setIsLoading(false);
     }
@@ -99,8 +95,8 @@ export default function Signup() {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
-        <div>Let's get started 🎉</div>
-        <p>Register to start trading and investing with BrazenBullFX💚</p>
+        <div>Create Admin Account</div>
+        <p>Create an admin account on BrazenBullFX💚</p>
       </div>
 
       <div className={styles.formContainer}>
@@ -217,7 +213,7 @@ export default function Signup() {
       </div>
       <div className={styles.resetDetails}>
         <div className={styles.error}>{error ? `${error}` : ""}</div>
-        <NavLink to="/login" className="link">
+        <NavLink to="/admin/login" className="link">
           <p className={styles.signupText}>Already have an account? Login.</p>
         </NavLink>
       </div>
