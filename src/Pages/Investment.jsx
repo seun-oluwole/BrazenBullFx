@@ -7,7 +7,7 @@ export default function Investment() {
       <h1 className={styles.title}>Investment Plans</h1>
       <div className={styles.container}>
         <div className={styles.investmentCard}>
-          <div className={styles.tierTitle}>Tier 1</div>
+          <div className={styles.tierTitle}>Tier 1 🚀</div>
           <div className={styles.innerCard}>
             <div className={styles.investmentPlan}>
             <p>✅ Investment plan: 2000PHP - 10,000PHP</p>
@@ -37,7 +37,7 @@ export default function Investment() {
           </div>
         </div>
         <div className={styles.investmentCard}>
-          <div className={styles.tierTitle}>V.I.P</div>
+          <div className={styles.tierTitle}>V.I.P 👑</div>
           <div className={styles.innerCard}>
             <div className={styles.investmentPlan}>
             <p>✅ Investment plan: 500,000PHP and above</p>
