@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { supabase } from "../Utils/supabaseClient";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -105,7 +106,7 @@ export const AuthContextProvider = ({ children }) => {
       }
       return { success: true, error: authError}
     } catch (error) {
-      throw new Error(error)
+      if (error) toast.error("Error: Signup Failed.")
     }
   };
 
@@ -123,9 +124,11 @@ export const AuthContextProvider = ({ children }) => {
     const authRole = authData?.user?.user_metadata?.role
 
     if (authRole === "user") {
+      toast.success("Welcome!")
       return { success: true };
     } else {
       await signOut()
+      toast.error("Error: Unauthorized login.")
       return { success: false }
     } 
   }
@@ -143,8 +146,10 @@ export const AuthContextProvider = ({ children }) => {
     const authRole = authData?.user?.user_metadata?.role
 
     if (authRole === "admin") {
+      toast.success("Welcome Admin")
       return { success: true };
     } else {
+      toast.error("Error: Unathorized login.")
       await signOut()
       return { success: false }
     } 
@@ -156,9 +161,11 @@ export const AuthContextProvider = ({ children }) => {
     const { error } = await supabase.auth.signOut({ scope: "local" });
 
     if (error) {
+      toast.error("Error: Logout failed.")
       return { success: false, error };
     }
 
+    toast.success("Logout successful.")
     setUserData(null);
     return { success: true };
   };

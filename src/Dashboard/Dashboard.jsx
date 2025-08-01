@@ -7,10 +7,21 @@ import styles from "./dashboard.module.css";
 import LogoutModal from "../Components/LogoutModal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UserNavContent from "../MobileNavigation/UserNavContent";
+import DepositModal from "../Components/DepositModal";
+import WithdrawModal from "../Components/WithdrawModal";
+import TransactionModal from "../Components/TransactionModal";
 
 const queryClient = new QueryClient();
 
-export default function Dashboard({ isModalOpen, setIsModalOpen }) {
+export default function Dashboard({ 
+  isModalOpen, 
+  setIsModalOpen, 
+  isDepositModalOpen,
+  setIsDepositModalOpen,
+  isWithdrawModalOpen,
+  setIsWithdrawModalOpen,
+  isTransactionModal,
+  setIsTransactionModal }) {
   return (
     <div className={styles.mainContainer}>
       <Header />
@@ -20,6 +31,9 @@ export default function Dashboard({ isModalOpen, setIsModalOpen }) {
           <DashboardContainer>
             <Outlet />
             <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            <DepositModal isDepositModalOpen={isDepositModalOpen} setIsDepositModalOpen={setIsDepositModalOpen}/>
+            <WithdrawModal isWithdrawModalOpen={isWithdrawModalOpen} setIsWithdrawModalOpen={setIsWithdrawModalOpen}/>
+            <TransactionModal isTransactionModal={isTransactionModal} setIsTransactioModal={setIsTransactionModal}/>
           </DashboardContainer>
         </QueryClientProvider>
       </div>

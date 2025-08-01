@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import useLocalStorage from "../Utils/useLocalStorage";
 import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "./AuthContext";
+import toast from "react-hot-toast";
 
 const walletContext = createContext();
 const [getItem, setItem] = useLocalStorage();
@@ -10,6 +11,12 @@ export default function WalletContextProvider({ children }) {
   const [showBalance, setShowBalance] = useState(true);
   const [isWalletLoading, setIsWalletLoading] = useState(false);
   const [fetchWalletError, setFetchWalletError] = useState(null);
+  const [allTransactions, setAllTransactions] = useState([]);
+  const [fetchingAllTransactions, setFetchingAllTransactions] = useState(false)
+  const [fetchingTransaction, setFetchingTransaction] = useState(false);
+  const [fetchingTransError, setFetchingTransError] = useState(null)
+  const [transactionDetail, setTransactionDetail] = useState({})
+
   const [walletData, setWalletData] = useState({
     tier: "",
     availableBalance: 0,
@@ -20,9 +27,9 @@ export default function WalletContextProvider({ children }) {
     cryptocurrency: "",
   });
 
-  const { userData, session } = userAuth();
-  const { sub: userId } = userData || {};
-  const userMetaData = session?.user?.user_metadata
+  const { session } = userAuth();
+  const userMetaData = session?.user?.user_metadata;
+  const userId = session?.user?.id;
 
   // Checks for a saved preference...
   useEffect(() => {
@@ -38,7 +45,10 @@ export default function WalletContextProvider({ children }) {
   }, [showBalance]);
 
   useEffect(() => {
-    if (userMetaData?.role === "user") fetchUserWallet();
+    if (userMetaData?.role === "user"){
+      fetchUserWallet(userId);
+      fetchAllTransactions(userId)
+    }
 
     // Reset wallet state when a user logs out...
     if (!session) {
@@ -57,7 +67,7 @@ export default function WalletContextProvider({ children }) {
     setShowBalance((prev) => !prev);
   };
 
-  async function fetchUserWallet() {
+  async function fetchUserWallet(userId) {
     if (!userId) return; // Prevents function from executing if there is no userId...
 
     setIsWalletLoading(true);
@@ -69,8 +79,7 @@ export default function WalletContextProvider({ children }) {
         .single();
 
       if (walletError) {
-        setFetchWalletError(walletError.message);
-        return;
+        throw new Error(walletError)
       }
 
       if (walletData) {
@@ -85,11 +94,56 @@ export default function WalletContextProvider({ children }) {
           cryptocurrency: walletData?.cryptocurrency,
         }));
       }
-    } finally {
+    }catch (error) {
+      if (error) {
+        setFetchWalletError(error)
+      }
+    }finally {
       setIsWalletLoading(false);
     }
   }
 
+  const fetchAllTransactions = async (userId) => {
+    if (!userId) return
+    setFetchingAllTransactions(true)
+    try {
+    const { data: transactionData, error: transactionError } = await supabase
+      .from("transactions")
+      .select("*")
+      .eq("user_id", userId)
+      .order("id", { ascending: false });
+
+      if (transactionError) {
+        throw(transactionError)
+      }
+      
+      setAllTransactions(transactionData);
+    }
+    catch (error) {
+     if (error) setFetchingTransError(error)
+    } finally {
+      setFetchingAllTransactions(false)
+    }
+  };
+
+  const fetchTransaction = async (id) => {
+    if (!id) return
+    setFetchingTransaction(true)
+    try {
+      const { data: transactionData, error: transactionError } = await supabase
+      .from("transactions")
+      .select()
+      .eq("id", id)
+
+      if (transactionError) throw new Error(transactionError)
+
+      setTransactionDetail(transactionData[0]);
+    } catch(error) {
+      if (error) setFetchingTransError(error)
+    } finally {
+      setFetchingTransaction(false)
+    }
+  }
 
   return (
     <walletContext.Provider
@@ -100,6 +154,13 @@ export default function WalletContextProvider({ children }) {
         isWalletLoading,
         fetchWalletError,
         fetchUserWallet,
+        allTransactions,
+        fetchAllTransactions,
+        fetchingAllTransactions,
+        fetchingTransError,
+        fetchTransaction,
+        fetchingTransaction,
+        transactionDetail
       }}
     >
       {children}

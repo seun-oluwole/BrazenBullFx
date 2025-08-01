@@ -25,13 +25,17 @@ export default function Investors() {
           <span>TIER</span>
         </div>
         <div className={styles.investorContainer}>
-          {isFetchingInvestors ? (
-            <div className={styles.spiralContainer}>
-              <SpiralSpinner width={30} height={30} />
-            </div>
-          ) : (
-            <>{fetchingInvestorsError ? <div className={styles.error}>{fetchingInvestorsError ? "Something went wrong! Try again." : ""}</div> : <InvestorList filterQuery={filterQuery}/>}</>
-          )}
+          {!fetchingInvestorsError ? 
+            <>
+            {isFetchingInvestors ? (
+              <div className={styles.spiralContainer}>
+                <SpiralSpinner width={30} height={30} />
+              </div>
+            ) : (
+              <InvestorList filterQuery={filterQuery}/>
+            )}
+            </>
+         : <div className={styles.error}>{fetchingInvestorsError ? "Something went wrong! Try again." : ""}</div> }
         </div>
       </div>
     </ViewContainer>

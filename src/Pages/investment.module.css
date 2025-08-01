@@ -13,6 +13,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px;
+  padding-bottom: 100px;
 }
 
 .investmentCard {
@@ -20,8 +21,6 @@
   flex-direction: column;
   justify-content: flex-end;
   border-radius: 12px;
-  /* height: 300px; */
-  /* width: 78%; */
   width: 310px;
   min-width: 310px;
   background-color: var(--green-400);
@@ -72,4 +71,10 @@
 
 .button:hover {
   opacity: 0.9;
+}
+
+@media(min-width: 1024px) {
+  .container {
+    padding-bottom: 0;
+  }
 }

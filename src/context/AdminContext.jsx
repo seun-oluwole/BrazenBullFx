@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../Utils/supabaseClient";
+import { userAuth } from "./AuthContext";
 
 const AdminContext = createContext();
 
@@ -16,12 +17,21 @@ export default function AdminContextProvider({ children }) {
     currency: "USD",
   });
 
-  useEffect(() => {
-    fetchAllWallets();
-    fetchInvestors();
-  }, []);
+  const { session } = userAuth();
+  const userRole = session?.user?.user_metadata?.role;
+  const user = session?.user?.id
 
-  const fetchAllWallets = async () => {
+  
+  
+  useEffect(() => {
+    if (userRole === "admin") {
+      fetchAllWallets(user);
+      fetchInvestors(user);
+    }
+  }, [session]);
+
+  const fetchAllWallets = async (user) => {
+    if (!user) return
     setIsFetchingAllWallet(true);
     try {
       const { data: walletDetails, error: fetchError } = await supabase.from("wallet").select("*");
@@ -42,7 +52,8 @@ export default function AdminContextProvider({ children }) {
     }
   };
 
-  const fetchInvestors = async () => {
+  const fetchInvestors = async (user) => {
+    if (!user) return
     setIsFetchingInvestors(true);
     try {
       const { data: investorDetails, error: fetchError } = await supabase.from("wallet").select("*");

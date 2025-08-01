@@ -21,19 +21,39 @@ import PageNotFound from "../Pages/PageNotFound";
 import "../global.css";
 
 
+
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false)
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isTransactionModal, setIsTransactionModal] = useState(false)
+  
 
   return (
         <BrowserRouter>
             <Routes>
               {/* <Route path="/" element={<LandingPage />}/> */}
               <Route path="*" element={<PageNotFound />} />
-              <Route path="/dashboard" element={<PrivateRoute><Dashboard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/></PrivateRoute>}>
+              <Route path="/dashboard" element={
+                <PrivateRoute>
+                  <Dashboard 
+                  isModalOpen={isModalOpen} 
+                  setIsModalOpen={setIsModalOpen} 
+                  isDepositModalOpen={isDepositModalOpen}
+                  setIsDepositModalOpen={setIsDepositModalOpen}
+                  isWithdrawModalOpen={isWithdrawModalOpen}
+                  setIsWithdrawModalOpen={setIsWithdrawModalOpen}
+                  isTransactionModal={isTransactionModal}
+                  setIsTransactionModal={setIsTransactionModal}/>
+                </PrivateRoute>}>
                 <Route index element={<Wallet />} />
                 <Route path="wallet" element={<Wallet />} />
-                <Route path="transactions" element={<Transactions />} />
+                <Route path="transactions" element={
+                  <Transactions 
+                  setIsDepositModalOpen={setIsDepositModalOpen} 
+                  setIsWithdrawModalOpen={setIsWithdrawModalOpen}
+                  setIsTransactionModal={setIsTransactionModal}/>} />
                 <Route path="investment" element={<Investment />} />
                 <Route path="settings" element={<Settings setIsModalOpen={setIsModalOpen}/>} />
               </Route>
@@ -43,7 +63,7 @@ export default function App() {
                 <Route path="dashboard" element={<AdminDashboard />}/>
                 <Route path="investors">
                   <Route index element={<Investors />}/>
-                  <Route path="profile/:userId" element={<InvestorProfile />}/>
+                  <Route path=":userId" element={<InvestorProfile />}/>
                 </Route>
                 <Route path="settings" element={<AdminSettings setIsModalOpen={setIsAdminModalOpen}/>} />
               </Route>

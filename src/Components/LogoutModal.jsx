@@ -65,9 +65,8 @@ export default function LogoutModal({ isModalOpen, setIsModalOpen, isAdmin=false
       handleAdminLogout()
     }
   }
-
   return (
-    <CustomModal isOpen={isModalOpen} onClose={closeModal}>
+    <CustomModal isOpen={isModalOpen} onClose={closeModal} width={450} height={225}>
       <div className={styles.container}>
         <h2 className={styles.title}>Confirm Logout</h2>
         <p className={styles.subtitle}>Are you sure you want to logout?</p>

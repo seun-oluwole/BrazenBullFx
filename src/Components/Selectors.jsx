@@ -1,5 +1,5 @@
 import CurrencyList from "currency-list";
-import styles from "../AdminDashboard/investorprofile.module.css";
+import styles from "../Components/selectors.module.css";
 
 export function SelectCurrency({ value, handleInput }) {
   const currencyValues = Object.values(CurrencyList.getAll("en_US"));
@@ -30,7 +30,27 @@ export function SelectCryptoCurrency({ value, handleInput }) {
     <select value={value} name="cryptocurrency" className={styles.input} onChange={handleInput}>
       <option value="">Select CryptoCurrency</option>
       <option value="BTC">BTC</option>
-      <option value="USDT">USDT</option>
+      <option value="USDT">USDT (ERC 20)</option>
+    </select>
+  );
+}
+
+export function SelectDepositMethod({ value, handleInput }) {
+  return (
+    <select defaultValue={value} onChange={handleInput} className={styles.input}>
+      <option value="Gcash">Gcash</option>
+      <option value="Bank">Bank Account</option>
+      <option value="Crypto">Crypto (USDT ERC20)</option>
+    </select>
+  );
+}
+
+export function SelectWithdrawalMethod({ value, handleInput }) {
+  return (
+    <select value={value || "Gcash"} onChange={handleInput} className={styles.input}>
+      <option value="Gcash">Withdraw to Gcash</option>
+      <option value="Bank">Withdraw to Bank Account</option>
+      <option value="Crypto">Withdraw via Crypto</option>
     </select>
   );
 }

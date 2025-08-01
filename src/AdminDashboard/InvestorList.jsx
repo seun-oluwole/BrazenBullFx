@@ -8,7 +8,7 @@ export default function InvestorList({ filterQuery }) {
   const navigate = useNavigate();
 
   const handleNavigate = (id) => {
-    navigate(`profile/${id}`);
+    navigate(`${id}`);
   };
 
   const filteredInvestors = filterQuery.trim() === "" ? 

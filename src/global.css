@@ -29,6 +29,9 @@ body {
   background-color: #f2f2f2;
   max-width: 1300px;
   margin: 0 auto;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 body::-webkit-scrollbar {

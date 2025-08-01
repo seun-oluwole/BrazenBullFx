@@ -17,7 +17,7 @@ export default function RecentInvestorsList() {
             <div
               className={styles.recentInvestorList}
               key={index}
-              onClick={() => navigate(`/admin/investors/profile/${user_id}`, { replace: true })}
+              onClick={() => navigate(`/admin/investors/${user_id}`, { replace: true })}
             >
               <span>{`${first_name} ${last_name}`}</span>
               <div className={styles.momentContainer}>

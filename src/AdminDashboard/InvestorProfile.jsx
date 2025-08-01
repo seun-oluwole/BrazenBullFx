@@ -6,6 +6,8 @@ import SpiralSpinner from "../Components/SpiralSpinner";
 import ViewContainer from "../Components/ViewContainer";
 import styles from "./investorprofile.module.css";
 import { userAuth } from "../context/AuthContext";
+import { NumericFormat } from "react-number-format";
+import { HiChevronRight } from "react-icons/hi2";
 
 export default function InvestorProfile() {
   const { userId } = useParams();
@@ -80,13 +82,22 @@ export default function InvestorProfile() {
     }
   };
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
+  const handleInput = (values, sourceInfo) => {
+    //gets the name attribute from the sourceInfo
+    const name = sourceInfo.event.target.name
+    setInputData((data) => ({
+      ...data,
+      [name]: values.floatValue,
+    }));
+  };
+
+  const handleSelectInput = (e) => {
+    const { name, value } = e.target
     setInputData((data) => ({
       ...data,
       [name]: value,
     }));
-  };
+  }
 
   const updateTier = async (walletColumn) => {
     dispatch({ type: `${walletColumn}`, payload: true });
@@ -248,7 +259,7 @@ export default function InvestorProfile() {
                 <div>
                   <div className={styles.subTitle}>Tier</div>
                   <div className={styles.inputContainer}>
-                    <SelectTier handleInput={handleInput} value={inputData.tier} />
+                    <SelectTier handleInput={handleSelectInput} value={inputData.tier} />
                     <button className={styles.button} onClick={() => updateTier("tier")}>
                       {isLoading.tier ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>
@@ -257,7 +268,7 @@ export default function InvestorProfile() {
                 <div>
                   <div className={styles.subTitle}>Currency: {investorData?.currency}</div>
                   <div className={styles.inputContainer}>
-                    <SelectCurrency handleInput={handleInput} value={inputData.currency} />
+                    <SelectCurrency handleInput={handleSelectInput} value={inputData.currency} />
                     <button className={styles.button} onClick={() => updateCurrency("currency")}>
                       {isLoading.currency ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>
@@ -266,23 +277,25 @@ export default function InvestorProfile() {
                 <div>
                   <div className={styles.subTitle}>CryptoCurrency: {investorData?.cryptocurrency}</div>
                   <div className={styles.inputContainer}>
-                    <SelectCryptoCurrency handleInput={handleInput} value={inputData.cryptocurrency} />
+                    <SelectCryptoCurrency handleInput={handleSelectInput} value={inputData.cryptocurrency} />
                     <button className={styles.button} onClick={() => updateCryptoCurrency("cryptocurrency")}>
                       {isLoading.crypto ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>
                   </div>
                 </div>
+              
                 <div>
                   <div className={styles.subTitle}>
                     Available Balance: {`${investorData?.available_balance?.toLocaleString()} ${investorData.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
-                    <input
+                
+                    <NumericFormat
                       className={styles.input}
-                      type="text"
                       name="availableBalance"
-                      value={inputData.availableBalance}
-                      onChange={handleInput}
+                      onValueChange={handleInput}
+                      decimalScale={2}
+                      thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateAvailableBal("available_balance")}>
                       {isLoading.availableBal ? <SpiralSpinner width={15} height={15} /> : "Update"}
@@ -294,12 +307,13 @@ export default function InvestorProfile() {
                     Total Deposit: {`${investorData?.total_deposit?.toLocaleString()} ${investorData?.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
-                    <input
+  
+                     <NumericFormat
                       className={styles.input}
-                      type="text"
                       name="totalDeposit"
-                      value={inputData.totalDeposit}
-                      onChange={handleInput}
+                      onValueChange={handleInput}
+                      decimalScale={2}
+                      thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateTotalDeposit("total_deposit")}>
                       {isLoading.totalDeposit ? <SpiralSpinner width={15} height={15} /> : "Update"}
@@ -311,13 +325,12 @@ export default function InvestorProfile() {
                     Total Withdrawn: {`${investorData?.total_withdrawn?.toLocaleString()} ${investorData?.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
-                    <input
+                    <NumericFormat
                       className={styles.input}
-                      type="text"
                       name="totalWithdrawn"
-                      value={inputData.totalWithdrawn}
-                      placeholder={investorData?.total_withdrawn}
-                      onChange={handleInput}
+                      onValueChange={handleInput}
+                      decimalScale={2}
+                      thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateTotalWithdrawn("total_withdrawn")}>
                       {isLoading.totalWithdrawn ? <SpiralSpinner width={15} height={15} /> : "Update"}
@@ -330,13 +343,12 @@ export default function InvestorProfile() {
                     {`${investorData?.withdrawable_balance?.toLocaleString()} ${investorData?.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
-                    <input
+                   <NumericFormat
                       className={styles.input}
-                      type="text"
                       name="withdrawableBalance"
-                      value={inputData.withdrawableBalance}
-                      placeholder={investorData?.withdrawable_balance}
-                      onChange={handleInput}
+                      onValueChange={handleInput}
+                      decimalScale={2}
+                      thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateWithdrawableBal("withdrawable_balance")}>
                       {isLoading.withdrawableBal ? <SpiralSpinner width={15} height={15} /> : "Update"}

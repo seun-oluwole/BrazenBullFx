@@ -60,3 +60,8 @@
 .spinner {
   padding: 5px;
 }
+
+.error {
+  font-size: 1rem;
+  font-weight: 400;
+}
