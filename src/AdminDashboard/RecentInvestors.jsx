@@ -10,13 +10,7 @@ export default function RecentInvestors() {
     <div className={styles.container}>
       <h3 className={styles.title}>Recent Investors</h3>
       <div className={styles.listContainer}>
-        {isFetchingInvestors ? (
-          <div className={styles.spiralContainer}>
-            <SpiralSpinner width={30} height={30} />{" "}
-          </div>
-        ) : (
-          <RecentInvestorsList />
-        )}
+        <RecentInvestorsList />
       </div>
     </div>
   );

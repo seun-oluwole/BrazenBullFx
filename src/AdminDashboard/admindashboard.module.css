@@ -51,6 +51,17 @@
   gap: 3px;
 }
 
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  font-size: 0.9rem;
+  min-width: 300px;
+  min-height: 113.5px;
+  padding: 25px 15px;
+}
+
 @media (min-width: 1024px) {
   .cardContainer {
     flex-direction: row;

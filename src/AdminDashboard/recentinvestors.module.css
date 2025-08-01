@@ -22,7 +22,7 @@
   border: none;
 }
 
-.spiralContainer, .empty {
+.spiralContainer, .empty, .error {
   display: flex;
   align-items: center;
   justify-content: center;

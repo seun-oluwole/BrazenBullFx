@@ -1,13 +1,16 @@
 import moment from "moment";
 import { useAdmin } from "../context/AdminContext";
-import styles from "./recentinvestors.module.css";
 import { useNavigate } from "react-router";
 import { HiChevronRight } from "react-icons/hi2";
+import styles from "./recentinvestors.module.css";
+import SpiralSpinner from "../Components/SpiralSpinner";
 
 export default function RecentInvestorsList() {
-  const { investors } = useAdmin();
+  const { investors, isFetchingInvestors, fetchingInvestorsError } = useAdmin();
   const navigate = useNavigate();
 
+  if (isFetchingInvestors) return  <div className={styles.spiralContainer}><SpiralSpinner width={30} height={30} /></div>
+  if (investors.length <= 0 && fetchingInvestorsError) return <div className={styles.error}>Check your connection and try again.</div>
   return (
     <>
       {investors.length > 0 ? (

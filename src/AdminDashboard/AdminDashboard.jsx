@@ -15,35 +15,44 @@ export default function AdminDashboard() {
         <h2 className={styles.title}>Dashboard</h2>
         <div className={styles.cardContainer}>
           <Card>
+            {!fetchAllWalletError ? 
             <div className={styles.cardContent}>
               <div className={styles.cardTitle}>Total Investors</div>
               <div className={styles.count}>
                 {isFetchingAllWallet ? <SpiralSpinner width={25} height={25} /> : totalInvestors}
               </div>
             </div>
+            : <div className={styles.error}>Check your connection and try again</div>
+            }
           </Card>
           <Card>
-            <div className={styles.cardContent}>
-              <div className={styles.cardTitle}>Total Wallets</div>
-              <div className={styles.count}>
-                {isFetchingAllWallet ? <SpiralSpinner width={25} height={25} /> : totalWallets}
+            {!fetchAllWalletError ? 
+              <div className={styles.cardContent}>
+                <div className={styles.cardTitle}>Total Wallets</div>
+                <div className={styles.count}>
+                  {isFetchingAllWallet ? <SpiralSpinner width={25} height={25} /> : totalWallets}
+                </div>
               </div>
-            </div>
+            : <div className={styles.error}>Check your connection and try again</div>
+            }
           </Card>
           <Card>
-            <div className={styles.cardContent}>
-              <div className={styles.cardTitle}>Wallets Balance</div>
-              <div className={styles.count}>
-                {isFetchingAllWallet ? (
-                  <SpiralSpinner width={25} height={25} />
-                ) : (
-                  <div className={styles.walletBalance}>
-                    <div>{walletsBalance.toLocaleString()}</div>
-                    <span>{currency}</span>
-                  </div>
-                )}
+            {!fetchAllWalletError ? 
+              <div className={styles.cardContent}>
+                <div className={styles.cardTitle}>Wallets Balance</div>
+                <div className={styles.count}>
+                  {isFetchingAllWallet ? (
+                    <SpiralSpinner width={25} height={25} />
+                  ) : (
+                    <div className={styles.walletBalance}>
+                      <div>{walletsBalance.toLocaleString()}</div>
+                      <span>{currency}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            : <div className={styles.error}>Check your connection and try again</div>
+            }
           </Card>
         </div>
 

@@ -2,9 +2,10 @@ import { useNavigate, useSearchParams } from "react-router";
 import { useAdmin } from "../context/AdminContext";
 import styles from "./investorlist.module.css";
 import moment from "moment";
+import SpiralSpinner from "../Components/SpiralSpinner";
 
 export default function InvestorList({ filterQuery }) {
-  const { investors } = useAdmin();
+  const { investors, isFetchingInvestors, fetchingInvestorsError } = useAdmin();
   const navigate = useNavigate();
 
   const handleNavigate = (id) => {
@@ -14,6 +15,8 @@ export default function InvestorList({ filterQuery }) {
   const filteredInvestors = filterQuery.trim() === "" ? 
   investors : investors.filter(({ tier }) => tier === filterQuery)
 
+  if (isFetchingInvestors) return  <div className={styles.spiralContainer}><SpiralSpinner  width={30} height={30} /></div>
+  if (investors.length <= 0 && fetchingInvestorsError) return <div className={styles.error}>Check your connection and try again.</div>
   return (
     <>
       {investors.length > 0 ? (
