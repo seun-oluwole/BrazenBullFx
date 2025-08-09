@@ -25,12 +25,23 @@ export function SelectTier({ value, handleInput }) {
   );
 }
 
+export function SelectFilterTier({ handleSelect, value }) {
+  return (
+    <select value={value} className={styles.input} onChange={handleSelect}>
+      <option value="">Filter By Tier</option>
+      <option value="1">TIER 1</option>
+      <option value="2">TIER 2</option>
+      <option value="V.I.P">V.I.P</option>
+    </select>
+  );
+}
+
 export function SelectCryptoCurrency({ value, handleInput }) {
   return (
     <select value={value} name="cryptocurrency" className={styles.input} onChange={handleInput}>
       <option value="">Select CryptoCurrency</option>
       <option value="BTC">BTC</option>
-      <option value="USDT">USDT (ERC 20)</option>
+      <option value="USDT">USDT (ERC-20)</option>
     </select>
   );
 }
@@ -40,7 +51,7 @@ export function SelectDepositMethod({ value, handleInput }) {
     <select defaultValue={value} onChange={handleInput} className={styles.input}>
       <option value="Gcash">Gcash</option>
       <option value="Bank">Bank Account</option>
-      <option value="Crypto">Crypto (USDT ERC20)</option>
+      <option value="Crypto">Crypto (USDT ERC-20)</option>
     </select>
   );
 }
@@ -53,4 +64,15 @@ export function SelectWithdrawalMethod({ value, handleInput }) {
       <option value="Crypto">Withdraw via Crypto</option>
     </select>
   );
+}
+
+export function SelectTransactionStatus({ value, handleInput }) {
+  return (
+    <select value={value} onChange={handleInput} className={styles.input}>
+      <option value="">Transaction Status</option>
+      <option value="successful">Successful</option>
+      <option value="pending">Pending</option>
+      <option value="failed">Failed</option>
+    </select>
+  )
 }

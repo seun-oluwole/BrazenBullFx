@@ -1,86 +1,83 @@
 import CustomModal from "./CustomModal";
+import LoadingSpinner from "./LoadingSpinner";
+import LoadingSvg from "./LoadingSvg";
 import { HiOutlineClipboardDocument } from "react-icons/hi2";
 import { SelectDepositMethod } from "./Selectors";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "../context/AuthContext";
-import LoadingSvg from "./LoadingSvg";
-import styles from "../Components/depositmodal.module.css";
-import LoadingSpinner from "./LoadingSpinner";
 import { useWallet } from "../context/WalletContextProvider";
 import { NumericFormat } from "react-number-format";
+import { useModal } from "../context/modalContext";
 import toast from "react-hot-toast";
+import styles from "../Components/depositmodal.module.css";
 
-export default function DepositModal({ isDepositModalOpen, setIsDepositModalOpen }) {
-  const [steps, setSteps] = useState(1);
-  const [reachedStepTwo, setReachedStepTwo] = useState(false)
+export default function DepositModal() {
   const [amount, setAmount] = useState(0);
-  const [formattedAmount, setFormattedAmount] = useState("")
-  const [depositMethod, setDepositMethod] = useState("Gcash")
+  const [depositMethod, setDepositMethod] = useState("Gcash");
   const [isLoading, setIsLoading] = useState(false);
-  const [fetchingTransaction, setFetchingTransaction] = useState(false);
-  const [generatingDetails, setGeneratingDetails] = useState(false);
-  const [lastTransaction, setLastTransaction] = useState({});
+  const [fetchingLastTransaction, setFetchingLastTransaction] = useState(false);
   const [transactionError, setTransactionError] = useState(null);
-  const [deletingTransaction, setDeletingTransaction] = useState(false)
+  const [deletingTransaction, setDeletingTransaction] = useState(false);
+  const [submittingDeposit, setSubmittingDeposit] = useState(false);
+  
+  const { session } = userAuth();
+  const { isDepositModalOpen, setIsDepositModalOpen } = useModal()
+  const { transactionDetail, setTransactionDetail, fetchAllTransactions, fetchingTransaction, steps, setSteps, reachedStepTwo, setReachedStepTwo, handleNextStep } = useWallet();
+  const userId = session?.user?.id;
+  const transactionId = transactionDetail?.id;
+  const isCrypto = transactionDetail?.transaction_method === "Crypto"
+  const isGcash = transactionDetail?.transaction_method === "Gcash"
+  const isBank = transactionDetail?.transaction_method === "Bank"
+  const isPending = transactionDetail?.transaction_status === "pending"
  
 
-  const { session } = userAuth();
-  const { fetchAllTransactions } = useWallet();
-  const userId = session?.user?.id;
-  const transactionId = lastTransaction?.id
-  console.log(transactionId);
-  console.log(lastTransaction)
+  const closeModal = () => {
+    setIsDepositModalOpen(false);
+    resetDepositFlow()
+  }
 
-  useEffect(() => {
+  async function cancelDeposit() {
     if (reachedStepTwo) {
-      fetchLastTransaction();
-    }
-  }, [steps]);
-
-  const modalHeight = (step) => {
-    if (step === 1) {
-      return 335;
-    } else if (step === 2) {
-      return 545;
-    }
-  };
-
-  const handleNextStep = () => {
-    if (steps === 1) {
-      setSteps((prev) => prev + 1)
-      setReachedStepTwo(true)
+      await deleteTransaction(transactionId);
+      closeModal()
+      fetchAllTransactions(userId);
     }
   }
 
-  async function closeModal() {
-    await deleteTransaction(transactionId)
-    setIsDepositModalOpen(false);
-    setSteps(1);
-    setLastTransaction({});
-    setAmount(0);
-    setFormattedAmount("");
-    setDepositMethod("Gcash");
-    setReachedStepTwo(false)
+  const handleDeposit = async (id) => {
+    if (!id) return
+    setSubmittingDeposit(true)
+    try {
+      const { error: updateError } = await supabase
+      .from("transactions")
+      .update({confirming_deposit: true})
+      .eq("id", id)
 
-    if (reachedStepTwo) {
-      fetchAllTransactions(userId)
+      if (updateError) throw new Error(updateError)
+
+    } catch (error) {
+      toast.error("Error: Failed to submit deposit")
+    } finally {
+      setSubmittingDeposit(false)
     }
+  }
+
+  const resetDepositFlow = () => {
+    setSteps(1);
+    setTransactionDetail({});
+    setAmount(0);
+    setDepositMethod("Gcash");
+    setReachedStepTwo(false); 
   }
 
   const handleAmountInput = (values) => {
     setAmount(values.floatValue);
-    setFormattedAmount(values.formattedValue)
-    console.log(values)
   };
 
   const selectDepositMethod = (e) => {
-    setDepositMethod(e.target.value)
+    setDepositMethod(e.target.value);
   };
-
-  console.log(amount);
-  console.log(depositMethod);
-  // console.log(transactionData)
 
   async function initializeDeposit() {
     setIsLoading(true);
@@ -94,19 +91,19 @@ export default function DepositModal({ isDepositModalOpen, setIsDepositModalOpen
       });
 
       if (error) {
-       toast.error(error.message)
-       return;
+        toast.error("Error: Failed to initialize deposit.");
+        return;
       }
     } finally {
       setIsLoading(false);
-      handleNextStep()
+      handleNextStep();
+      await fetchLastTransaction()
     }
   }
 
   async function fetchLastTransaction() {
-    setFetchingTransaction(true);
+    setFetchingLastTransaction(true);
     try {
-      console.log(userId);
       const { data: transactionData, error: transactionError } = await supabase
         .from("transactions")
         .select("*")
@@ -115,43 +112,40 @@ export default function DepositModal({ isDepositModalOpen, setIsDepositModalOpen
         .limit(1);
 
       if (transactionError) {
-        toast.error(transactionError.message)
-        setTransactionError(transactionError.message);
+        toast.error("Sorry, something went wrong.");
+        setTransactionError(transactionError);
         return;
       }
 
-      setLastTransaction(transactionData[0]);
+      setTransactionDetail(transactionData[0]);
     } finally {
-      setFetchingTransaction(false);
+      setFetchingLastTransaction(false);
     }
   }
 
   async function deleteTransaction(id) {
-    if (!id) return
-     setDeletingTransaction(true)
+    if (!id) return;
+    setDeletingTransaction(true);
     try {
       const { error: deleteError } = await supabase
       .from("transactions")
       .delete()
-      .eq("id", id)
+      .eq("id", id);
 
       if (deleteError) {
-        toast.error("Something went wrong! Try again.")
-        return
+        toast.error("Error: Failed to cancel deposit");
+        return;
       }
-
+      toast.success("Deposit has been cancelled");
     } finally {
-      toast.success("Deposit has been cancelled")
-      setDeletingTransaction(false)
+      setDeletingTransaction(false);
     }
-
   }
-
   return (
-    <CustomModal isOpen={isDepositModalOpen} onClose={closeModal} width={450} height={modalHeight(steps)}>
+    <CustomModal isOpen={isDepositModalOpen} onClose={closeModal}>
       <div className={styles.container}>
         <h2 className={styles.title}>Deposit</h2>
-        {steps === 1 ? (
+        {steps === 1 && (
           <div className={styles.stepOne}>
             <SelectDepositMethod value={depositMethod} handleInput={selectDepositMethod} />
             <div className={styles.depositDetailsContainer}>
@@ -164,67 +158,108 @@ export default function DepositModal({ isDepositModalOpen, setIsDepositModalOpen
                 thousandSeparator
               />
               <button className={styles.button} onClick={initializeDeposit} disabled={!amount}>
-                {isLoading ? <LoadingSvg width={25} height={25} color="#000"/> : "Proceed"}
+                {isLoading ? <LoadingSvg width={25} height={25} color="#000" /> : "Proceed"}
               </button>
             </div>
           </div>
-        ) : (
-          ""
         )}
 
-        {steps === 2 ? (
+        {steps === 2 && (
           <>
-            {!fetchingTransaction ? (
-              <>
-              <div className={styles.depositInstruction}>
-                <h3 className={styles.subtitle}>Deposit via {depositMethod}</h3>
-                <p>✅ Please make your payment into the details provided for you below.</p>
-                <p>✅ Please confirm details is correct before making your deposit.</p>
+            {fetchingTransaction || fetchingLastTransaction 
+            ? (
+              <div className={styles.spinnerContainer}>
+                <LoadingSpinner width={55} height={55} />
               </div>
-
-              <span className={styles.depositAmount}>
-                Deposit Amount: {formattedAmount}
-              </span>
-              {!generatingDetails ? (
+            ) : (
                 <>
-                  <div className={styles.depositDetailsContainer}>
-                    <div className={styles.depositDetails}>USDT (ERC 20)</div>
-                    <div className={styles.depositDetails}>
-                      <div>3ugaouy83uyaou938ayvs8ys</div>
-                      <span>
-                        <HiOutlineClipboardDocument className={styles.icon} />
-                      </span>
+                <div className={styles.depositInstruction}>
+                  <h3 className={styles.subtitle}>Deposit via {transactionDetail?.transaction_method}</h3>
+                  <p>✅ Please make your payment into the details provided for you below.</p>
+                  <p>✅ Please confirm details is correct before making your deposit.</p>
+                </div>
+
+                <span className={styles.depositAmount}>Deposit Amount: {transactionDetail?.transaction_amount?.toLocaleString()}</span>
+                {!transactionDetail?.generating_details ? (
+                  <>
+                    {isCrypto && (
+                    <div className={styles.depositDetailsContainer}>
+                      <div className={styles.depositDetails}>USDT (ERC-20)</div>
+                      <div className={styles.depositDetails}>
+                        <div>{transactionDetail?.deposit_crypto_address}</div>
+                        <span>
+                          <HiOutlineClipboardDocument className={styles.icon} />
+                        </span>
+                      </div>
+                    </div>
+
+                    )}
+
+                    {isGcash || isBank 
+                    ? (
+                    <div className={styles.depositDetailsContainer}>
+                      <div className={styles.depositDetails}>
+                        <div>{transactionDetail?.deposit_account_name}</div> 
+                        <span>
+                          <HiOutlineClipboardDocument className={styles.icon} />
+                        </span>
+                      </div>
+                      <div className={styles.depositDetails}>
+                        <div>{transactionDetail?.deposit_account_number}</div>
+                        <span>
+                          <HiOutlineClipboardDocument className={styles.icon} />
+                        </span>
+                      </div>
+                      {isBank ? (
+                      <div className={styles.depositDetails}>
+                        <div>{transactionDetail?.deposit_bank_name}</div>
+                        <span>
+                          <HiOutlineClipboardDocument className={styles.icon} />
+                        </span>
+                      </div>
+                      ): ""}
+                    </div>
+                    ) : null}
+
+                    <div className={styles.buttonContainer}>
+                      {transactionDetail?.confirming_deposit ? (
+                        <>
+                          <button className={styles.button} disabled={isPending}>
+                            Pending Confirmation
+                          </button>
+                          <button className={styles.cancel} onClick={closeModal}>
+                            Close
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button className={styles.button} onClick={() => handleDeposit(transactionId)}>
+                            {submittingDeposit 
+                            ? <LoadingSvg width={25} height={25} color="#000"/> 
+                            : "Confirm Deposit"}
+                          </button>
+                          <button className={styles.cancel} onClick={cancelDeposit}>
+                            {deletingTransaction ? "Cancelling..." : "Cancel Deposit"}
+                          </button>
+                        </>
+                      )}
+                      
+                    </div>
+                  </>
+                ) : (
+                  <div className={styles.generatingContainer}>
+                    <LoadingSpinner height={55} width={55} />
+                    <p>Generating details please wait.</p>
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.cancel} onClick={cancelDeposit}>
+                        {deletingTransaction ? "Cancelling..." : "Cancel Deposit"}
+                      </button>
                     </div>
                   </div>
-
-                  <div className={styles.buttonContainer}>
-                    <button className={styles.button} onClick={() => setIsDepositModalOpen(false)}>Deposit</button>
-                    <button className={styles.cancel} onClick={closeModal}>
-                     {deletingTransaction ? "Cancelling..." : "Cancel"}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className={styles.spinnerContainer}>
-                  <LoadingSpinner height={55} width={55} />
-                  <p>Generating details please wait.</p>
-                </div>
-              )}
-
-              {generatingDetails ? (
-                <div className={styles.buttonContainer}>
-                  <button className={styles.cancel} onClick={closeModal}>
-                    {deletingTransaction ? "Cancelling..." : "Cancel"}
-                  </button>
-                </div>
-              ) : (
-                ""
-              )}
+                )}
               </>
-            ) : (<div className={styles.spinner}><LoadingSpinner width={55} height={55}/></div>)}   
+            )}
           </>
-        ) : (
-          ""
         )}
       </div>
     </CustomModal>

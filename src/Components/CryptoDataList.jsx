@@ -37,7 +37,8 @@ export default function CryptoDataList() {
     <>
       {data.length > 0
         ? data.map(({ name, symbol, price, icon }, index) => (
-            <CryptoData key={index} name={name} symbol={symbol} price={price} icon={icon} index={index} />
+            <CryptoData key={index} name={name} symbol={symbol} 
+            price={price} icon={icon} index={index} />
           ))
         : "Oops So Empty!"}
     </>

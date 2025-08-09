@@ -70,10 +70,10 @@
   color: white;
 }
 
-.spinnerContainer {
+.spinnerContainer, .error {
+  height: 435px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 200px;
 }
 

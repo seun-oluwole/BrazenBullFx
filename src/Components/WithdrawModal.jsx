@@ -1,63 +1,38 @@
 import CustomModal from "./CustomModal";
+import LoadingSvg from "./LoadingSvg";
 import { useEffect, useState } from "react";
 import { SelectCryptoCurrency, SelectDepositMethod, SelectWithdrawalMethod } from "./Selectors";
-import styles from "../Components/depositmodal.module.css";
 import { NumericFormat } from "react-number-format";
 import { supabase } from "../Utils/supabaseClient";
-import toast from "react-hot-toast";
 import { userAuth } from "../context/AuthContext";
-import LoadingSvg from "./LoadingSvg";
 import { useWallet } from "../context/WalletContextProvider";
+import { useModal } from "../context/modalContext";
+import toast from "react-hot-toast";
+import styles from "../Components/depositmodal.module.css";
 
-export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalOpen }) {
+export default function WithdrawModal() {
   const [steps, setSteps] = useState(1);
   const [amount, setAmount] = useState(0);
   const [withdrawalMethod, setWithdrawalMethod] = useState("Gcash");
   const [selectedCrypto, setSelectedCrypto] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
-  const [isBankAccount, setIsBankAccount] = useState(false);
-  const [isCrypto, setIsCrypto] = useState(false);
-  const [isGcash, setIsGcash] = useState(false);
   const [checkingBalance, setCheckingBalance] = useState(false);
   const [initializingWithdrawal, setInitializingWithdrawal] = useState(false);
-  const [withdrawalDetails, setWithdrawalDetails] = useState({
-    accountName: "",
-    accountNumber: "",
-    bankName: "",
-    cryptoAddress: "",
-  });
-
-  const { fetchAllTransactions, fetchUserWallet } = useWallet();
+  const [bankDetails, setBankDetails] = useState({ accountName: "", accountNumber: "", bankName: "" });
+  const [gcashDetails, setGcashDetails] = useState({gcashName: "", gcashNumber: ""})
+  const [cryptoAddress, setCryptoAddress] = useState("")
+  const { isWithdrawModalOpen, setIsWithdrawModalOpen } = useModal()
+  const { fetchUserWallet } = useWallet();
   const { session } = userAuth();
   const userId = session?.user?.id;
 
-  // Updates state to display feilds based on selected value.
-  useEffect(() => {
-    if (withdrawalMethod === "Gcash") {
-      setIsGcash(true);
-      setIsBankAccount(false);
-      setIsCrypto(false);
-    } else if (withdrawalMethod === "Bank") {
-      setIsBankAccount(true);
-      setIsCrypto(false);
-      setIsGcash(false);
-    } else if (withdrawalMethod === "Crypto") {
-      setIsCrypto(true);
-      setIsGcash(false);
-      setIsBankAccount(false);
-    }
-  }, [withdrawalMethod, isWithdrawModalOpen]);
+  const gcash = withdrawalMethod === "Gcash" && !gcashDetails.gcashName || !gcashDetails.gcashNumber
+  const bank = withdrawalMethod === "Bank" && !bankDetails.accountName || !bankDetails.accountNumber || !bankDetails.bankName
+  const crypto = withdrawalMethod === "Crypto" && !selectedCrypto || !cryptoAddress
 
-  // Custom modal height adjustment according to steps
-  const modalHeight = (step) => {
-    if (step === 1) {
-      return 335;
-    } else if (step === 2 && !isBankAccount) {
-      return 555;
-    } else if (step === 2 && isBankAccount) {
-      return 615;
-    }
-  };
+  const isGcash = withdrawalMethod === "Gcash"
+  const isBank = withdrawalMethod === "Bank"
+  const isCrypto = withdrawalMethod === "Crypto"
 
   const selectWithdrawMethod = (e) => {
     setWithdrawalMethod(e.target.value);
@@ -76,20 +51,21 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
     if (!userId) return;
     setCheckingBalance(true);
     try {
-      const { data, error } = await supabase.from("wallet").select("withdrawable_balance").eq("user_id", userId);
+      const { data, error } = await supabase
+      .from("wallet")
+      .select("withdrawable_balance")
+      .eq("user_id", userId);
 
-      if (error) {
-        throw new Error(error);
-      }
+      if (error) throw new Error(error);
+
       // Checks balance and returns true or false if balance is empty or insufficient...
       if (data.length > 0) {
         const balance = data[0]?.withdrawable_balance;
-        console.log(balance);
         if (balance <= 0 || balance < amount) {
           toast.error("Insufficient balance")
           return false;
         } else {
-          // returns true if thhere is enough balance...
+          // returns true if there is enough balance...
           return true;
         }
       }
@@ -112,10 +88,19 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setWithdrawalDetails((details) => ({
-      ...details,
-      [name]: value,
-    }));
+    if (isBank) {
+      setBankDetails((details) => ({
+        ...details,
+        [name]: value,
+      }));
+
+    } else if (isGcash) {
+        setGcashDetails((details) => ({
+        ...details,
+        [name]: value,
+      }));
+
+    } else if (isCrypto) setCryptoAddress(value)
   };
 
   const handleBalanceSettlement = async (amount) => {
@@ -154,9 +139,8 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
     setInitializingWithdrawal(true);
     try {
       await handleBalanceSettlement(amount);
-      const { accountName, accountNumber, bankName, cryptoAddress } = withdrawalDetails;
-      if (accountName || accountNumber || bankName || cryptoAddress || amount || selectedCrypto) {
         if (isGcash) {
+          if (!gcashDetails.gcashName && !gcashDetails.gcashNumber)return
           const { error: transactionError } = await supabase
             .from("transactions")
             .insert({
@@ -165,15 +149,16 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
               transaction_amount: amount,
               transaction_status: "pending",
               transaction_method: withdrawalMethod,
-              withdrawal_account_number: accountNumber,
-              withdrawal_account_name: accountName,
+              withdrawal_account_number: gcashDetails.gcashName,
+              withdrawal_account_name: gcashDetails.gcashNumber,
             })
             .eq("user_id", userId);
 
           if (transactionError) {
             throw new Error(transactionError);
           }
-        } else if (isBankAccount) {
+        } else if (isBank) {
+          if (!bankDetails.accountName && !bankName.accountNumber && !bankDetails.bankName)return
           const { error: transactionError } = await supabase
             .from("transactions")
             .insert({
@@ -182,9 +167,9 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
               transaction_amount: amount,
               transaction_status: "pending",
               transaction_method: withdrawalMethod,
-              withdrawal_account_number: accountNumber,
-              withdrawal_account_name: accountName,
-              withdrawal_bank_name: bankName,
+              withdrawal_account_number: bankDetails.accountNumber,
+              withdrawal_account_name: bankDetails.accountName,
+              withdrawal_bank_name: bankDetails.bankName,
             })
             .eq("user_id", userId);
 
@@ -192,24 +177,24 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
             throw new Error(transactionError);
           }
         } else if (isCrypto) {
+          if (!selectCrypto && !cryptoAddress)return
           const { error: transactionError } = await supabase
-            .from("transactions")
-            .insert({
-              user_id: userId,
-              transaction_title: "Withdraw",
-              transaction_amount: amount,
-              transaction_status: "pending",
-              transaction_method: withdrawalMethod,
-              withdrawal_cryptocurrency: selectedCrypto,
-              withdrawal_crypto_address: cryptoAddress,
-            })
-            .eq("user_id", userId);
+          .from("transactions")
+          .insert({
+            user_id: userId,
+            transaction_title: "Withdraw",
+            transaction_amount: amount,
+            transaction_status: "pending",
+            transaction_method: withdrawalMethod,
+            withdrawal_cryptocurrency: selectedCrypto,
+            withdrawal_crypto_address: cryptoAddress,
+          })
+          .eq("user_id", userId);
 
           if (transactionError) {
             throw new Error(transactionError);
           }
         }
-      }
     } catch (error) {
       if (error) {
         toast.error("Failed to complete withdrawal");
@@ -224,33 +209,35 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
   const handleWithdraw = async () => {
     await initializeWithdrawal(userId);
     closeModal();
-    await fetchAllTransactions(userId);
     await fetchUserWallet(userId);
   };
 
   function closeModal() {
     setIsWithdrawModalOpen(false);
     setSteps(1);
-    setIsBankAccount(false);
-    setIsCrypto(false);
-    setIsGcash(false);
     setWithdrawalMethod("Gcash");
     setAmount(0);
     setFormattedAmount("");
-    setWithdrawalDetails((details) => ({
+    setBankDetails((details) => ({
       ...details,
       accountName: "",
       accountNumber: "",
       bankName: "",
-      cryptoAddress: "",
     }));
+    setGcashDetails((details) => ({
+      ...details,
+      gcashName: "",
+      gcashNumber: ""
+    }
+    ));
+    setCryptoAddress("")
   }
 
   return (
-    <CustomModal isOpen={isWithdrawModalOpen} onClose={closeModal} width={450} height={modalHeight(steps)}>
+    <CustomModal isOpen={isWithdrawModalOpen} onClose={closeModal}>
       <div className={styles.container}>
         <h2 className={styles.title}>Withdraw</h2>
-        {steps === 1 ? (
+        {steps === 1 && (
           <div className={styles.stepOne}>
             <SelectWithdrawalMethod value={withdrawalMethod} handleInput={selectWithdrawMethod} />
             <div className={styles.depositDetailsContainer}>
@@ -268,11 +255,9 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
               </button>
             </div>
           </div>
-        ) : (
-          ""
         )}
 
-        {steps === 2 ? (
+        {steps === 2 && (
           <>
             <div className={styles.depositInstruction}>
               <h3 className={styles.subtitle}>Withdraw to {withdrawalMethod}</h3>
@@ -282,67 +267,76 @@ export default function WithdrawModal({ isWithdrawModalOpen, setIsWithdrawModalO
 
             <div className={styles.depositDetailsContainer}>
               <span className={styles.depositAmount}>Withdrawal Amount: {formattedAmount}</span>
-              {isCrypto ? <SelectCryptoCurrency value={selectedCrypto} handleInput={selectCrypto} /> : ""}
-              {isBankAccount || isGcash ? (
-                <input
-                  className={styles.input}
-                  value={withdrawalDetails.accountName}
-                  name="accountName"
-                  placeholder="Enter account name"
-                  type="text"
-                  onChange={handleInput}
-                />
-              ) : (
-                ""
+              {isGcash && (
+                <>
+                  <input
+                    className={styles.input}
+                    value={gcashDetails.gcashName}
+                    name="gcashName"
+                    placeholder="Enter account name"
+                    type="text"
+                    onChange={handleInput}/>
+
+                  <input
+                    className={styles.input}
+                    value={gcashDetails.gcashNumber}
+                    name="gcashNumber"
+                    placeholder="Enter account number"
+                    type="text"
+                    onChange={handleInput}/>
+                </>
               )}
-              {isBankAccount || isGcash ? (
-                <input
-                  className={styles.input}
-                  value={withdrawalDetails.accountNumber}
-                  name="accountNumber"
-                  placeholder="Enter account number"
-                  type="text"
-                  onChange={handleInput}
-                />
-              ) : (
-                ""
+              {isBank && (
+                <>
+                  <input
+                    className={styles.input}
+                    value={bankDetails.accountName}
+                    name="accountName"
+                    placeholder="Enter account name"
+                    type="text"
+                    onChange={handleInput}
+                  />
+                  <input
+                    className={styles.input}
+                    value={bankDetails.accountNumber}
+                    name="accountNumber"
+                    placeholder="Enter account number"
+                    type="text"
+                    onChange={handleInput}
+                  />
+                  <input
+                    className={styles.input}
+                    value={bankDetails.bankName}
+                    name="bankName"
+                    placeholder="Enter bank name"
+                    type="text"
+                    onChange={handleInput}
+                  />
+                </>
               )}
-              {isBankAccount ? (
-                <input
-                  className={styles.input}
-                  value={withdrawalDetails.bankName}
-                  name="bankName"
-                  placeholder="Enter bank name"
-                  type="text"
-                  onChange={handleInput}
-                />
-              ) : (
-                ""
-              )}
-              {isCrypto ? (
-                <input
-                  className={styles.input}
-                  value={withdrawalDetails.cryptoAddress}
-                  name="cryptoAddress"
-                  placeholder="Enter crypto address"
-                  type="text"
-                  onChange={handleInput}
-                />
-              ) : (
-                ""
+              {isCrypto && (
+                <>
+                  <SelectCryptoCurrency value={selectedCrypto} handleInput={selectCrypto} />
+                  <input
+                    className={styles.input}
+                    value={cryptoAddress}
+                    name="cryptoAddress"
+                    placeholder="Enter crypto address"
+                    type="text"
+                    onChange={handleInput}
+                  />
+                </>
               )}
             </div>
             <div className={styles.buttonContainer}>
-              <button className={styles.button} onClick={handleWithdraw}>
+              <button className={styles.button} onClick={handleWithdraw} disabled={bank && gcash && crypto}>
                 {initializingWithdrawal ? <LoadingSvg width={25} height={25} color="#000"/> : "Withdraw"}
               </button>
               <button className={styles.cancel} onClick={closeModal}>
-                Cancel
+                Cancel Withdraw
               </button>
             </div>
           </>
-        ) : (
-          ""
         )}
       </div>
     </CustomModal>

@@ -32,7 +32,7 @@ export default function Wallet() {
       </div>
 
       <BalanceCardContainer>
-        <BalanceCard balanceTitle={"Available Balance"} balanceAmount={availableBalance} />
+        <BalanceCard balanceTitle={"Accumulated Profit"} balanceAmount={availableBalance} />
 
         <BalanceCard balanceTitle={"Total Deposit"} balanceAmount={totalDeposit} />
 

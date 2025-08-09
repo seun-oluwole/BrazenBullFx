@@ -3,24 +3,24 @@ import { userAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import LoadingSpinner from "./LoadingSpinner";
 import CustomModal from "./CustomModal";
-import styles from "./logoutmodal.module.css";
+import styles from "../Components/adminlogoutmodal.module.css"
 import handleErrorMessages from "../Utils/errorMessages";
 import { useModal } from "../context/modalContext";
 
-export default function LogoutModal(){
+export default function AdminLogoutModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { signOut } = userAuth();
-  const {  isLogoutModalOpen, setIsLogoutModalOpen } = useModal()
+  const { isAdminLogoutModalOpen, setIsAdminLogoutModalOpen } = useModal()
 
   const closeModal = () => {
-    setIsLogoutModalOpen(false);
+    setIsAdminLogoutModalOpen(false);
     if (error) setError(null);
   };
 
   const navigate = useNavigate();
 
-  const handleUserLogout = async () => {
+  const handleAdminLogout = async () => {
     setIsLoading(true);
     try {
       const { success, error: signOutError } = await signOut();
@@ -31,8 +31,8 @@ export default function LogoutModal(){
       }
 
       if (success) {
-        setIsLogoutModalOpen(false);
-        navigate("/login");
+        setIsAdminLogoutModalOpen(false);
+        navigate("/admin/login");
       } 
 
     } finally {
@@ -41,7 +41,7 @@ export default function LogoutModal(){
   };
 
   return (
-    <CustomModal isOpen={isLogoutModalOpen} onClose={closeModal} width={450} height={225}>
+    <CustomModal isOpen={isAdminLogoutModalOpen} onClose={closeModal} width={450} height={225}>
       <div className={styles.container}>
         <h2 className={styles.title}>Confirm Logout</h2>
         <p className={styles.subtitle}>Are you sure you want to logout?</p>
@@ -57,7 +57,7 @@ export default function LogoutModal(){
               <button className={styles.button} onClick={closeModal}>
                 Cancel
               </button>
-              <button className={`${styles.button} ${styles.logoutButton}`} onClick={handleUserLogout}>
+              <button className={`${styles.button} ${styles.logoutButton}`} onClick={handleAdminLogout}>
                 Logout
               </button>
             </div>

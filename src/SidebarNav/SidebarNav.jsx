@@ -10,9 +10,11 @@ import {
 } from "react-icons/hi2";
 import styles from "./sidebarnav.module.css";
 import SidebarContainer from "./SidebarContainer";
+import { useModal } from "../context/modalContext";
 
 
-export default function SidebarNav({ setIsModalOpen }) {
+export default function SidebarNav() {
+  const { setIsLogoutModalOpen } = useModal()
   return (
     <SidebarContainer>
       <div className={styles.sidebarContentContainer}>
@@ -56,7 +58,7 @@ export default function SidebarNav({ setIsModalOpen }) {
           )}
         </NavLink>
 
-        <div className={`${styles.iconContainer} ${styles.logout}`} onClick={() => setIsModalOpen(true)}>
+        <div className={`${styles.iconContainer} ${styles.logout}`} onClick={() => setIsLogoutModalOpen(true)}>
           <HiArrowRightEndOnRectangle className={styles.navIcon} />
           <span className={styles.iconLabel}>Logout</span>
         </div>

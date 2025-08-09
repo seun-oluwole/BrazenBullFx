@@ -1,16 +1,18 @@
+import SpiralSpinner from "../Components/SpiralSpinner";
+import ViewContainer from "../Components/ViewContainer";
+import InvestorTransHistory from "./InvestorTransHistory";
+import { SelectCryptoCurrency, SelectCurrency, SelectTier } from "../Components/Selectors";
 import { useParams } from "react-router";
 import { supabase } from "../Utils/supabaseClient";
 import { useEffect, useReducer, useState } from "react";
-import { SelectCryptoCurrency, SelectCurrency, SelectTier } from "../Components/Selectors";
-import SpiralSpinner from "../Components/SpiralSpinner";
-import ViewContainer from "../Components/ViewContainer";
-import styles from "./investorprofile.module.css";
 import { userAuth } from "../context/AuthContext";
 import { NumericFormat } from "react-number-format";
-import { HiChevronRight } from "react-icons/hi2";
+import { useAdmin } from "../context/AdminContext";
+import styles from "./investorprofile.module.css";
 
 export default function InvestorProfile() {
   const { userId } = useParams();
+  const { fetchInvestorTransactions } = useAdmin()
   const [investorData, setInvestorData] = useState({});
   const [error, setError] = useState(null);
   const [inputData, setInputData] = useState({
@@ -64,7 +66,10 @@ export default function InvestorProfile() {
   }
 
   useEffect(() => {
-    if (userMetaData?.role === "admin") fetchInvestor()
+    if (userMetaData?.role === "admin") {
+      fetchInvestor()
+      fetchInvestorTransactions(userId)
+    } 
   }, []);
 
   const fetchInvestor = async () => {
@@ -364,8 +369,9 @@ export default function InvestorProfile() {
           )}
         </>
       ) : (
-        <div className={styles.error}>{error ? "Something went wrong! Try again." : ""}</div>
+        <div className={styles.error}>{error ? "Check your connection and try again." : ""}</div>
       )}
+    <InvestorTransHistory />
     </ViewContainer>
   );
 }

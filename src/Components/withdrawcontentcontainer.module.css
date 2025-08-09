@@ -1,0 +1,36 @@
+.title {
+  font-family: Funnel Display, "sans-serif";
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 35px;
+}
+
+.mainContainer div{
+  padding: 15px;
+  border-radius: 8px;
+  height: 52px;
+  border: 1px solid rgb(133, 146, 173);
+  background-color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  color: rgb(133, 146, 173);
+  -webkit-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
+  -moz-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
+  box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08);
+}
+
+.button {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 15px;
+  height: 52px;
+  background-color: red;
+  color: white;
+}

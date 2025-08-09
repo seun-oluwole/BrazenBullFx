@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .title {
@@ -11,7 +12,7 @@
 }
 
 .subtitle {
-   font-family: Funnel Display, "sans-serif";
+  font-family: Funnel Display, "sans-serif";
   margin-bottom: 12px;
   font-size: 1.2rem;
 }
@@ -49,9 +50,10 @@
 }
 
 .buttonContainer {
-  margin-top: 5px;
+  margin-top: 35px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .button, .cancel {
@@ -64,6 +66,10 @@
   margin-top: 15px;
   height: 52px;
   color:var(--grey-950);
+}
+
+.button:disabled {
+  opacity: 0.8;
 }
 
 .cancel {
@@ -125,22 +131,19 @@
   margin-bottom: 5px;
 }
 
-.spinner, .spinnerContainer {
+.spinnerContainer, .generatingContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 165px;
-}
-
-.spinnerContainer {
-  display: flex;
-  align-items: center;
+  height: 355px;
+  margin-top: 25px;
   flex-direction: column;
   gap: 35px;
-  margin-top: 15px;
-  margin-bottom: 25px;
-  padding: 25px;
   color: var(--green-500);
+}
+
+.generatingContainer {
+  height: 260px;
 }
 
 

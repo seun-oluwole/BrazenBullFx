@@ -1,22 +1,17 @@
 import { useWallet } from "../context/WalletContextProvider";
-import LoadingSvg from "./LoadingSvg";
-import styles from "../Components/transactionmodal.module.css";
 import { HiArrowDown, HiArrowUp } from "react-icons/hi2";
 import Status from "./Status";
 import moment from "moment";
+import styles from "../Components/transactionmodal.module.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function TransactionModalContent({ closeModal }) {
-  const { fetchingTransaction, transactionDetail } = useWallet();
+  const { fetchingTransaction, transactionDetail, fetchingTransError } = useWallet();
   const { transaction_title, transaction_amount, transaction_method, transaction_status, created_at } =
     transactionDetail || "";
 
-  console.log(transactionDetail);
-  if (fetchingTransaction)
-    return (
-      <div className={styles.spinnerContainer}>
-        <LoadingSvg width={55} height={55} />
-      </div>
-    );
+  if (fetchingTransaction) return (<div className={styles.spinnerContainer}><LoadingSpinner width={55} height={55} /></div>);
+  if (fetchingTransError && !transactionDetail) return <div className={styles.error}>Sorry, something went wrong!</div>
   return (
     <>
       {transactionDetail ? (
@@ -43,7 +38,7 @@ export default function TransactionModalContent({ closeModal }) {
           </div>
         </div>
       ) : (
-        ""
+        "Sorry, something went wrong!"
       )}
     </>
   );

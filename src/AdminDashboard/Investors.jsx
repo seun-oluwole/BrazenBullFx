@@ -1,12 +1,10 @@
+import { SelectFilterTier } from "../Components/Selectors";
 import { useState } from "react";
-import SpiralSpinner from "../Components/SpiralSpinner";
 import ViewContainer from "../Components/ViewContainer";
-import { useAdmin } from "../context/AdminContext";
 import InvestorList from "./InvestorList";
 import styles from "./investors.module.css";
 
 export default function Investors() {
-  const { isFetchingInvestors, fetchingInvestorsError } = useAdmin();
   const [filterQuery, setFilterQuery] = useState("")
 
   const handleSelect = (e) => {
@@ -16,29 +14,22 @@ export default function Investors() {
 
   return (
     <ViewContainer>
-      <h2 className={styles.title}>Investors</h2>
-      <SelectTier handleSelect={handleSelect} value={filterQuery}/>
       <div className={styles.mainContainer}>
-        <div className={styles.titleContainer}>
-          <span>NAME</span>
-          <span>WALLET BALANCE</span>
-          <span>TIER</span>
-        </div>
-        <div className={styles.investorContainer}>
-          <InvestorList filterQuery={filterQuery}/>
+        <h2 className={styles.title}>Investors</h2>
+        <SelectFilterTier handleSelect={handleSelect} value={filterQuery}/>
+        <div className={styles.container}>
+          <div className={styles.titleContainer}>
+            <span>NAME</span>
+            <span>WALLET BALANCE</span>
+            <span>TIER</span>
+          </div>
+          <div className={styles.investorContainer}>
+            <InvestorList filterQuery={filterQuery}/>
+          </div>
         </div>
       </div>
     </ViewContainer>
   );
 }
 
-function SelectTier({ handleSelect, value }) {
-  return (
-    <select value={value} className={styles.selectTier} onChange={handleSelect}>
-      <option value="">Filter By Tier</option>
-      <option value="1">TIER 1</option>
-      <option value="2">TIER 2</option>
-      <option value="V.I.P">V.I.P</option>
-    </select>
-  );
-}
+

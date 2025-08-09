@@ -5,6 +5,10 @@
   font-weight: 600;
 }
 
+.mainContainer {
+  height: 100vh;
+}
+
 .container {
   display: flex;
   flex-direction: column;

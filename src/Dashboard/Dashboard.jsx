@@ -20,8 +20,7 @@ export default function Dashboard({
   setIsDepositModalOpen,
   isWithdrawModalOpen,
   setIsWithdrawModalOpen,
-  isTransactionModal,
-  setIsTransactionModal }) {
+  }) {
   return (
     <div className={styles.mainContainer}>
       <Header />
@@ -31,9 +30,9 @@ export default function Dashboard({
           <DashboardContainer>
             <Outlet />
             <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-            <DepositModal isDepositModalOpen={isDepositModalOpen} setIsDepositModalOpen={setIsDepositModalOpen}/>
-            <WithdrawModal isWithdrawModalOpen={isWithdrawModalOpen} setIsWithdrawModalOpen={setIsWithdrawModalOpen}/>
-            <TransactionModal isTransactionModal={isTransactionModal} setIsTransactioModal={setIsTransactionModal}/>
+            <DepositModal />
+            <WithdrawModal />
+            <TransactionModal />
           </DashboardContainer>
         </QueryClientProvider>
       </div>

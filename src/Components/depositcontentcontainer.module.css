@@ -1,0 +1,79 @@
+.title {
+  font-family: Funnel Display, "sans-serif";
+  margin-top: 12px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.inputContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputContainer div, .input {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  height: 52px;
+  border: 1px solid rgb(133, 146, 173);
+  background-color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  color: rgb(133, 146, 173);
+  -webkit-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
+  -moz-box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08), 0 1px 2px 0 rgba(88, 102, 126, .12);
+  box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08);
+}
+
+.input::placeholder {
+ color: rgb(133, 146, 173);
+ font-size: 1rem;
+}
+
+.generatingDetails {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-weight: 500;
+}
+
+.toggleBtn {
+  height: 32px;
+  width: 95px;
+  border: none;
+  color: var(--grey-950);
+  background-color: var(--green-300);
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.spinnerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 124px;
+}
+
+.cryptoContainer {
+  font-size: 0.7rem;
+}
+
+.button {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 5px;
+  height: 52px;
+  background-color: red;
+  color: white;
+}

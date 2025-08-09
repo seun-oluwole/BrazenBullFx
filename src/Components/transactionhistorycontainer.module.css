@@ -1,0 +1,39 @@
+.inputContainer {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.detailContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  color: rgb(133, 146, 173);
+  font-weight: 500;
+}
+
+
+
+.detailContainer table {
+  text-align: center;
+  border: 1px solid ;
+  border-radius: 12px;
+  padding: 5px;
+}
+
+.button {
+  border-radius: 8px;
+  border: none;
+  min-width: 82px;
+  min-height: 32px;
+  color: rgb(133, 146, 173);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 180px;
+  height: 230px;
+}

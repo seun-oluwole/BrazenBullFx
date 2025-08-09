@@ -8,6 +8,8 @@ const walletContext = createContext();
 const [getItem, setItem] = useLocalStorage();
 
 export default function WalletContextProvider({ children }) {
+  const [steps, setSteps] = useState(1)
+  const [reachedStepTwo, setReachedStepTwo] = useState(false)
   const [showBalance, setShowBalance] = useState(true);
   const [isWalletLoading, setIsWalletLoading] = useState(false);
   const [fetchWalletError, setFetchWalletError] = useState(null);
@@ -138,12 +140,20 @@ export default function WalletContextProvider({ children }) {
       if (transactionError) throw new Error(transactionError)
 
       setTransactionDetail(transactionData[0]);
+      return transactionData[0]
     } catch(error) {
-      if (error) setFetchingTransError(error)
+      setFetchingTransError(error)
     } finally {
       setFetchingTransaction(false)
     }
   }
+
+  const handleNextStep = () => {
+    if (steps === 1) {
+      setSteps((prev) => prev + 1);
+      setReachedStepTwo(true);
+    }
+  };
 
   return (
     <walletContext.Provider
@@ -156,11 +166,18 @@ export default function WalletContextProvider({ children }) {
         fetchUserWallet,
         allTransactions,
         fetchAllTransactions,
+        setAllTransactions,
         fetchingAllTransactions,
         fetchingTransError,
         fetchTransaction,
         fetchingTransaction,
-        transactionDetail
+        transactionDetail,
+        setTransactionDetail,
+        steps,
+        setSteps,
+        reachedStepTwo,
+        setReachedStepTwo,
+        handleNextStep,
       }}
     >
       {children}

@@ -4,23 +4,25 @@ import Header from "../Header/Header";
 import styles from "./admincontainer.module.css";
 import AdminSideBar from "./AdminSideBar";
 import MobileNavigation from "../MobileNavigation/MobileNavigation";
-import AdminNavContent from "./AdminNavContent";
-import LogoutModal from "../Components/LogoutModal";
+import TransactionHisoryModal from "../Components/TransactionHistoryModal";
+import AdminLogoutModal from "../Components/AdminLogoutModal";
+import AdminMobileNavContent from "./AdminMobileNavContent";
 
-export default function AdminContainer({ isModalOpen, setIsModalOpen }) {
+export default function AdminContainer() {
   return (
     <div className={styles.adminContainer}>
       <Header isAdmin={true} />
       <div>
         <div className={styles.container}>
-          <AdminSideBar setIsModalOpen={setIsModalOpen}/>
+          <AdminSideBar />
           <DashboardContainer>
             <Outlet />
-            <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} isAdmin={true}/>
+            <AdminLogoutModal />
+            <TransactionHisoryModal />
           </DashboardContainer>
         </div>
         <MobileNavigation>
-          <AdminNavContent />
+          <AdminMobileNavContent />
         </MobileNavigation>
       </div>
     </div>

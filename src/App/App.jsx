@@ -23,56 +23,41 @@ import "../global.css";
 
 
 export default function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [isTransactionModal, setIsTransactionModal] = useState(false)
-  
-
   return (
-        <BrowserRouter>
-            <Routes>
-              {/* <Route path="/" element={<LandingPage />}/> */}
-              <Route path="*" element={<PageNotFound />} />
-              <Route path="/dashboard" element={
-                <PrivateRoute>
-                  <Dashboard 
-                  isModalOpen={isModalOpen} 
-                  setIsModalOpen={setIsModalOpen} 
-                  isDepositModalOpen={isDepositModalOpen}
-                  setIsDepositModalOpen={setIsDepositModalOpen}
-                  isWithdrawModalOpen={isWithdrawModalOpen}
-                  setIsWithdrawModalOpen={setIsWithdrawModalOpen}
-                  isTransactionModal={isTransactionModal}
-                  setIsTransactionModal={setIsTransactionModal}/>
-                </PrivateRoute>}>
-                <Route index element={<Wallet />} />
-                <Route path="wallet" element={<Wallet />} />
-                <Route path="transactions" element={
-                  <Transactions 
-                  setIsDepositModalOpen={setIsDepositModalOpen} 
-                  setIsWithdrawModalOpen={setIsWithdrawModalOpen}
-                  setIsTransactionModal={setIsTransactionModal}/>} />
-                <Route path="investment" element={<Investment />} />
-                <Route path="settings" element={<Settings setIsModalOpen={setIsModalOpen}/>} />
-              </Route>
+    <BrowserRouter>
+        <Routes>
+          {/* <Route path="/" element={<LandingPage />}/> */}
+          <Route path="*" element={<PageNotFound />} />
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>}>
+            <Route index element={<Wallet />} />
+            <Route path="wallet" element={<Wallet />} />
+            <Route path="transactions" element={
+              <Transactions />} />
+            <Route path="investment" element={<Investment />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
 
-              <Route path="/admin" element={<ProtectAdminRoute><AdminContainer isModalOpen={isAdminModalOpen} setIsModalOpen={setIsAdminModalOpen}/></ProtectAdminRoute>}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />}/>
-                <Route path="investors">
-                  <Route index element={<Investors />}/>
-                  <Route path=":userId" element={<InvestorProfile />}/>
-                </Route>
-                <Route path="settings" element={<AdminSettings setIsModalOpen={setIsAdminModalOpen}/>} />
-              </Route>
-              
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/signup" element={<AdminSignup />} />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
-            </Routes>
-        </BrowserRouter>
+          <Route path="/admin" element={
+            <ProtectAdminRoute>
+              <AdminContainer />
+            </ProtectAdminRoute>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<AdminDashboard />}/>
+            <Route path="investors">
+              <Route index element={<Investors />}/>
+              <Route path=":userId" element={<InvestorProfile />}/>
+            </Route>
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+          
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/signup" element={<AdminSignup />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+        </Routes>
+    </BrowserRouter>
   );
 }

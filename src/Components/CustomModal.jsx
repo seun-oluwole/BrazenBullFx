@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 
 ReactModal.setAppElement("#root");
 
-const CustomModal = ({ isOpen, onClose, width, height, children }) => {
+const CustomModal = ({ isOpen, onClose, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -15,8 +15,8 @@ const CustomModal = ({ isOpen, onClose, width, height, children }) => {
         content: {
           left: "15px",
           right: "15px",
-          maxWidth: `${width}px`,
-          maxHeight: `${height}px`,
+          maxWidth: "450px",
+          maxHeight: "fit-content",
           margin: "auto",
           padding: "1.6rem",
           borderRadius: "16px",

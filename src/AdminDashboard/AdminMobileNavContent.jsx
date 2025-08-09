@@ -9,7 +9,7 @@ import {
 } from "react-icons/hi2";
 import styles from "../MobileNavigation/mobilenavigation.module.css";
 
-export default function AdminNavContent() {
+export default function AdminMobileNavContent() {
   return (
     <div className={styles.contentContainer}>
       <NavLink to="/admin/dashboard" className={styles.navLinkContainer}>

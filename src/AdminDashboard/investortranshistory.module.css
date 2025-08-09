@@ -1,0 +1,15 @@
+.mainContainer {
+  margin-top: 25px;
+  padding-bottom: 100px;
+}
+
+.container {
+  margin-top: 15px;
+  border: 1px solid var(--grey);
+  border-radius: 12px;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-family: Funnel Display, "sans-serif";
+}

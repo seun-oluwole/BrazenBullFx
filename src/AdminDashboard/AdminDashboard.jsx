@@ -6,7 +6,7 @@ import SpiralSpinner from "../Components/SpiralSpinner";
 import { useAdmin } from "../context/AdminContext";
 
 export default function AdminDashboard() {
-  const { totalInvestors, totalWallets, walletsBalance, currency, isFetchingAllWallet, fetchAllWalletError } =
+  const { totalInvestors, totalWallets, totalTransactions, isFetchingAllWallet, fetchAllWalletError } =
     useAdmin();
     
   return (
@@ -39,14 +39,13 @@ export default function AdminDashboard() {
           <Card>
             {!fetchAllWalletError ? 
               <div className={styles.cardContent}>
-                <div className={styles.cardTitle}>Wallets Balance</div>
+                <div className={styles.cardTitle}>Total Transactions</div>
                 <div className={styles.count}>
                   {isFetchingAllWallet ? (
                     <SpiralSpinner width={25} height={25} />
                   ) : (
                     <div className={styles.walletBalance}>
-                      <div>{walletsBalance.toLocaleString()}</div>
-                      <span>{currency}</span>
+                      <div>{totalTransactions}</div>
                     </div>
                   )}
                 </div>

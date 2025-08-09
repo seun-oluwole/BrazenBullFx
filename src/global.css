@@ -51,3 +51,15 @@ body::-webkit-scrollbar-thumb {
 .link {
   text-decoration: none;
 }
+
+.button {
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background-color: var(--green-300);
+  margin-top: 15px;
+  height: 52px;
+  color:var(--grey-950);
+}

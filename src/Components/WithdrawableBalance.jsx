@@ -4,10 +4,11 @@ import { useWallet } from "../context/WalletContextProvider";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
 import SpiralSpinner from "./SpiralSpinner";
 import styles from "./withdrawablebalance.module.css";
+import { useModal } from "../context/modalContext";
 
-export default function WithdrawableBalance({ setIsDepositModalOpen, setIsWithdrawModalOpen }) {
-  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } =
-    useWallet();
+export default function WithdrawableBalance() {
+  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } = useWallet();
+  const { setIsDepositModalOpen, setIsWithdrawModalOpen } = useModal()
 
   return (
     <div className={styles.container}>

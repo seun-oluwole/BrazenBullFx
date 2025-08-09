@@ -1,5 +1,6 @@
 .table {
   width: 100%;
+  cursor: pointer;
 }
 
 .bodyTitle {
@@ -77,7 +78,7 @@
   background-color: #FDF8EC;
 }
 
-.spinnerContainer, .error, .empty {
+.error, .empty, .spinnerContainer {
   min-height: 340px;
   display: flex;
   align-items: center;

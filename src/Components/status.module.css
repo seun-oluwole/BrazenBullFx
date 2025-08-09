@@ -1,24 +1,30 @@
 .success {
+  display: flex;
+  align-items: center;
   color: green;
   border: 1px solid green;
   width: fit-content;
-  padding: 6px;
   border-radius: 6px;
+  padding: 3px;
 }
 
 .failed {
+  display: flex;
+  align-items: center;
   color: red;
   border: 1px solid red;
   width: fit-content;
-  padding: 6px;
   border-radius: 6px;
+  padding: 3px;
 }
 
 .pending {
+  display: flex;
+  align-items: center;
   color: #D3BA71;
   border: 1px solid #D3BA71;
   background-color: #FDF8EC;  
   width: fit-content;
-  padding: 6px;
   border-radius: 6px;
+  padding: 3px;
 }
