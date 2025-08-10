@@ -87,7 +87,7 @@ export default function Signup() {
       );
 
       if (signUpSuccess) {
-        navigate("/dashboard");
+        navigate("/dashboard/wallet");
       } else {
         setError(handleErrorMessages(signUpError.message));
       }

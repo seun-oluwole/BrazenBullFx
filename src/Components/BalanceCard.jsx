@@ -4,7 +4,7 @@ import styles from "./balancecard.module.css";
 import SpiralSpinner from "./SpiralSpinner";
 
 export default function BalanceCard({ balanceTitle, balanceAmount }) {
-  const { balanceCurrency, cryptocurrency, showBalance, toggleShowBalance, isWalletLoading, fetchWalletError } =
+  const { balanceCurrency, currencySymbol, cryptocurrency, showBalance, toggleShowBalance, isWalletLoading, fetchWalletError } =
     useWallet();
 
   return (
@@ -37,8 +37,8 @@ export default function BalanceCard({ balanceTitle, balanceAmount }) {
               </div>
             ) : (
               <>
+                <div className={styles.balanceCurrency}>{currencySymbol}</div>
                 <div>{showBalance ? balanceAmount.toLocaleString() : "*****"}</div>
-                <div className={styles.balanceCurrency}>{balanceCurrency}</div>
                 <div className="dashboard_show-balance" onClick={toggleShowBalance}>
                   {showBalance ? (
                     <LuEye className={styles.balanceIcon} />

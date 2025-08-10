@@ -26,6 +26,7 @@ export default function WalletContextProvider({ children }) {
     totalWithdrawn: 0,
     withdrawableBalance: 0,
     balanceCurrency: "",
+    currencySymbol: "",
     cryptocurrency: "",
   });
 
@@ -93,6 +94,7 @@ export default function WalletContextProvider({ children }) {
           totalWithdrawn: walletData?.total_withdrawn,
           withdrawableBalance: walletData?.withdrawable_balance,
           balanceCurrency: walletData?.currency,
+          currencySymbol: walletData?.currency_symbol,
           cryptocurrency: walletData?.cryptocurrency,
         }));
       }

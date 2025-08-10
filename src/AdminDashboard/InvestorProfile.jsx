@@ -9,6 +9,8 @@ import { userAuth } from "../context/AuthContext";
 import { NumericFormat } from "react-number-format";
 import { useAdmin } from "../context/AdminContext";
 import styles from "./investorprofile.module.css";
+import convertCurrency from "../Utils/convertCurrency";
+import CurrencyList from "currency-list";
 
 export default function InvestorProfile() {
   const { userId } = useParams();
@@ -19,6 +21,7 @@ export default function InvestorProfile() {
     tier: "",
     currency: "",
     cryptocurrency: "",
+    currencySymbol: "",
     availableBalance: 0,
     totalDeposit: 0,
     totalWithdrawn: 0,
@@ -36,7 +39,7 @@ export default function InvestorProfile() {
   });
   const { session } = userAuth();
   const userMetaData = session?.user?.user_metadata;
-
+ 
   function reducer(isLoading, action) {
     if (action.type === "investor") {
       return { ...isLoading, investor: action.payload };
@@ -102,6 +105,15 @@ export default function InvestorProfile() {
       ...data,
       [name]: value,
     }));
+
+    if (name === "currency") {
+      const currencyValues = Object.values(CurrencyList.getAll("en_US"));
+      const filteredCurrency = currencyValues.find(({ code }) => code === value);
+      setInputData((data) => ({
+        ...data,
+        currencySymbol: filteredCurrency.symbol
+      }))
+    }
   }
 
   const updateTier = async (walletColumn) => {
@@ -127,10 +139,22 @@ export default function InvestorProfile() {
   const updateCurrency = async (walletColumn) => {
     dispatch({ type: `${walletColumn}`, payload: true });
     try {
+      const [availableBal, totalDeposit, totalWithdrawn, withdrawableBal] = await Promise.all([
+        convertCurrency(investorData?.currency, inputData.currency, investorData?.available_balance),
+        convertCurrency(investorData?.currency, inputData.currency, investorData?.total_deposit),
+        convertCurrency(investorData?.currency, inputData.currency, investorData?.total_withdrawn),
+        convertCurrency(investorData?.currency, inputData.currency, investorData?.withdrawable_balance)
+      ])
+
       const { error: updateError } = await supabase
         .from("wallet")
         .update({
           [walletColumn]: inputData.currency,
+          currency_symbol: inputData.currencySymbol,
+          available_balance: availableBal?.conversion_result,
+          total_deposit: totalDeposit?.conversion_result,
+          total_withdrawn: totalWithdrawn?.conversion_result,
+          withdrawable_balance: withdrawableBal?.conversion_result
         })
         .eq("user_id", userId);
 

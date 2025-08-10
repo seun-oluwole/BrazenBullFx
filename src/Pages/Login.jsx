@@ -25,7 +25,7 @@ export default function Login() {
       session.user?.user_metadata?.role === "user" &&
       window.location.pathname !== "/dashboard"
     ) {
-      navigate("/dashboard", { replace: true });
+      navigate("/dashboard/wallet", { replace: true });
     }
   }, [isSessionLoading, session, navigate]);
 
@@ -44,7 +44,7 @@ export default function Login() {
     setError(null);
     try {
       const { error: signInError } = await signInUser(
-        loginDetails.email.toLowerCase(),
+        loginDetails.email.toLowerCase().trim(""),
         loginDetails.password
       );
 

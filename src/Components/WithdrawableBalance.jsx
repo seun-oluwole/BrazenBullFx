@@ -7,7 +7,7 @@ import styles from "./withdrawablebalance.module.css";
 import { useModal } from "../context/modalContext";
 
 export default function WithdrawableBalance() {
-  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } = useWallet();
+  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, currencySymbol, isWalletLoading, fetchWalletError } = useWallet();
   const { setIsDepositModalOpen, setIsWithdrawModalOpen } = useModal()
 
   return (
@@ -18,9 +18,9 @@ export default function WithdrawableBalance() {
           <>
             {!isWalletLoading ? (
               <>
+                <span className={styles.currencySymbol}>{currencySymbol}</span>
                 <div className={styles.amount}>{showBalance ? withdrawableBalance.toLocaleString() : "*****"}</div>
-                <span>{balanceCurrency}</span>
-                <div className="" onClick={toggleShowBalance}>
+                <div className={styles.toggleShowBalance} onClick={toggleShowBalance}>
                   {showBalance ? <LuEye className={styles.icon} /> : <LuEyeClosed className={styles.icon} />}
                 </div>
               </>

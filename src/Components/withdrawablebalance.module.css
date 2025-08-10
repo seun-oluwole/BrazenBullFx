@@ -65,3 +65,11 @@
   font-size: 1rem;
   font-weight: 400;
 }
+
+.currencySymbol {
+  margin-right: -3px;
+}
+
+.toggleShowBalance {
+  margin-left: 5px;
+}

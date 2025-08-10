@@ -3,7 +3,6 @@ import styles from "../Components/selectors.module.css";
 
 export function SelectCurrency({ value, handleInput }) {
   const currencyValues = Object.values(CurrencyList.getAll("en_US"));
-
   return (
     <select value={value} name="currency" id="" className={styles.input} onChange={handleInput}>
       <option value="">Select Currency</option>
