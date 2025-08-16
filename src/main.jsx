@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")).render(
             toastOptions={{
               success: {
                 style: {
-                  padding: '16px'
+                  padding: '8px'
                 }
 
               },
@@ -25,7 +25,7 @@ createRoot(document.getElementById("root")).render(
                 style: {
                 background: '#ff2323',
                 color: '#fff',
-                padding: '16px'
+                padding: '8px'
               }
               },
 

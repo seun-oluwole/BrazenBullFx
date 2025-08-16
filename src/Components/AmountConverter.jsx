@@ -3,6 +3,7 @@ import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 import LoadingSvg from "./LoadingSvg";
 import styles from "../Components/amountconverter.module.css"
 import { useWallet } from "../context/WalletContextProvider";
+import formatAmount from "../Utils/formatAmount";
 
 export default function AmountConverter({ formattedAmount, convertingCurrency, convertedAmount }) {
   const { balanceCurrency } = useWallet()
@@ -14,7 +15,7 @@ export default function AmountConverter({ formattedAmount, convertingCurrency, c
         {convertingCurrency ? (
           <LoadingSvg width={20} height={20} color="#000" />
         ) : (
-          <>{`${getCurrencySymbol(balanceCurrency)}${convertedAmount?.toFixed(2).toLocaleString()}`}</>
+          <>{`${getCurrencySymbol(balanceCurrency)}${formatAmount(convertedAmount?.toFixed(2))}`}</>
         )}
       </span>
     </div>

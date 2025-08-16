@@ -105,7 +105,7 @@ export const AuthContextProvider = ({ children }) => {
       toast.success("Account created successfully.")
     } catch (error) {
       setSignUpError(error.message)
-      toast.error("Error: Signup Failed.")
+      toast.error("Error: Signup failed.")
 
     } finally {
        let timeoutId = setTimeout(() => {
@@ -135,7 +135,7 @@ export const AuthContextProvider = ({ children }) => {
       } 
     } catch (error) {
       setSignInUserError(error.message)
-      toast.error("Error: Login Error");
+      toast.error("Error: Login failed.");
 
     } finally {
       let timeoutId = setTimeout(() => {
@@ -159,13 +159,13 @@ export const AuthContextProvider = ({ children }) => {
       if (authRole === "admin") {
         toast.success("Welcome Admin")
       } else {
-        toast.error("Error: Unathorised login")
+        toast.error("Error: Unathorised login.")
         await signOut()
       }
 
     } catch (error) {
       setSignInAdminError(error.message)
-      toast.error("Error: Login Error")
+      toast.error("Error: Login failed.")
 
     } finally {
       let timeoutId = setTimeout(() => {

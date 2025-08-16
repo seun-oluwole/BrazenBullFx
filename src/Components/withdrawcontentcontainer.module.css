@@ -9,7 +9,17 @@
   margin-top: 35px;
 }
 
-.mainContainer div{
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.withdrawDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 15px;
   border-radius: 8px;
   height: 52px;
@@ -23,6 +33,14 @@
   box-shadow: 0 4px 24px 0 rgba(88, 102, 126, .08);
 }
 
+.cryptoAddress {
+  display: flex;
+  align-items: center;
+  overflow: auto; 
+  padding: 12px 0;
+  margin-right: 5px;
+}
+
 .button {
   width: 100%;
   border: none;
@@ -33,4 +51,15 @@
   height: 52px;
   background-color: red;
   color: white;
+}
+
+.icon {
+  color: var(--green-500);
+  font-size: 1.5rem;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  margin-right: -7px;
 }

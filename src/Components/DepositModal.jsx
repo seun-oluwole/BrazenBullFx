@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import styles from "../Components/depositmodal.module.css";
 import AmountConverter from "./AmountConverter";
 import formatAmount from "../Utils/formatAmount";
+import handleCopyToClipboard from "../Utils/copyToClipboard";
 
 export default function DepositModal() {
   const [amount, setAmount] = useState(0);
@@ -278,9 +279,9 @@ export default function DepositModal() {
                     {isCrypto && (
                       <div className={styles.depositDetailsContainer}>
                         <div className={styles.depositDetails}>USDT (ERC-20)</div>
-                        <div className={styles.depositDetails}>
-                          <div>{transactionDetail?.deposit_crypto_address}</div>
-                          <span>
+                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_crypto_address)}>
+                          <div className={styles.cryptoAddress}>{transactionDetail?.deposit_crypto_address}</div>
+                          <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
                           </span>
                         </div>
@@ -289,22 +290,22 @@ export default function DepositModal() {
 
                     {isGcash || isBank ? (
                       <div className={styles.depositDetailsContainer}>
-                        <div className={styles.depositDetails}>
+                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_name)}>
                           <div>{transactionDetail?.deposit_account_name}</div>
-                          <span>
+                          <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
                           </span>
                         </div>
-                        <div className={styles.depositDetails}>
+                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_number)}>
                           <div>{transactionDetail?.deposit_account_number}</div>
-                          <span>
+                          <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
                           </span>
                         </div>
                         {isBank ? (
-                          <div className={styles.depositDetails}>
+                          <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_bank_name)}>
                             <div>{transactionDetail?.deposit_bank_name}</div>
-                            <span>
+                            <span className={styles.iconContainer}>
                               <HiOutlineClipboardDocument className={styles.icon} />
                             </span>
                           </div>
