@@ -16,7 +16,7 @@ export default function BalanceCard({ balanceTitle, balanceAmount }) {
           {!isWalletLoading ? (
             <div className={styles.cryptoImgContainer}>
               <img
-                src={`../src/assets/${cryptocurrency?.toLowerCase()}.png`}
+                src={`/${cryptocurrency?.toLowerCase()}.png`}
                 alt={cryptocurrency}
                 className={styles.cryptoImg}
               />

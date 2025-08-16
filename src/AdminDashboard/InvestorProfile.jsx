@@ -383,7 +383,7 @@ export default function InvestorProfile() {
               
                 <div>
                   <div className={styles.subTitle}>
-                    Available Balance: {`${investorData?.available_balance?.toLocaleString()} ${investorData.currency}`}
+                    Available Balance: {`${investorData?.available_balance?.toLocaleString()} ${investorData?.currency}`}
                   </div>
                   <div className={styles.inputContainer}>
                 

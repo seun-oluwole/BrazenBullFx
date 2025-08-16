@@ -1,7 +1,9 @@
 import { HiBell, HiOutlineUser, HiUser } from "react-icons/hi2";
 import { useNavigate } from "react-router";
-import styles from "./header.module.css";
 import { useWallet } from "../context/WalletContextProvider";
+import logo from "../assets/brazenbull.svg";
+import adminLogo from "../assets/bulladminfull.svg"
+import styles from "../Header/header.module.css";
 
 export default function Header({ isAdmin = false }) {
   const navigate = useNavigate();
@@ -12,9 +14,9 @@ export default function Header({ isAdmin = false }) {
       <div className={styles.logoContainer}>
         <>
           {isAdmin ? (
-            <img className={styles.logo} src="/src/assets/bulladminfull.svg" alt="" />
+            <img className={styles.logo} src={adminLogo} alt="" />
           ) : (
-            <img className={styles.logo} src="/src/assets/brazenbull.svg" alt=""/>
+            <img className={styles.logo} src={logo} alt=""/>
           )}
         </>
       </div>
