@@ -1,13 +1,13 @@
 import ViewContainer from "../Components/ViewContainer";
 import { HiArrowRightEndOnRectangle, HiChevronRight } from "react-icons/hi2";
 import { userAuth } from "../context/AuthContext";
-import { useModal } from "../context/modalContext";
-import styles from "../AdminDashboard/adminsettings.module.css"
+import { useModal } from "../context/ModalContext";
+import styles from "../AdminDashboard/adminsettings.module.css";
 
 export default function AdminSettings() {
   const { userData } = userAuth();
   const { firstName, lastName, email, phoneNumber } = userData || "";
-  const { setIsAdminLogoutModalOpen } = useModal()
+  const { setIsAdminLogoutModalOpen } = useModal();
 
   return (
     <ViewContainer>

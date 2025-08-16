@@ -10,11 +10,10 @@ import {
 } from "react-icons/hi2";
 import styles from "./sidebarnav.module.css";
 import SidebarContainer from "./SidebarContainer";
-import { useModal } from "../context/modalContext";
-
+import { useModal } from "../context/ModalContext";
 
 export default function SidebarNav() {
-  const { setIsLogoutModalOpen } = useModal()
+  const { setIsLogoutModalOpen } = useModal();
   return (
     <SidebarContainer>
       <div className={styles.sidebarContentContainer}>
@@ -44,7 +43,7 @@ export default function SidebarNav() {
             </div>
           )}
         </NavLink>
-        
+
         <NavLink to="/dashboard/settings" className={styles.navLinkContainer}>
           {({ isActive }) => (
             <div className={`${styles.iconContainer} ${isActive ? `${styles.active}` : ""}`}>

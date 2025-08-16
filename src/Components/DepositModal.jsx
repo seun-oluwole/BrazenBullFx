@@ -8,7 +8,7 @@ import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
 import { NumericFormat } from "react-number-format";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 import { useDebounce } from "../Utils/useDebounce";
 import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 import convertCurrency from "../Utils/convertCurrency";
@@ -204,9 +204,9 @@ export default function DepositModal() {
                 <h3 className={styles.subtitle}>Amount</h3>
                 {formattedAmount && balanceCurrency !== depositCurrency && (
                   <AmountConverter
-                  formattedAmount={formattedAmount}
-                  convertingCurrency={convertingCurrency} 
-                  convertedAmount={convertedAmount}
+                    formattedAmount={formattedAmount}
+                    convertingCurrency={convertingCurrency}
+                    convertedAmount={convertedAmount}
                   />
                 )}
                 {balanceCurrency === depositCurrency && (
@@ -244,14 +244,20 @@ export default function DepositModal() {
               <>
                 <div className={styles.depositInstruction}>
                   <h3 className={styles.subtitle}>Deposit via {transactionDetail?.transaction_method}</h3>
-                  <p>✅ Please make your payment of <span className={styles.deposit}>
-                  {balanceCurrency !== depositCurrency
-                  ? (`${getCurrencySymbol(depositCurrency)}${formatAmount(transactionDetail?.transaction_amount.toFixed(2))}`)
-                  : (`${getCurrencySymbol(depositCurrency)}${formatAmount(transactionDetail?.converted_amount.toFixed(2))}`)
-                  } 
-                  </span> into the details provided for you below.</p>
-                  <p>✅ Click on Confirm Deposit to submit your deposit for confirmation.
+                  <p>
+                    ✅ Please make your payment of{" "}
+                    <span className={styles.deposit}>
+                      {balanceCurrency !== depositCurrency
+                        ? `${getCurrencySymbol(depositCurrency)}${formatAmount(
+                            transactionDetail?.transaction_amount.toFixed(2)
+                          )}`
+                        : `${getCurrencySymbol(depositCurrency)}${formatAmount(
+                            transactionDetail?.converted_amount.toFixed(2)
+                          )}`}
+                    </span>{" "}
+                    into the details provided for you below.
                   </p>
+                  <p>✅ Click on Confirm Deposit to submit your deposit for confirmation.</p>
                 </div>
 
                 <div className={styles.depositAmount}>
@@ -263,7 +269,7 @@ export default function DepositModal() {
                           {getCurrencySymbol(transactionDetail?.deposit_currency)}
                           {formatAmount(transactionDetail?.transaction_amount?.toFixed(2))}
                         </span>
-                        <HiArrowsRightLeft className={styles.icon}/>
+                        <HiArrowsRightLeft className={styles.icon} />
                         <span>
                           {getCurrencySymbol(transactionDetail?.balance_currency)}
                           {formatAmount(transactionDetail?.converted_amount?.toFixed(2))}
@@ -282,7 +288,10 @@ export default function DepositModal() {
                     {isCrypto && (
                       <div className={styles.depositDetailsContainer}>
                         <div className={styles.depositDetails}>USDT (ERC-20)</div>
-                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_crypto_address)}>
+                        <div
+                          className={styles.depositDetails}
+                          onClick={() => handleCopyToClipboard(transactionDetail?.deposit_crypto_address)}
+                        >
                           <div className={styles.cryptoAddress}>{transactionDetail?.deposit_crypto_address}</div>
                           <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
@@ -293,20 +302,29 @@ export default function DepositModal() {
 
                     {isGcash || isBank ? (
                       <div className={styles.depositDetailsContainer}>
-                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_name)}>
+                        <div
+                          className={styles.depositDetails}
+                          onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_name)}
+                        >
                           <div>{transactionDetail?.deposit_account_name}</div>
                           <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
                           </span>
                         </div>
-                        <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_number)}>
+                        <div
+                          className={styles.depositDetails}
+                          onClick={() => handleCopyToClipboard(transactionDetail?.deposit_account_number)}
+                        >
                           <div>{transactionDetail?.deposit_account_number}</div>
                           <span className={styles.iconContainer}>
                             <HiOutlineClipboardDocument className={styles.icon} />
                           </span>
                         </div>
                         {isBank ? (
-                          <div className={styles.depositDetails} onClick={() => handleCopyToClipboard(transactionDetail?.deposit_bank_name)}>
+                          <div
+                            className={styles.depositDetails}
+                            onClick={() => handleCopyToClipboard(transactionDetail?.deposit_bank_name)}
+                          >
                             <div>{transactionDetail?.deposit_bank_name}</div>
                             <span className={styles.iconContainer}>
                               <HiOutlineClipboardDocument className={styles.icon} />

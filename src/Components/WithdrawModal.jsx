@@ -6,7 +6,7 @@ import { NumericFormat } from "react-number-format";
 import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 import { useDebounce } from "../Utils/useDebounce";
 import convertCurrency from "../Utils/convertCurrency";
 import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
@@ -21,51 +21,52 @@ export default function WithdrawModal() {
   const [amount, setAmount] = useState(0);
   const [convertedAmount, setConvertedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
-  const [convertingCurrency, setConvertingCurrency] = useState(false)
+  const [convertingCurrency, setConvertingCurrency] = useState(false);
   const [withdrawalMethod, setWithdrawalMethod] = useState("Gcash");
   const [selectedCrypto, setSelectedCrypto] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
   const [checkingBalance, setCheckingBalance] = useState(false);
   const [initializingWithdrawal, setInitializingWithdrawal] = useState(false);
   const [bankDetails, setBankDetails] = useState({ accountName: "", accountNumber: "", bankName: "" });
-  const [gcashDetails, setGcashDetails] = useState({gcashName: "", gcashNumber: ""})
-  const [cryptoAddress, setCryptoAddress] = useState("")
-  const { isWithdrawModalOpen, setIsWithdrawModalOpen } = useModal()
+  const [gcashDetails, setGcashDetails] = useState({ gcashName: "", gcashNumber: "" });
+  const [cryptoAddress, setCryptoAddress] = useState("");
+  const { isWithdrawModalOpen, setIsWithdrawModalOpen } = useModal();
   const { fetchUserWallet, balanceCurrency, depositCurrency, transactionDetail } = useWallet();
   const { session } = userAuth();
   const userId = session?.user?.id;
 
-  const gcash = withdrawalMethod === "Gcash" && !gcashDetails.gcashName || !gcashDetails.gcashNumber
-  const bank = withdrawalMethod === "Bank" && !bankDetails.accountName || !bankDetails.accountNumber || !bankDetails.bankName
-  const crypto = withdrawalMethod === "Crypto" && !selectedCrypto || !cryptoAddress
+  const gcash = (withdrawalMethod === "Gcash" && !gcashDetails.gcashName) || !gcashDetails.gcashNumber;
+  const bank =
+    (withdrawalMethod === "Bank" && !bankDetails.accountName) || !bankDetails.accountNumber || !bankDetails.bankName;
+  const crypto = (withdrawalMethod === "Crypto" && !selectedCrypto) || !cryptoAddress;
 
-  const isGcash = withdrawalMethod === "Gcash"
-  const isBank = withdrawalMethod === "Bank"
-  const isCrypto = withdrawalMethod === "Crypto"
+  const isGcash = withdrawalMethod === "Gcash";
+  const isBank = withdrawalMethod === "Bank";
+  const isCrypto = withdrawalMethod === "Crypto";
 
-  const debouncedQuery = useDebounce(amount, 1000)
-   useEffect(() => { 
+  const debouncedQuery = useDebounce(amount, 1000);
+  useEffect(() => {
     if (debouncedQuery && balanceCurrency !== depositCurrency) {
-      convertWithdrawCurrency()
+      convertWithdrawCurrency();
     }
-  }, [debouncedQuery])
+  }, [debouncedQuery]);
 
   useEffect(() => {
     if (amount && balanceCurrency === depositCurrency) {
-      convertWithdrawCurrency()
+      convertWithdrawCurrency();
     }
-  }, [amount])
+  }, [amount]);
 
-   async function convertWithdrawCurrency() {
-    setConvertingCurrency(true)
+  async function convertWithdrawCurrency() {
+    setConvertingCurrency(true);
     try {
-      const { convertedAmount, rate } = await convertCurrency(depositCurrency, balanceCurrency, amount)
-      setConvertedAmount(convertedAmount)
-      setExchangeRate(rate)
+      const { convertedAmount, rate } = await convertCurrency(depositCurrency, balanceCurrency, amount);
+      setConvertedAmount(convertedAmount);
+      setExchangeRate(rate);
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     } finally {
-      setConvertingCurrency(false)
+      setConvertingCurrency(false);
     }
   }
 
@@ -86,10 +87,7 @@ export default function WithdrawModal() {
     if (!userId) return;
     setCheckingBalance(true);
     try {
-      const { data, error } = await supabase
-      .from("wallet")
-      .select("withdrawable_balance")
-      .eq("user_id", userId);
+      const { data, error } = await supabase.from("wallet").select("withdrawable_balance").eq("user_id", userId);
 
       if (error) throw new Error(error);
 
@@ -98,15 +96,15 @@ export default function WithdrawModal() {
         const balance = data[0]?.withdrawable_balance;
         if (balanceCurrency === depositCurrency) {
           if (balance === 0 || balance < amount) {
-            toast.error("Insufficient balance")
+            toast.error("Insufficient balance");
             return false;
           } else {
             // returns true if there is enough balance...
             return true;
           }
         } else {
-           if (balance === 0 || balance < convertedAmount) {
-            toast.error("Insufficient balance")
+          if (balance === 0 || balance < convertedAmount) {
+            toast.error("Insufficient balance");
             return false;
           } else {
             // returns true if there is enough balance...
@@ -116,8 +114,8 @@ export default function WithdrawModal() {
       }
     } catch (error) {
       if (error) {
-        toast.error("Something went wrong! Try again.") 
-        return
+        toast.error("Something went wrong! Try again.");
+        return;
       }
     } finally {
       setCheckingBalance(false);
@@ -138,14 +136,12 @@ export default function WithdrawModal() {
         ...details,
         [name]: value,
       }));
-
     } else if (isGcash) {
-        setGcashDetails((details) => ({
+      setGcashDetails((details) => ({
         ...details,
         [name]: value,
       }));
-
-    } else if (isCrypto) setCryptoAddress(value)
+    } else if (isCrypto) setCryptoAddress(value);
   };
 
   const handleBalanceSettlement = async (amount) => {
@@ -161,7 +157,7 @@ export default function WithdrawModal() {
 
       if (walletData.length > 0) {
         const balance = walletData[0].withdrawable_balance;
-        if (balance === 0 || balance < amount) return
+        if (balance === 0 || balance < amount) return;
 
         const newBalance = balance - amount;
 
@@ -185,11 +181,11 @@ export default function WithdrawModal() {
     if (!userId || !convertedAmount) return;
     setInitializingWithdrawal(true);
     try {
-      await handleBalanceSettlement(convertedAmount)
-      
+      await handleBalanceSettlement(convertedAmount);
+
       if (isGcash) {
-        if (!gcashDetails.gcashName && !gcashDetails.gcashNumber) return
-          const { error: transactionError } = await supabase
+        if (!gcashDetails.gcashName && !gcashDetails.gcashNumber) return;
+        const { error: transactionError } = await supabase
           .from("transactions")
           .insert({
             user_id: userId,
@@ -202,15 +198,15 @@ export default function WithdrawModal() {
             withdraw_currency: depositCurrency,
             balance_currency: balanceCurrency,
             converted_amount: convertedAmount,
-            exchange_rate: exchangeRate
+            exchange_rate: exchangeRate,
           })
           .eq("user_id", userId);
 
-          if (transactionError) {
-            throw new Error(transactionError);
-          }
+        if (transactionError) {
+          throw new Error(transactionError);
+        }
       } else if (isBank) {
-        if (!bankDetails.accountName && !bankName.accountNumber && !bankDetails.bankName)return
+        if (!bankDetails.accountName && !bankName.accountNumber && !bankDetails.bankName) return;
         const { error: transactionError } = await supabase
           .from("transactions")
           .insert({
@@ -225,7 +221,7 @@ export default function WithdrawModal() {
             withdraw_currency: depositCurrency,
             balance_currency: balanceCurrency,
             converted_amount: convertedAmount,
-            exchange_rate: exchangeRate
+            exchange_rate: exchangeRate,
           })
           .eq("user_id", userId);
 
@@ -233,23 +229,23 @@ export default function WithdrawModal() {
           throw new Error(transactionError);
         }
       } else if (isCrypto) {
-        if (!selectCrypto && !cryptoAddress)return
+        if (!selectCrypto && !cryptoAddress) return;
         const { error: transactionError } = await supabase
-        .from("transactions")
-        .insert({
-          user_id: userId,
-          transaction_title: "Withdraw",
-          transaction_amount: amount,
-          transaction_status: "pending",
-          transaction_method: withdrawalMethod,
-          withdrawal_cryptocurrency: selectedCrypto,
-          withdrawal_crypto_address: cryptoAddress,
-          withdraw_currency: depositCurrency,
-          balance_currency: balanceCurrency,
-          converted_amount: convertedAmount,
-          exchange_rate: exchangeRate
-        })
-        .eq("user_id", userId);
+          .from("transactions")
+          .insert({
+            user_id: userId,
+            transaction_title: "Withdraw",
+            transaction_amount: amount,
+            transaction_status: "pending",
+            transaction_method: withdrawalMethod,
+            withdrawal_cryptocurrency: selectedCrypto,
+            withdrawal_crypto_address: cryptoAddress,
+            withdraw_currency: depositCurrency,
+            balance_currency: balanceCurrency,
+            converted_amount: convertedAmount,
+            exchange_rate: exchangeRate,
+          })
+          .eq("user_id", userId);
 
         if (transactionError) {
           throw new Error(transactionError);
@@ -258,7 +254,7 @@ export default function WithdrawModal() {
     } catch (error) {
       if (error) {
         toast.error("Failed to complete withdrawal");
-        return
+        return;
       }
     } finally {
       toast.success("Your withdrawal was successful.");
@@ -277,7 +273,7 @@ export default function WithdrawModal() {
     setSteps(1);
     setWithdrawalMethod("Gcash");
     setAmount(0);
-    setConvertedAmount(0)
+    setConvertedAmount(0);
     setFormattedAmount("");
     setBankDetails((details) => ({
       ...details,
@@ -288,10 +284,9 @@ export default function WithdrawModal() {
     setGcashDetails((details) => ({
       ...details,
       gcashName: "",
-      gcashNumber: ""
-    }
-    ));
-    setCryptoAddress("")
+      gcashNumber: "",
+    }));
+    setCryptoAddress("");
   }
 
   return (
@@ -304,18 +299,18 @@ export default function WithdrawModal() {
             <div className={styles.depositDetailsContainer}>
               <div className={styles.amountContainer}>
                 <h3 className={styles.subtitle}>Amount</h3>
-                {formattedAmount && balanceCurrency !== depositCurrency &&  
-                 <AmountConverter 
-                 formattedAmount={formattedAmount}
-                 convertedAmount={convertedAmount}
-                 convertingCurrency={convertingCurrency}
-                 />
-                }
-                {balanceCurrency === depositCurrency &&
+                {formattedAmount && balanceCurrency !== depositCurrency && (
+                  <AmountConverter
+                    formattedAmount={formattedAmount}
+                    convertedAmount={convertedAmount}
+                    convertingCurrency={convertingCurrency}
+                  />
+                )}
+                {balanceCurrency === depositCurrency && (
                   <div>
                     <span>{`${formattedAmount}`}</span>
                   </div>
-                }  
+                )}
               </div>
               <NumericFormat
                 className={styles.input}
@@ -326,8 +321,12 @@ export default function WithdrawModal() {
                 thousandSeparator
               />
 
-              <button className={styles.button} onClick={handleNextStep} disabled={!formattedAmount || convertingCurrency}>
-                {checkingBalance ? <LoadingSvg width={25} height={25} color="#000"/> : "Proceed"}
+              <button
+                className={styles.button}
+                onClick={handleNextStep}
+                disabled={!formattedAmount || convertingCurrency}
+              >
+                {checkingBalance ? <LoadingSvg width={25} height={25} color="#000" /> : "Proceed"}
               </button>
             </div>
           </div>
@@ -351,10 +350,8 @@ export default function WithdrawModal() {
                         {getCurrencySymbol(balanceCurrency)}
                         {formatAmount(convertedAmount.toFixed(2))}
                       </span>
-                      <HiArrowsRightLeft className={styles.icon}/>
-                       <span>
-                        {formattedAmount}
-                      </span>
+                      <HiArrowsRightLeft className={styles.icon} />
+                      <span>{formattedAmount}</span>
                     </>
                   ) : (
                     <span>
@@ -372,7 +369,8 @@ export default function WithdrawModal() {
                     name="gcashName"
                     placeholder="Enter account name"
                     type="text"
-                    onChange={handleInput}/>
+                    onChange={handleInput}
+                  />
 
                   <input
                     className={styles.input}
@@ -380,7 +378,8 @@ export default function WithdrawModal() {
                     name="gcashNumber"
                     placeholder="Enter account number"
                     type="text"
-                    onChange={handleInput}/>
+                    onChange={handleInput}
+                  />
                 </>
               )}
               {isBank && (
@@ -427,7 +426,7 @@ export default function WithdrawModal() {
             </div>
             <div className={styles.buttonContainer}>
               <button className={styles.button} onClick={handleWithdraw} disabled={bank && gcash && crypto}>
-                {initializingWithdrawal ? <LoadingSvg width={25} height={25} color="#000"/> : "Withdraw"}
+                {initializingWithdrawal ? <LoadingSvg width={25} height={25} color="#000" /> : "Withdraw"}
               </button>
               <button className={styles.cancel} onClick={closeModal}>
                 Cancel Withdraw

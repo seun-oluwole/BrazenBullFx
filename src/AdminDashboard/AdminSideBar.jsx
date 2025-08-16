@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 import SidebarContainer from "../SidebarNav/SidebarContainer";
 import {
   HiArrowRightEndOnRectangle,
@@ -13,7 +13,7 @@ import {
 import styles from "../SidebarNav/sidebarnav.module.css";
 
 export default function AdminSideBar() {
-  const { setIsAdminLogoutModalOpen } = useModal()
+  const { setIsAdminLogoutModalOpen } = useModal();
   return (
     <SidebarContainer>
       <div className={styles.sidebarContentContainer}>

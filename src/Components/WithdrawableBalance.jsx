@@ -2,14 +2,15 @@ import { HiArrowDownTray, HiArrowUpTray } from "react-icons/hi2";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { useWallet } from "../context/WalletContextProvider";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 import SpiralSpinner from "./SpiralSpinner";
 import styles from "./withdrawablebalance.module.css";
 
 export default function WithdrawableBalance() {
-  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } = useWallet();
-  const { setIsDepositModalOpen, setIsWithdrawModalOpen } = useModal()
+  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } =
+    useWallet();
+  const { setIsDepositModalOpen, setIsWithdrawModalOpen } = useModal();
 
   return (
     <div className={styles.container}>

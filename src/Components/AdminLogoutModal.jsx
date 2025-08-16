@@ -3,15 +3,15 @@ import { userAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import LoadingSpinner from "./LoadingSpinner";
 import CustomModal from "./CustomModal";
-import styles from "../Components/adminlogoutmodal.module.css"
+import styles from "../Components/adminlogoutmodal.module.css";
 import handleErrorMessages from "../Utils/errorMessages";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 
 export default function AdminLogoutModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { signOut } = userAuth();
-  const { isAdminLogoutModalOpen, setIsAdminLogoutModalOpen } = useModal()
+  const { isAdminLogoutModalOpen, setIsAdminLogoutModalOpen } = useModal();
 
   const closeModal = () => {
     setIsAdminLogoutModalOpen(false);
@@ -27,14 +27,13 @@ export default function AdminLogoutModal() {
 
       if (signOutError) {
         setError(handleErrorMessages(signOutError.message));
-        throw new Error(signOutError.message)
+        throw new Error(signOutError.message);
       }
 
       if (success) {
         setIsAdminLogoutModalOpen(false);
         navigate("/admin/login");
-      } 
-
+      }
     } finally {
       setIsLoading(false);
     }

@@ -5,13 +5,13 @@ import LoadingSpinner from "./LoadingSpinner";
 import CustomModal from "./CustomModal";
 import styles from "./logoutmodal.module.css";
 import handleErrorMessages from "../Utils/errorMessages";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 
-export default function LogoutModal(){
+export default function LogoutModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { signOut } = userAuth();
-  const {  isLogoutModalOpen, setIsLogoutModalOpen } = useModal()
+  const { isLogoutModalOpen, setIsLogoutModalOpen } = useModal();
 
   const closeModal = () => {
     setIsLogoutModalOpen(false);
@@ -27,14 +27,13 @@ export default function LogoutModal(){
 
       if (signOutError) {
         setError(handleErrorMessages(signOutError.message));
-        throw new Error(signOutError.message)
+        throw new Error(signOutError.message);
       }
 
       if (success) {
         setIsLogoutModalOpen(false);
         navigate("/login");
-      } 
-
+      }
     } finally {
       setIsLoading(false);
     }

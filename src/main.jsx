@@ -1,10 +1,10 @@
 import { createRoot } from "react-dom/client";
-import { AuthContextProvider } from './context/AuthContext';
+import { AuthContextProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
-import WalletContextProvider from './context/WalletContextProvider';
-import AdminContextProvider from './context/AdminContext';
-import ModalContextProvider from './context/modalContext';
-import App from './App/App';
+import WalletContextProvider from "./context/WalletContextProvider";
+import AdminContextProvider from "./context/AdminContext";
+import ModalContextProvider from "./context/ModalContext";
+import App from "./App/App";
 
 createRoot(document.getElementById("root")).render(
   <AuthContextProvider>
@@ -12,11 +12,11 @@ createRoot(document.getElementById("root")).render(
       <AdminContextProvider>
         <ModalContextProvider>
           <App />
-          <Toaster 
+          <Toaster
             containerClassName="toastContainer"
             toastOptions={{
-              success: { style: { padding: '8px' } },
-              error: { style: { background: '#ff2323', color: '#fff', padding: '8px' } },
+              success: { style: { padding: "8px" } },
+              error: { style: { background: "#ff2323", color: "#fff", padding: "8px" } },
             }}
           />
         </ModalContextProvider>

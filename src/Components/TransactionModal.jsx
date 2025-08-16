@@ -1,6 +1,5 @@
-
 import styles from "../Components/transactionmodal.module.css";
-import { useModal } from "../context/modalContext";
+import { useModal } from "../context/ModalContext";
 import CustomModal from "./CustomModal";
 import TransactionModalContent from "./TransactionModalContent";
 
@@ -15,7 +14,7 @@ export default function TransactionModal() {
     <CustomModal isOpen={isTransactionModal} onClose={closeModal}>
       <div style={styles.container}>
         <h2 className={styles.title}>Transaction Details</h2>
-        <TransactionModalContent closeModal={closeModal}/>
+        <TransactionModalContent closeModal={closeModal} />
       </div>
     </CustomModal>
   );
