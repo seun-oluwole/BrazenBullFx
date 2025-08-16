@@ -3,7 +3,7 @@ import { AuthContextProvider } from "../src/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import WalletContextProvider from "../src/context/WalletContextProvider";
 import AdminContextProvider from "../src/context/AdminContext";
-import ModalContextProvider from "./context/modalContext";
+import ModalContextProvider from "../src/context/modalContext";
 import App from "./App/App";
 
 createRoot(document.getElementById("root")).render(
