@@ -4,10 +4,12 @@ import Status from "./Status";
 import moment from "moment";
 import styles from "../Components/transactionmodal.module.css";
 import LoadingSpinner from "./LoadingSpinner";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
+import formatAmount from "../Utils/formatAmount";
 
 export default function TransactionModalContent({ closeModal }) {
   const { fetchingTransaction, transactionDetail, fetchingTransError } = useWallet();
-  const { transaction_title, transaction_amount, transaction_method, transaction_status, created_at } =
+  const { transaction_title, balance_currency, converted_amount, transaction_method, transaction_status, created_at } =
     transactionDetail || "";
 
   if (fetchingTransaction) return (<div className={styles.spinnerContainer}><LoadingSpinner width={55} height={55} /></div>);
@@ -22,7 +24,9 @@ export default function TransactionModalContent({ closeModal }) {
               {transaction_title === "Withdraw" ? <HiArrowUp className={styles.icon} /> : ""}
             </div>
             <h2 className={styles.methodTitle}>{transaction_title}</h2>
-            <div className={styles.amount}>{`$${transaction_amount}`}</div>
+            <div className={styles.amount}>
+              {`${getCurrencySymbol(balance_currency)}${formatAmount(converted_amount.toFixed(2))}`}
+            </div>
             <div className={styles.status}>
               <Status status={transaction_status} />
             </div>

@@ -2,20 +2,18 @@ import { useEffect, useState } from "react";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { NavLink, useNavigate } from "react-router";
 import { userAuth } from "../context/AuthContext";
-import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import styles from "./login.module.css";
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
   });
 
-  const { session, signInUser, isSessionLoading } = userAuth();
+  const { session, signInUser, signInUserError, isSessionLoading } = userAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,17 +39,11 @@ export default function Login() {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     try {
-      const { error: signInError } = await signInUser(
+        await signInUser(
         loginDetails.email.toLowerCase().trim(""),
         loginDetails.password
       );
-
-      if (signInError) {
-        setError(handleErrorMessages(signInError.message));
-        return;
-      }
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +97,7 @@ export default function Login() {
         </form>
       </div>
       <div className={styles.resetDetails}>
-        <div className={styles.error}>{error}</div>
+        <div className={styles.error}>{signInUserError ? signInUserError : null}</div>
         <NavLink to="/signup" className="link">
           <p className={styles.signupText}>Don't have an account? SignUp.</p>
         </NavLink>

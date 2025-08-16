@@ -1,12 +1,12 @@
-import axios from "axios";
+import fetchExchangeRate from "./getExchangeRate";
 
-const exchangeUrl = import.meta.env.VITE_EXCHANGE_URL;
-const exchangeKey = import.meta.env.VITE_EXCHANGE_KEY;
+export default async function convertCurrency(fromCurr, toCurr, amount) {
+  if (!fromCurr || !toCurr) {
+      throw new Error('Invalid currency codes');
+    }
+    
+  const rate = await fetchExchangeRate(fromCurr, toCurr);
+  const convertedAmount = rate * amount
 
-export default async function convertCurrency(baseCode, targetCode, amount) {
-  if (baseCode === targetCode) return 
-  const response = await axios.get(`${exchangeUrl}/${exchangeKey}/pair/${baseCode}/${targetCode}/${amount}`);
-
-  if (!response?.status === 200) throw new Error("Error: Failed to fetch") 
-  return response?.data
+  return { convertedAmount, rate }
 }

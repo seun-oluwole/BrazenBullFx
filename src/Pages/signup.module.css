@@ -46,7 +46,7 @@
   border-radius: 8px;
   border: 1px solid #595b61;
   color: #666d7c;
-   font-size: 1rem;
+  font-size: 1rem;
 }
 
 .formContainer input::placeholder {
@@ -145,5 +145,16 @@
   color: red;
   font-size: 0.9rem;
   text-align: center;
+}
+
+.displayCurrency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  width: 85px;
+  border: 1px solid #595b61;;
+  border-radius: 12px;
+  font-weight: 600;
 }
  

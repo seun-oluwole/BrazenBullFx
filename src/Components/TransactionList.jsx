@@ -7,43 +7,47 @@ import { useEffect } from "react";
 import { supabase } from "../Utils/supabaseClient";
 import moment from "moment";
 import styles from "../Components/transactionlist.module.css";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
+import { userAuth } from "../context/AuthContext";
+import formatAmount from "../Utils/formatAmount";
 
 export default function TransactionList() {
   const { allTransactions, setAllTransactions, fetchingAllTransactions, fetchingTransError, fetchTransaction, setTransactionDetail, handleNextStep } = useWallet();
   const { setIsTransactionModal, setIsDepositModalOpen } = useModal()
+  const { session } = userAuth()
+  const userId = session?.user?.id;
 
   // Listening for updates from supabase in realtime and updating the states...
   let payloadUpdate;
   useEffect(() => {
-    supabase
+    const channel = supabase
     .channel('generating-details')
     .on('postgres_changes', 
       { event: '*', schema: 'public', table: 'transactions' }, 
       payload => {
       payloadUpdate = payload
-      setTransactionDetail(payload.new)
-      if (payload.eventType === "INSERT") {
-        setAllTransactions((prev) => ([
-        ...prev,
-        payload.new
-        ]))
-      } else if (payload.eventType === "UPDATE"){
-        setAllTransactions((prev) => prev
-          .map((item) => item.id === payload.new.id 
-          ? { ...item, ...payload.new }
-          : item));
-      }
-      else if (payload.eventType === "DELETE") {
-        setAllTransactions((prev) => prev
-        .filter((item) => item.id !== payload.old.id));
+      if (payload.new.user_id === userId) {
+        setTransactionDetail(payload.new)
+        if (payload.eventType === "INSERT") {
+          setAllTransactions((prev) => ([
+          ...prev,
+          payload.new
+          ]))
+        } else if (payload.eventType === "UPDATE"){
+          setAllTransactions((prev) => prev
+            .map((item) => item.id === payload.new.id 
+            ? { ...item, ...payload.new }
+            : item));
+        }
+        else if (payload.eventType === "DELETE") {
+          setAllTransactions((prev) => prev
+          .filter((item) => item.id !== payload.old.id));
+        }
       }
     }).subscribe()
 
-    return () => supabase
-    .removeChannel('generating-details')
-    .then()
-  }, [payloadUpdate]);
-
+    return () => supabase.removeChannel(channel)
+  }, [payloadUpdate, session]);
 
   const handleTransactionDetail = async (id, status, title) => {
     if (status === "pending" && title === "Deposit") {
@@ -66,12 +70,13 @@ export default function TransactionList() {
             <tbody>
               {allTransactions
               .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-              .map(({transaction_title, transaction_amount, transaction_method, transaction_status, created_at, id}, index) => (
-                <tr className={styles.bodyRow} key={index} onClick={() => handleTransactionDetail(id, transaction_status, transaction_title)}>
+              .map(({transaction_title, balance_currency, converted_amount, transaction_method, transaction_status, created_at, id}, index) => {
+                return (
+                  <tr className={styles.bodyRow} key={index} onClick={() => handleTransactionDetail(id, transaction_status, transaction_title)}>
                   <td className={styles.bodyTitle}>
                     <div className={styles.iconContainer}>
-                      {transaction_title === "Deposit" ? (<HiArrowDown className={styles.icon}/>) : ""}
-                      {transaction_title === "Withdraw" ? (<HiArrowUp className={styles.icon}/>) : ""}
+                      {transaction_title === "Deposit" && (<HiArrowDown className={styles.icon}/>)}
+                      {transaction_title === "Withdraw" && (<HiArrowUp className={styles.icon}/>)}
                     </div>
                     <div className={styles.titleContainer}>
                       <div className={styles.transactionTitle}>{transaction_title}</div>
@@ -80,7 +85,9 @@ export default function TransactionList() {
                   </td>
                   <td className={styles.bodyCell}>
                     <div className={styles.amountContainer}>
-                      <div className={styles.amount}>{`$${transaction_amount.toLocaleString()}`}</div>
+                      <div className={styles.amount}>
+                      {`${getCurrencySymbol(balance_currency)}${formatAmount(converted_amount?.toFixed(2))}`}
+                      </div>
                       <Status status={transaction_status} height={19} fontSize={0.7}/>
                     </div>
                   </td>
@@ -88,7 +95,8 @@ export default function TransactionList() {
                     <HiChevronRight />
                   </td>
                 </tr>
-              ))}
+                )})
+              }
             </tbody>
           </table>
         ) : (

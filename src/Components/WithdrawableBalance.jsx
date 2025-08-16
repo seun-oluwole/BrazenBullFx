@@ -2,12 +2,13 @@ import { HiArrowDownTray, HiArrowUpTray } from "react-icons/hi2";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { useWallet } from "../context/WalletContextProvider";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
+import { useModal } from "../context/modalContext";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 import SpiralSpinner from "./SpiralSpinner";
 import styles from "./withdrawablebalance.module.css";
-import { useModal } from "../context/modalContext";
 
 export default function WithdrawableBalance() {
-  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, currencySymbol, isWalletLoading, fetchWalletError } = useWallet();
+  const { withdrawableBalance, showBalance, toggleShowBalance, balanceCurrency, isWalletLoading, fetchWalletError } = useWallet();
   const { setIsDepositModalOpen, setIsWithdrawModalOpen } = useModal()
 
   return (
@@ -18,7 +19,7 @@ export default function WithdrawableBalance() {
           <>
             {!isWalletLoading ? (
               <>
-                <span className={styles.currencySymbol}>{currencySymbol}</span>
+                <span className={styles.currencySymbol}>{getCurrencySymbol(balanceCurrency)}</span>
                 <div className={styles.amount}>{showBalance ? withdrawableBalance.toLocaleString() : "*****"}</div>
                 <div className={styles.toggleShowBalance} onClick={toggleShowBalance}>
                   {showBalance ? <LuEye className={styles.icon} /> : <LuEyeClosed className={styles.icon} />}

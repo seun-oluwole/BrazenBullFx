@@ -1,9 +1,7 @@
-/* .transactionsContainer {
-  padding: 15px;
-} */
  .mainContainer {
   overflow: hidden;
-  padding-bottom: 100px;
+  margin-bottom: 100px;
+  min-height: 100vh;
  }
 
 .container {
@@ -22,7 +20,7 @@
 
 @media(min-width: 1024px) {
   .mainContainer {
-    padding-bottom: 0;
+    margin-bottom: 15px;
   }
 }
 

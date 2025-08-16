@@ -7,39 +7,42 @@ import { supabase } from "../Utils/supabaseClient";
 import moment from "moment";
 import Status from "../Components/Status";
 import styles from "../AdminDashboard/transactionhistorylist.module.css";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 
 
-export default function TransactionHistoryList() {
+export default function TransactionHistoryList({ userId }) {
   const { allTransactions, setAllTransactions, fetchingInvestorTrans, fetchingTransError, fetchInvestorTransDetail } = useAdmin();
   const { setIsTransHistoryModal } = useModal();
 
   //Listening for updates from supabase in realtime and updating the states...
   let payloadUpdate;
   useEffect(() => {
-    supabase
+    const channel = supabase
     .channel('generating-details')
     .on('postgres_changes', 
       { event: '*', schema: 'public', table: 'transactions' }, 
       payload => {
       payloadUpdate = payload
-      if (payload.eventType === "INSERT") {
-        setAllTransactions((prev) => ([
-        ...prev,
-        payload.new
-        ]))
-      } else if (payload.eventType === "UPDATE"){
-        setAllTransactions((prev) => prev
-          .map((item) => item.id === payload.new.id 
-          ? { ...item, ...payload.new }
-          : item));
-      }
-      else if (payload.eventType === "DELETE") {
-        setAllTransactions((prev) => prev
-        .filter((item) => item.id !== payload.old.id));
+      if (payload.new.user_id === userId) {
+        if (payload.eventType === "INSERT") {
+          setAllTransactions((prev) => ([
+          ...prev,
+          payload.new
+          ]))
+        } else if (payload.eventType === "UPDATE"){
+          setAllTransactions((prev) => prev
+            .map((item) => item.id === payload.new.id 
+            ? { ...item, ...payload.new }
+            : item));
+        }
+        else if (payload.eventType === "DELETE") {
+          setAllTransactions((prev) => prev
+          .filter((item) => item.id !== payload.old.id));
+        }
       }
     }).subscribe()
 
-    return () => supabase.removeChannel('generating-details').then()
+    return () => supabase.removeChannel(channel)
   }, [payloadUpdate]);
 
   const handleTransactionDetail = async (id) => {
@@ -58,7 +61,7 @@ export default function TransactionHistoryList() {
             .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
             .map(
               (
-                { transaction_title, transaction_amount, transaction_method, transaction_status, created_at, id },
+                { converted_amount, transaction_title, balance_currency, transaction_method, transaction_status, created_at, id },
                 index
               ) => (
                 <tr className={styles.bodyRow} key={index} onClick={() => handleTransactionDetail(id)}>
@@ -74,7 +77,7 @@ export default function TransactionHistoryList() {
                   </td>
                   <td className={styles.bodyCell}>
                     <div className={styles.amountContainer}>
-                      <div className={styles.amount}>{`$${transaction_amount.toLocaleString()}`}</div>
+                      <div className={styles.amount}>{`${getCurrencySymbol(balance_currency)}${converted_amount?.toLocaleString()}`}</div>
                       <Status status={transaction_status} height={19} fontSize={0.7} />
                     </div>
                   </td>

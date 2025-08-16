@@ -9,6 +9,9 @@ export const AuthContextProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [isSessionLoading, setIsSessionLoading] = useState(true);
+  const [signUpError, setSignUpError] = useState(null);
+  const [signInUserError, setSignInUserError] = useState(null);
+  const [signInAdminError, setSignInAdminError] = useState(null);
   const role = session?.user?.user_metadata?.role
  
   // Get and set user session on page load...
@@ -50,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  async function createWallet(user) {
+  async function createWallet(user, countryCurrency) {
     if (!user) return;
     const { error: walletError } = await supabase.from("wallet").insert([{
       user_id: user?.sub,
@@ -58,7 +61,8 @@ export const AuthContextProvider = ({ children }) => {
       total_deposit: 0,
       total_withdrawn: 0,
       withdrawable_balance: 0,
-      currency: "USD",
+      currency: countryCurrency,
+      country_currency: countryCurrency,
       currency_symbol: "$",
       cryptocurrency: "USDT",
       tier: "1",
@@ -73,14 +77,14 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   // Sign up...
-  const signUpNewUser = async (email, password, firstName, lastName, phoneNumber, role) => {
+  const signUpNewUser = async (email, password, firstName, lastName, phoneNumber, countryCurrency, role) => {
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
           data: {
-            role: role.role,
+            role: role,
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,
@@ -88,72 +92,87 @@ export const AuthContextProvider = ({ children }) => {
         },
       });
 
-      if (authError) {
-        return { success: false, error: authError }
-      }
+      if (authError) throw authError
 
       const userMetaData = authData.user.user_metadata;
 
       // Create wallet data...
-      if (userMetaData?.role === "user") {
-        const { success: walletCreated, error: walletError } = await createWallet(userMetaData);
+      if (userMetaData?.role === "user" && countryCurrency) {
+        const { success: walletCreated, error: walletError } = await createWallet(userMetaData, countryCurrency);
 
-        if (walletCreated) {
-          setIsWalletCreated(true);
-          return { success: true };
-        } else {
-          throw new Error(walletError.message);
-        }
+        if (walletError) throw walletError
       }
-      return { success: true, error: authError}
+      toast.success("Account created successfully.")
     } catch (error) {
-      if (error) toast.error("Error: Signup Failed.")
+      setSignUpError(error.message)
+      toast.error("Error: Signup Failed.")
+
+    } finally {
+       let timeoutId = setTimeout(() => {
+        setSignUpError(null)
+        clearTimeout(timeoutId)  
+      }, 2000)
     }
   };
 
   //Sign In User
   const signInUser = async (email, password) => {
-    const { data: authData, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    try {
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+  
+      if (error) throw error
+  
+      const authRole = authData?.user?.user_metadata?.role
+  
+      if (authRole === "user") {
+        toast.success("Welcome!")
+      } else {
+        await signOut()
+        toast.error("Error: Unauthorized login.")
+      } 
+    } catch (error) {
+      setSignInUserError(error.message)
+      toast.error("Error: Login Error");
 
-    if (error) {
-      return { success: false, error };
+    } finally {
+      let timeoutId = setTimeout(() => {
+        setSignInUserError(null)
+        clearTimeout(timeoutId)  
+      }, 2000)
     }
-
-    const authRole = authData?.user?.user_metadata?.role
-
-    if (authRole === "user") {
-      toast.success("Welcome!")
-      return { success: true };
-    } else {
-      await signOut()
-      toast.error("Error: Unauthorized login.")
-      return { success: false }
-    } 
   }
   //Sign In Admin
   const signInAdmin = async (email, password) => {
-    const { data: authData, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    try {
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+  
+      if (signInError) throw signInError
+  
+      const authRole = authData?.user?.user_metadata?.role
+  
+      if (authRole === "admin") {
+        toast.success("Welcome Admin")
+      } else {
+        toast.error("Error: Unathorised login")
+        await signOut()
+      }
 
-    if (error) {
-      return { success: false, error };
+    } catch (error) {
+      setSignInAdminError(error.message)
+      toast.error("Error: Login Error")
+
+    } finally {
+      let timeoutId = setTimeout(() => {
+        setSignInAdminError(null)
+        clearTimeout(timeoutId)  
+      }, 2000)
     }
-
-    const authRole = authData?.user?.user_metadata?.role
-
-    if (authRole === "admin") {
-      toast.success("Welcome Admin")
-      return { success: true };
-    } else {
-      toast.error("Error: Unathorized login.")
-      await signOut()
-      return { success: false }
-    } 
   }
 
 
@@ -173,7 +192,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, signInUser, signInAdmin, signUpNewUser, signOut, userData, isSessionLoading, isWalletCreated }}
+      value={{ session, signInUser, signInAdmin, signUpNewUser, signOut, userData, isSessionLoading, isWalletCreated, signUpError, signInAdminError, signInUserError }}
     >
       {children}
     </AuthContext.Provider>

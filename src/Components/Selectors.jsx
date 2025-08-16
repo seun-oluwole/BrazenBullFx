@@ -1,13 +1,51 @@
-import CurrencyList from "currency-list";
+import country from 'country-list-js';
 import styles from "../Components/selectors.module.css";
 
+const countryNames = country.names().sort();
+const allCountries = countryNames.map(name => country.findByName(name))
+
+export function SelectCountry({ value, handleInput }) {
+  return (
+  <select value={value} name="countryCurrency" id="" className={styles.countryInput} onChange={handleInput} required>
+    <option value="">Select Country</option>
+    {allCountries.map(({ code: { iso2 }, name }) => (
+      <option key={iso2} value={iso2}>{`${name}`}</option>
+    ))}
+  </select>
+);
+}
+
 export function SelectCurrency({ value, handleInput }) {
-  const currencyValues = Object.values(CurrencyList.getAll("en_US"));
   return (
     <select value={value} name="currency" id="" className={styles.input} onChange={handleInput}>
       <option value="">Select Currency</option>
-      {currencyValues.map(({ code, name }, index) => (
-        <option key={index} value={code}>{`${name} (${code})`}</option>
+      {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
+        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
+      ))}
+    </select>
+  );
+}
+
+export function CallingCodeSelector({ value, handleInput }) {
+   const callingCode = country.findByIso3(value).dialing_code
+   return (
+    <select value={value} name="callingCode" onChange={handleInput} className={styles.selector} autoFocus>
+      <option value={value}>{`${value} (+${callingCode})`}</option>
+      {allCountries.map(({ name, dialing_code, code: { iso3 }}) => (
+        <option key={iso3} value={iso3}>
+          {`${name} (+${dialing_code})`}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export function SelectDepositCurrency({ value, handleInput }) {
+  return (
+    <select value={value} name="depositCurrency" id="" className={styles.input} onChange={handleInput}>
+      <option value="">Select Currency</option>
+      {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
+        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
       ))}
     </select>
   );

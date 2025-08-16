@@ -9,13 +9,12 @@ import styles from "../Pages/login.module.css";
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [loginDetails, setLoginDetails] = useState({
     email: "",
     password: "",
   });
 
-  const { session, signInAdmin, isSessionLoading } = userAuth();
+  const { session, signInAdmin, isSessionLoading, signInAdminError } = userAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,17 +40,9 @@ export default function Login() {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     try {
-      const { error: signInError } = await signInAdmin(
-        loginDetails.email.toLowerCase(),
-        loginDetails.password
-      );
+      await signInAdmin(loginDetails.email.toLowerCase(), loginDetails.password);
 
-      if (signInError) {
-        setError(handleErrorMessages(signInError.message));
-        return;
-      }
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +96,7 @@ export default function Login() {
         </form>
       </div>
       <div className={styles.resetDetails}>
-        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <div className={styles.error}>{signInAdminError ? `${signInAdminError}` : ""}</div>
         <NavLink to="/admin/signup" className="link">
           <p className={styles.signupText}>Don't have an account? SignUp.</p>
         </NavLink>

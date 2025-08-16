@@ -3,21 +3,17 @@ import { NavLink, useNavigate } from "react-router";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { userAuth } from "../context/AuthContext";
 import { toCapitalize } from "../Utils/toCapitalize";
-import CountrySelector from "../Components/CountrySelector";
-import countryList from "country-calling-code";
+import { CallingCodeSelector } from "../Components/Selectors";
 import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import styles from "../Pages/signup.module.css";
+import country from 'country-list-js';
 
 export default function AdminSignup() {
-  const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
-  const [callingCode, setCallingCode] = useState("63");
-  const [countryDetails, setCountryDetails] = useState(null);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [matchingPassword, setMatchingPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
@@ -25,10 +21,23 @@ export default function AdminSignup() {
     phonenumber: "",
     password: "",
     confirmPassword: "",
+    callingCode: "",
+    countryISO3: "NGA"
   });
 
-  const { signUpNewUser } = userAuth();
-  const navigate = useNavigate();
+  const { session, isSessionLoading, signUpNewUser, signUpError } = userAuth();
+  const navigate = useNavigate()
+
+   useEffect(() => {
+    if (
+      !isSessionLoading &&
+      session &&
+      session.user?.user_metadata?.role === "admin" &&
+      window.location.pathname !== "/admin"
+    ) {
+      navigate("/admin", { replace: true });
+    }
+  }, [isSessionLoading, session, navigate]);
 
   // Using Effect to track current state of confirmPassword so that it can be validated.
   useEffect(() => {
@@ -36,13 +45,16 @@ export default function AdminSignup() {
     validateEmail();
   }, [userDetails.password, userDetails.confirmPassword, userDetails.email]);
 
-  const handleSelectCountry = (e) => {
-    const countryCode = e.target.value;
-    setSelectedCountryCode(countryCode);
+  const handleSelectCallingCode = (e) => {
+    const countryISO3 = e.target.value;
+    const filteredCountry = country.findByIso3(countryISO3)
+    const callingCode = filteredCountry.dialing_code
 
-    const filteredCountry = countryList.find(({ isoCode3 }) => isoCode3 === countryCode);
-    setCountryDetails(filteredCountry);
-    setCallingCode(filteredCountry?.countryCodes[0]);
+    setUserDetails((details) => ({ 
+      ...details, 
+      countryISO3: countryISO3,
+      callingCode: callingCode
+    }));
   };
 
   const handleUserInput = (e) => {
@@ -75,19 +87,18 @@ export default function AdminSignup() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const completePhoneNumber = `+${callingCode}${userDetails.phonenumber}`;
+    const completePhoneNumber = `+${userDetails.callingCode}${userDetails.phonenumber}`;
     try {
-      const { success: signUpSuccess, error: signUpError } = await signUpNewUser(
+        await signUpNewUser(
         userDetails.email.toLowerCase(),
         userDetails.confirmPassword,
         toCapitalize(userDetails.firstname),
         toCapitalize(userDetails.lastname),
         completePhoneNumber,
-        { role: "admin" }
+        "",
+        "admin"
       );
-
-      if (signUpError) setError(handleErrorMessages(signUpError.message));
-    } finally {
+    }finally {
       setIsLoading(false);
     }
   };
@@ -146,10 +157,9 @@ export default function AdminSignup() {
           <div className={styles.authDetails}>
             <div>Phone Number</div>
             <div className={styles.selectorContainer}>
-              <CountrySelector
-                value={selectedCountryCode}
-                countryDetails={countryDetails}
-                handleSelectCountry={handleSelectCountry}
+              <CallingCodeSelector
+                value={userDetails.countryISO3}
+                handleInput={handleSelectCallingCode}
               />
               <div className={styles.inputContainer}>
                 <input
@@ -212,7 +222,7 @@ export default function AdminSignup() {
         </form>
       </div>
       <div className={styles.resetDetails}>
-        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <div className={styles.error}>{signUpError ? `${signUpError}` : ""}</div>
         <NavLink to="/admin/login" className="link">
           <p className={styles.signupText}>Already have an account? Login.</p>
         </NavLink>

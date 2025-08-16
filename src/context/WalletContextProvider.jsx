@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import useLocalStorage from "../Utils/useLocalStorage";
 import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "./AuthContext";
-import toast from "react-hot-toast";
+
 
 const walletContext = createContext();
 const [getItem, setItem] = useLocalStorage();
@@ -18,7 +18,6 @@ export default function WalletContextProvider({ children }) {
   const [fetchingTransaction, setFetchingTransaction] = useState(false);
   const [fetchingTransError, setFetchingTransError] = useState(null)
   const [transactionDetail, setTransactionDetail] = useState({})
-
   const [walletData, setWalletData] = useState({
     tier: "",
     availableBalance: 0,
@@ -26,14 +25,41 @@ export default function WalletContextProvider({ children }) {
     totalWithdrawn: 0,
     withdrawableBalance: 0,
     balanceCurrency: "",
-    currencySymbol: "",
-    cryptocurrency: "",
+    depositCurrency: "",
+    cryptocurrency: ""
   });
 
   const { session } = userAuth();
   const userMetaData = session?.user?.user_metadata;
   const userId = session?.user?.id;
 
+ let payloadUpdate;
+  useEffect(() => {
+    const channel = supabase
+    .channel('wallet_update')
+    .on('postgres_changes', 
+      { event: '*', schema: 'public', table: 'wallet' }, 
+      payload => {
+      payloadUpdate = payload
+      if (payload.new.user_id === userId) {
+        setWalletData((prev) => ({
+          ...prev,
+          tier: walletData?.tier,
+          availableBalance: payload.new?.available_balance,
+          totalDeposit: payload.new?.total_deposit,
+          totalWithdrawn: payload.new?.total_withdrawn,
+          withdrawableBalance: payload.new?.withdrawable_balance,
+          balanceCurrency: payload.new?.currency,
+          cryptocurrency: payload.new?.cryptocurrency,
+          depositCurrency: payload.new?.country_currency
+        }))
+      }
+    }).subscribe()
+
+    return () => supabase.removeChannel(channel)
+  }, [payloadUpdate, session]);
+   
+    
   // Checks for a saved preference...
   useEffect(() => {
     const savedPreference = getItem("balanceVisible");
@@ -55,20 +81,24 @@ export default function WalletContextProvider({ children }) {
 
     // Reset wallet state when a user logs out...
     if (!session) {
-      setWalletData({
+      setWalletData((prev) => ({
+        ...prev,
         availableBalance: 0,
         totalDeposit: 0,
         totalWithdrawn: 0,
         withdrawableBalance: 0,
         balanceCurrency: "",
         cryptocurrency: "",
-      });
+      })
+        
+      );
     }
   }, [session]);
 
   const toggleShowBalance = () => {
     setShowBalance((prev) => !prev);
   };
+
 
   async function fetchUserWallet(userId) {
     if (!userId) return; // Prevents function from executing if there is no userId...
@@ -94,9 +124,10 @@ export default function WalletContextProvider({ children }) {
           totalWithdrawn: walletData?.total_withdrawn,
           withdrawableBalance: walletData?.withdrawable_balance,
           balanceCurrency: walletData?.currency,
-          currencySymbol: walletData?.currency_symbol,
           cryptocurrency: walletData?.cryptocurrency,
+          depositCurrency: walletData?.country_currency
         }));
+        return walletData[0]
       }
     }catch (error) {
       if (error) {
@@ -107,24 +138,23 @@ export default function WalletContextProvider({ children }) {
     }
   }
 
-  const fetchAllTransactions = async (userId) => {
+  async function fetchAllTransactions(userId) {
     if (!userId) return
     setFetchingAllTransactions(true)
     try {
-    const { data: transactionData, error: transactionError } = await supabase
+      const { data: transactionData, error: transactionError } = await supabase
       .from("transactions")
       .select("*")
       .eq("user_id", userId)
       .order("id", { ascending: false });
-
-      if (transactionError) {
-        throw(transactionError)
-      }
       
-      setAllTransactions(transactionData);
+    if (transactionError) {
+      throw(transactionError)
     }
-    catch (error) {
-     if (error) setFetchingTransError(error)
+    setAllTransactions(transactionData);
+    
+    } catch (error) {
+      setFetchingTransError(error)
     } finally {
       setFetchingAllTransactions(false)
     }

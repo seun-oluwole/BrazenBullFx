@@ -8,15 +8,18 @@ const CustomModal = ({ isOpen, onClose, children }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Modal"
+      className="modal-content"
       style={{
         overlay: {
+          display: "flex",
+          alignItems: "center",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         },
         content: {
           left: "15px",
           right: "15px",
           maxWidth: "450px",
-          maxHeight: "fit-content",
+          maxHeight: "auto",
           margin: "auto",
           padding: "1.6rem",
           borderRadius: "16px",

@@ -63,3 +63,21 @@ body::-webkit-scrollbar-thumb {
   height: 52px;
   color:var(--grey-950);
 }
+
+.modal-content {
+  position: absolute;
+  background-color: #fff;
+  left: 15px;
+  right: 15px;
+  max-width: 450px;
+  max-height: auto;
+  /* margin: auto; */
+  padding: 1.6rem;
+  border-radius: 16px;
+  overflow: hidden;
+  outline: none;
+}
+
+.modal-overlay {
+ background-color: rgba(0, 0, 0, 0.5);
+}

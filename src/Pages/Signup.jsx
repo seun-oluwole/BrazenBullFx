@@ -3,32 +3,45 @@ import { NavLink, useNavigate } from "react-router";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { userAuth } from "../context/AuthContext";
 import { toCapitalize } from "../Utils/toCapitalize";
-import CountrySelector from "../Components/CountrySelector";
-import countryList from "country-calling-code";
+import { SelectCountry, CallingCodeSelector } from "../Components/Selectors";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
+import country from 'country-list-js';
 import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import styles from "./signup.module.css";
 
 export default function Signup() {
-  const [selectedCountryCode, setSelectedCountryCode] = useState("PHP");
-  const [callingCode, setCallingCode] = useState("63");
-  const [countryDetails, setCountryDetails] = useState(null);
+  const [steps, setSteps] = useState(1);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [matchingPassword, setMatchingPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
     email: "",
+    countryCurrency: "PHP",
+    countryISO2: "PH",
+    countryISO3: "PHL",
     phonenumber: "",
     password: "",
     confirmPassword: "",
+    callingCode: "63",
   });
 
-  const { signUpNewUser } = userAuth();
+  const { session, signUpNewUser, signUpError, isSessionLoading } = userAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      !isSessionLoading &&
+      session &&
+      session.user?.user_metadata?.role === "user" &&
+      window.location.pathname !== "/dashboard"
+    ) {
+      navigate("/dashboard/wallet", { replace: true });
+    }
+  }, [isSessionLoading, session, navigate]);
 
   // Using Effect to track current state of confirmPassword so that it can be validated.
   useEffect(() => {
@@ -36,18 +49,39 @@ export default function Signup() {
     validateEmail();
   }, [userDetails.password, userDetails.confirmPassword, userDetails.email]);
 
-  const handleSelectCountry = (e) => {
-    const countryCode = e.target.value;
-    setSelectedCountryCode(countryCode);
-
-    const filteredCountry = countryList.find(({ isoCode3 }) => isoCode3 === countryCode);
-    setCountryDetails(filteredCountry);
-    setCallingCode(filteredCountry?.countryCodes[0]);
-  };
 
   const handleUserInput = (e) => {
     const { name, value } = e.target;
-    setUserDetails((details) => ({ ...details, [name]: value }));
+    if (name === "countryCurrency") {
+      const filteredCountry = country.findByIso2(value)
+      const currencyCode = filteredCountry.currency.code
+      const countryISO3 = filteredCountry.code.iso3
+      const callingCode = filteredCountry.dialing_code
+  
+      setUserDetails((details) => ({ 
+        ...details, 
+        [name]: currencyCode,
+        countryISO2: value,
+        countryISO3: countryISO3,
+        callingCode: callingCode
+      }));
+    } else if (name === "callingCode") {
+      const filteredCountry = country.findByIso3(value)
+      const currencyCode = filteredCountry.currency.code
+      const countryISO2 = filteredCountry.code.iso2
+      const callingCode = filteredCountry.dialing_code
+  
+      setUserDetails((details) => ({ 
+        ...details, 
+        countryCurrency: currencyCode,
+        countryISO2: countryISO2,
+        countryISO3: value,
+        callingCode: callingCode
+      }));
+
+    } else {
+      setUserDetails((details) => ({ ...details, [name]: value }));
+    }
   };
 
   const handleConfirmPassword = () => {
@@ -75,22 +109,18 @@ export default function Signup() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const completePhoneNumber = `+${callingCode}${userDetails.phonenumber}`;
+    const completePhoneNumber = `+${userDetails.callingCode}${userDetails.phonenumber}`;
     try {
-      const { success: signUpSuccess, error: signUpError } = await signUpNewUser(
+        await signUpNewUser(
         userDetails.email.toLowerCase(),
         userDetails.confirmPassword,
         toCapitalize(userDetails.firstname),
         toCapitalize(userDetails.lastname),
         completePhoneNumber,
-        { role: "user" }
+        userDetails.countryCurrency,
+        "user"
       );
 
-      if (signUpSuccess) {
-        navigate("/dashboard/wallet");
-      } else {
-        setError(handleErrorMessages(signUpError.message));
-      }
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +135,7 @@ export default function Signup() {
 
       <div className={styles.formContainer}>
         <form onSubmit={handleSignUp}>
-          <div className={`${styles.nameContainer}`}>
+          <div className={styles.nameContainer}>
             <div className={styles.authDetails}>
               <div>First Name</div>
               <div className={styles.inputContainer}>
@@ -148,12 +178,20 @@ export default function Signup() {
             {!isEmailValid && <div className={styles.error}>Your email is not valid. Enter a valid email.</div>}
           </div>
           <div className={styles.authDetails}>
+            <div className={styles.selectorContainer}>
+            <div className={styles.displayCurrency}>{getCurrencySymbol(userDetails.countryCurrency)}</div>
+            <SelectCountry
+              value={userDetails.countryISO2}
+              handleInput={handleUserInput}
+            />
+            </div>
+          </div>
+          <div className={styles.authDetails}>
             <div>Phone Number</div>
             <div className={styles.selectorContainer}>
-              <CountrySelector
-                value={selectedCountryCode}
-                countryDetails={countryDetails}
-                handleSelectCountry={handleSelectCountry}
+              <CallingCodeSelector
+                value={userDetails.countryISO3}
+                handleInput={handleUserInput}
               />
               <div className={styles.inputContainer}>
                 <input
@@ -216,7 +254,7 @@ export default function Signup() {
         </form>
       </div>
       <div className={styles.resetDetails}>
-        <div className={styles.error}>{error ? `${error}` : ""}</div>
+        <div className={styles.error}>{signUpError ? `${signUpError}` : ""}</div>
         <NavLink to="/login" className="link">
           <p className={styles.signupText}>Already have an account? Login.</p>
         </NavLink>

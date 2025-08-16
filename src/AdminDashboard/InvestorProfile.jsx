@@ -1,7 +1,7 @@
 import SpiralSpinner from "../Components/SpiralSpinner";
 import ViewContainer from "../Components/ViewContainer";
 import InvestorTransHistory from "./InvestorTransHistory";
-import { SelectCryptoCurrency, SelectCurrency, SelectTier } from "../Components/Selectors";
+import { SelectCryptoCurrency, SelectCurrency, SelectDepositCurrency, SelectTier } from "../Components/Selectors";
 import { useParams } from "react-router";
 import { supabase } from "../Utils/supabaseClient";
 import { useEffect, useReducer, useState } from "react";
@@ -11,15 +11,19 @@ import { useAdmin } from "../context/AdminContext";
 import styles from "./investorprofile.module.css";
 import convertCurrency from "../Utils/convertCurrency";
 import CurrencyList from "currency-list";
+import fetchExchangeRate from "../Utils/getExchangeRate";
+import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
+import toast from "react-hot-toast";
 
 export default function InvestorProfile() {
   const { userId } = useParams();
-  const { fetchInvestorTransactions } = useAdmin()
+  const { allTransactions, fetchInvestorTransactions } = useAdmin()
   const [investorData, setInvestorData] = useState({});
   const [error, setError] = useState(null);
   const [inputData, setInputData] = useState({
     tier: "",
     currency: "",
+    depositCurrency: "",
     cryptocurrency: "",
     currencySymbol: "",
     availableBalance: 0,
@@ -36,6 +40,7 @@ export default function InvestorProfile() {
     totalDeposit: false,
     totalWithdrawn: false,
     withdrawableBal: false,
+    depositCurrency: false,
   });
   const { session } = userAuth();
   const userMetaData = session?.user?.user_metadata;
@@ -66,6 +71,9 @@ export default function InvestorProfile() {
     if (action.type === "withdrawable_balance") {
       return { ...isLoading, withdrawableBal: action.payload };
     }
+    if (action.type === "country_currency") {
+      return { ...isLoading, depositCurrency: action.payload }
+    }
   }
 
   useEffect(() => {
@@ -82,7 +90,6 @@ export default function InvestorProfile() {
       if (error) throw new Error(error);
 
       setInvestorData(investorData[0]);
-      return investorData;
     } catch (error) {
       setError(error);
     } finally {
@@ -137,30 +144,82 @@ export default function InvestorProfile() {
   };
 
   const updateCurrency = async (walletColumn) => {
+    if (investorData?.currency === inputData.currency) return
     dispatch({ type: `${walletColumn}`, payload: true });
     try {
-      const [availableBal, totalDeposit, totalWithdrawn, withdrawableBal] = await Promise.all([
-        convertCurrency(investorData?.currency, inputData.currency, investorData?.available_balance),
-        convertCurrency(investorData?.currency, inputData.currency, investorData?.total_deposit),
-        convertCurrency(investorData?.currency, inputData.currency, investorData?.total_withdrawn),
-        convertCurrency(investorData?.currency, inputData.currency, investorData?.withdrawable_balance)
-      ])
+      const rate = await fetchExchangeRate(investorData?.currency, inputData.currency)
+      const convertedAvailableBal = rate * investorData?.available_balance
+      const convertedTotalDeposit = rate * investorData?.total_deposit
+      const convertedTotalWithdrawn = rate * investorData?.total_withdrawn
+      const convertedWithdrawableBal = rate * investorData?.withdrawable_balance
+      
 
+      //Update all wallet balance with converted amount
       const { error: updateError } = await supabase
         .from("wallet")
         .update({
           [walletColumn]: inputData.currency,
-          currency_symbol: inputData.currencySymbol,
-          available_balance: availableBal?.conversion_result,
-          total_deposit: totalDeposit?.conversion_result,
-          total_withdrawn: totalWithdrawn?.conversion_result,
-          withdrawable_balance: withdrawableBal?.conversion_result
+          available_balance: convertedAvailableBal,
+          total_deposit: convertedTotalDeposit,
+          total_withdrawn: convertedTotalWithdrawn,
+          withdrawable_balance: convertedWithdrawableBal
         })
         .eq("user_id", userId);
+      
+      if (updateError) throw new Error(updateError);
+
+      // Convert and update transaction currency
+      await Promise.all(allTransactions.map(async (transaction) => {
+        if (transaction?.transaction_title === "Deposit") {
+          const { convertedAmount, rate } = await convertCurrency(transaction?.deposit_currency, inputData.currency, transaction?.transaction_amount);
+          const { error: updateError } = await supabase
+          .from("transactions")
+          .update({
+            balance_currency: inputData.currency,
+            converted_amount: convertedAmount,
+            exchange_rate: rate
+          })
+          .eq("id", transaction?.id);
+
+          if (updateError) throw updateError
+
+        } else if (transaction?.transaction_title === "Withdraw"){
+          const {convertedAmount, rate} = await convertCurrency(transaction?.withdraw_currency, inputData.currency, transaction?.transaction_amount);
+
+          const { error: updateError } = await supabase
+          .from("transactions")
+          .update({
+            balance_currency: inputData.currency,
+            converted_amount: convertedAmount,
+            exchange_rate: rate
+          })
+          .eq("id", transaction?.id);
+
+          if (updateError) throw updateError
+        }
+      })).catch(err => toast.error(err.message))
 
       await fetchInvestor();
 
-      if (updateError) throw new Error(updateError);
+    } catch (error) {
+      setError(error);
+    } finally {
+      dispatch({ type: `${walletColumn}`, payload: false });
+    }
+  };
+
+  const updateDepositCurrency = async (walletColumn) => {
+    dispatch({ type: `${walletColumn}`, payload: true });
+    try {
+      const { error: updateWalletError } = await supabase
+        .from("wallet")
+        .update({
+          [walletColumn]: inputData.depositCurrency,
+        })
+        .eq("user_id", userId);
+
+      if (updateWalletError) throw new Error(updateError);
+      await fetchInvestor();
     } catch (error) {
       setError(error);
     } finally {
@@ -295,11 +354,20 @@ export default function InvestorProfile() {
                   </div>
                 </div>
                 <div>
-                  <div className={styles.subTitle}>Currency: {investorData?.currency}</div>
+                  <div className={styles.subTitle}>Balance Currency: {investorData?.currency}</div>
                   <div className={styles.inputContainer}>
                     <SelectCurrency handleInput={handleSelectInput} value={inputData.currency} />
                     <button className={styles.button} onClick={() => updateCurrency("currency")}>
                       {isLoading.currency ? <SpiralSpinner width={15} height={15} /> : "Update"}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div className={styles.subTitle}>Deposit Currency: {investorData?.country_currency}</div>
+                  <div className={styles.inputContainer}>
+                    <SelectDepositCurrency handleInput={handleSelectInput} value={inputData.depositCurrency} />
+                    <button className={styles.button} onClick={() => updateDepositCurrency("country_currency")}>
+                      {isLoading.depositCurrency ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>
                   </div>
                 </div>
@@ -324,6 +392,7 @@ export default function InvestorProfile() {
                       name="availableBalance"
                       onValueChange={handleInput}
                       decimalScale={2}
+                      prefix={getCurrencySymbol(investorData?.currency)}
                       thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateAvailableBal("available_balance")}>
@@ -342,6 +411,7 @@ export default function InvestorProfile() {
                       name="totalDeposit"
                       onValueChange={handleInput}
                       decimalScale={2}
+                      prefix={getCurrencySymbol(investorData?.currency)}
                       thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateTotalDeposit("total_deposit")}>
@@ -359,6 +429,7 @@ export default function InvestorProfile() {
                       name="totalWithdrawn"
                       onValueChange={handleInput}
                       decimalScale={2}
+                      prefix={getCurrencySymbol(investorData?.currency)}
                       thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateTotalWithdrawn("total_withdrawn")}>
@@ -377,6 +448,7 @@ export default function InvestorProfile() {
                       name="withdrawableBalance"
                       onValueChange={handleInput}
                       decimalScale={2}
+                      prefix={getCurrencySymbol(investorData?.currency)}
                       thousandSeparator
                     />
                     <button className={styles.button} onClick={() => updateWithdrawableBal("withdrawable_balance")}>
@@ -395,7 +467,7 @@ export default function InvestorProfile() {
       ) : (
         <div className={styles.error}>{error ? "Check your connection and try again." : ""}</div>
       )}
-    <InvestorTransHistory />
+    <InvestorTransHistory userId={userId}/>
     </ViewContainer>
   );
 }

@@ -79,11 +79,23 @@
 }
 
 .depositAmount {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 1rem;
   font-weight: 500;
   color: rgb(133, 146, 173);
   margin-bottom: 5px;
   margin-top: 15px;
+}
+
+.depositAmount div {
+  display: flex;
+  gap: 8px;
+}
+
+.deposit {
+  font-weight: 500;
 }
 
 .depositInstruction {
@@ -135,8 +147,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 355px;
-  margin-top: 25px;
+  height: 375px;
   flex-direction: column;
   gap: 35px;
   color: var(--green-500);
@@ -144,6 +155,28 @@
 
 .generatingContainer {
   height: 260px;
+  margin-top: 25px;
 }
+
+.amountContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.amountContainer div {
+  font-size: Funnel Display, "sans-serif";
+  font-weight: 500;
+  display: flex;
+  gap: 15px;
+  margin-right: 15px;
+}
+
+.currencyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 

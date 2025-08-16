@@ -6,6 +6,10 @@
   margin-bottom: 20px;
 }
 
+.mainContainer {
+  min-height: 100vh;
+}
+
 .container {
   flex: 1 1 auto;
   display: flex;

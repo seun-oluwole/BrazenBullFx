@@ -1,3 +1,4 @@
+
 .subtitle {
   font-size: 1.3rem;
   font-family: "Funnel Display", sans-serif;
@@ -8,9 +9,9 @@
 
 .historyContainer {
   height: fit-content;
-  /* min-height: 420px; */
   border: 1px solid var(--grey);
   border-radius: 12px;
+  padding-bottom: 15px;
 }
 
 @media(min-width: 1024px) {

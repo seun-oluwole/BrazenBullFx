@@ -3,7 +3,7 @@ import TransactionList from "./TransactionList";
 
 export default function TransactionHistory() {
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <h3 className={styles.subtitle}>Transaction History</h3>
       <div className={styles.historyContainer}>
         <TransactionList />
