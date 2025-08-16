@@ -18,8 +18,6 @@ const CustomModal = ({ isOpen, onClose, children }) => {
         content: {
           left: "15px",
           right: "15px",
-          maxWidth: "450px",
-          maxHeight: "auto",
           margin: "auto",
           padding: "1.6rem",
           borderRadius: "16px",

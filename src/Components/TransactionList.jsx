@@ -16,7 +16,6 @@ export default function TransactionList() {
   const { setIsTransactionModal, setIsDepositModalOpen } = useModal()
   const { session } = userAuth()
   const userId = session?.user?.id;
-
   // Listening for updates from supabase in realtime and updating the states...
   let payloadUpdate;
   useEffect(() => {

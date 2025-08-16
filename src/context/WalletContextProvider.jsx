@@ -3,7 +3,6 @@ import useLocalStorage from "../Utils/useLocalStorage";
 import { supabase } from "../Utils/supabaseClient";
 import { userAuth } from "./AuthContext";
 
-
 const walletContext = createContext();
 const [getItem, setItem] = useLocalStorage();
 
@@ -18,6 +17,8 @@ export default function WalletContextProvider({ children }) {
   const [fetchingTransaction, setFetchingTransaction] = useState(false);
   const [fetchingTransError, setFetchingTransError] = useState(null)
   const [transactionDetail, setTransactionDetail] = useState({})
+  const [imageUrl, setImageUrl] = useState(null);
+  const [fetchingImage, setFetchingImage] = useState(false)
   const [walletData, setWalletData] = useState({
     tier: "",
     availableBalance: 0,
@@ -99,12 +100,27 @@ export default function WalletContextProvider({ children }) {
     setShowBalance((prev) => !prev);
   };
 
+  const fetchImage = async () => {
+    setFetchingImage(true)
+    try {
+      const { data, error } = await supabase
+      .from("wallet")
+      .select("image_url")
+      .eq("user_id", userId)
+  
+      if (error) return
+      setImageUrl(data[0]?.image_url)
+    } finally {
+      setFetchingImage(false)
+    }
+  }
 
   async function fetchUserWallet(userId) {
     if (!userId) return; // Prevents function from executing if there is no userId...
 
     setIsWalletLoading(true);
     try {
+      await fetchImage()
       const { error: walletError, data: walletData } = await supabase
         .from("wallet")
         .select("*")
@@ -127,7 +143,6 @@ export default function WalletContextProvider({ children }) {
           cryptocurrency: walletData?.cryptocurrency,
           depositCurrency: walletData?.country_currency
         }));
-        return walletData[0]
       }
     }catch (error) {
       if (error) {
@@ -191,6 +206,10 @@ export default function WalletContextProvider({ children }) {
     <walletContext.Provider
       value={{
         ...walletData,
+        imageUrl,
+        setImageUrl,
+        fetchImage,
+        fetchingImage,
         showBalance,
         toggleShowBalance,
         isWalletLoading,

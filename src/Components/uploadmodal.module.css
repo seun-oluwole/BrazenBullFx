@@ -1,0 +1,91 @@
+.mainContainer {
+  position: relative;
+}
+
+.xContainer {
+  position: absolute;
+  right: -5px;
+  top: -10px;
+}
+
+.title, .subtitle {
+  font-family: Funnel Display, "sans-serif";
+  margin-bottom: 27px;
+  color: var(--grey-950);
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  color: rgb(114, 121, 135);;
+  font-weight: 500;
+}
+
+.stepOneContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.stepOneContainer div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepOneContainer input[type="file"] {
+  display: none;
+}
+
+.stepTwoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.xIcon {
+  width: 1.7rem;
+  height: 1.7rem;
+  color: red;
+}
+
+.removePhoto {
+  color: red;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 15px;
+}
+
+.button, .removeButton {
+  padding: 12px;
+  width: 140px;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.removeButton {
+  background-color: transparent;
+  border: 1px solid red;
+  color: red;
+}
+
+.spinnerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 29px 0;
+}

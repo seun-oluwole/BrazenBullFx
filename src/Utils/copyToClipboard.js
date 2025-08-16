@@ -6,7 +6,6 @@ export default async function handleCopyToClipboard(value) {
   await navigator.clipboard.writeText(value)
   toast.success("Copied!")
  } catch (error) {
-  console.log(error)
   toast.error("Failed to copy.")
  }
 }

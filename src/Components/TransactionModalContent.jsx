@@ -25,7 +25,7 @@ export default function TransactionModalContent({ closeModal }) {
             </div>
             <h2 className={styles.methodTitle}>{transaction_title}</h2>
             <div className={styles.amount}>
-              {`${getCurrencySymbol(balance_currency)}${formatAmount(converted_amount.toFixed(2))}`}
+              {`${getCurrencySymbol(balance_currency)}${formatAmount(converted_amount?.toFixed(2))}`}
             </div>
             <div className={styles.status}>
               <Status status={transaction_status} />

@@ -245,7 +245,10 @@ export default function DepositModal() {
                 <div className={styles.depositInstruction}>
                   <h3 className={styles.subtitle}>Deposit via {transactionDetail?.transaction_method}</h3>
                   <p>✅ Please make your payment of <span className={styles.deposit}>
-                  {getCurrencySymbol(depositCurrency)}{transactionDetail?.transaction_amount.toLocaleString()} 
+                  {balanceCurrency !== depositCurrency
+                  ? (`${getCurrencySymbol(depositCurrency)}${formatAmount(transactionDetail?.transaction_amount.toFixed(2))}`)
+                  : (`${getCurrencySymbol(depositCurrency)}${formatAmount(transactionDetail?.converted_amount.toFixed(2))}`)
+                  } 
                   </span> into the details provided for you below.</p>
                   <p>✅ Click on Confirm Deposit to submit your deposit for confirmation.
                   </p>

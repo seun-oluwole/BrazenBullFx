@@ -9,6 +9,7 @@ export default function ModalContextProvider({ children }) {
   const [isTransHistoryModal, setIsTransHistoryModal] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
   return (
     <ModalContext.Provider value={{
@@ -23,7 +24,9 @@ export default function ModalContextProvider({ children }) {
       isLogoutModalOpen,
       setIsLogoutModalOpen,
       isAdminLogoutModalOpen, 
-      setIsAdminLogoutModalOpen
+      setIsAdminLogoutModalOpen,
+      isUploadModalOpen,
+      setIsUploadModalOpen
     }}>
       {children}
     </ModalContext.Provider>

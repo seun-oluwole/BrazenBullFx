@@ -26,6 +26,17 @@ export function SelectCurrency({ value, handleInput }) {
   );
 }
 
+export function SelectDepositCurrency({ value, handleInput }) {
+  return (
+    <select value={value} name="depositCurrency" id="" className={styles.input} onChange={handleInput}>
+      <option value="">Select Currency</option>
+      {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
+        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
+      ))}
+    </select>
+  );
+}
+
 export function CallingCodeSelector({ value, handleInput }) {
    const callingCode = country.findByIso3(value).dialing_code
    return (
@@ -35,17 +46,6 @@ export function CallingCodeSelector({ value, handleInput }) {
         <option key={iso3} value={iso3}>
           {`${name} (+${dialing_code})`}
         </option>
-      ))}
-    </select>
-  );
-}
-
-export function SelectDepositCurrency({ value, handleInput }) {
-  return (
-    <select value={value} name="depositCurrency" id="" className={styles.input} onChange={handleInput}>
-      <option value="">Select Currency</option>
-      {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
-        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
       ))}
     </select>
   );

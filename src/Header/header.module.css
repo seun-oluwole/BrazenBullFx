@@ -6,7 +6,7 @@
   padding: 10px 0 10px 0;
   background: #fff;
   border-radius: 28px;
-  z-index: -2;
+  /* z-index: -2; */
   max-width: 100%;
   width: 100%;
   margin: 0 auto;
@@ -53,7 +53,9 @@
 }
 
 .profileImgContainer {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 43px;
   width: 43px;
   border: 2px solid var(--grey-400);
@@ -66,6 +68,12 @@
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.userIcon {
+  height: 1.2rem;
+  width: 1.2rem;
+  color: var(--grey-400);;
 }
 
 @media (min-width: 1024px) {

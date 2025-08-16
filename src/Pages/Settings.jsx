@@ -1,15 +1,16 @@
 import ViewContainer from "../Components/ViewContainer";
 import styles from "./settings.module.css";
-import { HiArrowRightEndOnRectangle, HiChevronRight, HiPencilSquare } from "react-icons/hi2";
+import { HiArrowRightEndOnRectangle, HiCamera, HiChevronRight, HiOutlineUser, HiPencilSquare, HiUser } from "react-icons/hi2";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
 import { useModal } from "../context/modalContext";
+import LoadingSpinner from "../Components/LoadingSpinner";
 
 export default function Settings({ isAdmin = false }) {
   const { userData } = userAuth();
-  const { tier } = useWallet();
+  const { tier, imageUrl, fetchingImage } = useWallet();
   const { firstName, lastName, email, phoneNumber } = userData || "";
-  const { setIsLogoutModalOpen } = useModal()
+  const { setIsLogoutModalOpen, setIsUploadModalOpen } = useModal()
 
   return (
     <ViewContainer>
@@ -17,9 +18,16 @@ export default function Settings({ isAdmin = false }) {
         <h1 className={styles.title}>Settings</h1>
         <div className={styles.container}>
           {!isAdmin && (
-          <div className={styles.displayPicture}>
-            <img src={`../src/assets/profile-pic.JPG`} alt="" />
+          <div className={styles.displayPicture} onClick={() => setIsUploadModalOpen(true)}>
+            {imageUrl 
+             ? (<>{fetchingImage ? <LoadingSpinner /> : <img src={imageUrl} alt="" />}</>)
+             : <HiUser className={styles.userIcon}/>
+             }
+            
             <div className={styles.tierBadge}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
+            <div className={styles.uploadContainer}>
+              <HiCamera className={styles.icon}/>
+            </div>
           </div>
           )}
           <div className={styles.profileDetails}>

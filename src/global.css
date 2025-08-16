@@ -77,7 +77,3 @@ body::-webkit-scrollbar-thumb {
   overflow: hidden;
   outline: none;
 }
-
-.modal-overlay {
- background-color: rgba(0, 0, 0, 0.5);
-}

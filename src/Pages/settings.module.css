@@ -24,12 +24,16 @@
 }
 
 .displayPicture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  height: 120px;
-  width: 120px;
-  border: 3px solid #cfc7c7;
+  height: 110px;
+  width: 110px;
+  border: 3px solid rgba(133, 146, 173, 0.7);
   border-radius: 50%;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .displayPicture img {
@@ -92,6 +96,12 @@
   width: 1.4rem;
 }
 
+.userIcon {
+  height: 2.6rem;
+  width: 2.6rem;
+  color: rgb(133, 146, 173);
+}
+
 .tierBadge {
   position: absolute;
   padding: 5px;
@@ -102,4 +112,17 @@
   font-weight: 600;
   top: -5px;
   right: -15px;
+}
+
+.uploadContainer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+  background-color: #f3f3f3;
+  border-radius: 50%;
+
 }

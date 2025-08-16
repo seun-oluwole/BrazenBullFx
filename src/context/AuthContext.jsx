@@ -26,28 +26,6 @@ export const AuthContextProvider = ({ children }) => {
       setSession(session);
       setUserData(session?.user?.user_metadata);
 
-      setTimeout(async () => {
-        if (event === "SIGNED_IN" && session?.user?.id && role === "user" ) {
-
-          // Check if wallet already exists
-          const { data: walletData } = await supabase
-            .from("wallet")
-            .select("*")
-            .eq("user_id", session.user.id)
-            .single();
-
-          const userMetaData = session?.user?.user_metadata
-          if (!walletData && role === "user") await createWallet(userMetaData);
-
-          if (walletData) {
-            setIsWalletCreated(true);
-          } else {
-            setIsWalletCreated(false);
-          }
-        } else {
-          setIsWalletCreated(false);
-        }
-      }, 0);
     });
 
     return () => listener.subscription.unsubscribe();
@@ -63,7 +41,6 @@ export const AuthContextProvider = ({ children }) => {
       withdrawable_balance: 0,
       currency: countryCurrency,
       country_currency: countryCurrency,
-      currency_symbol: "$",
       cryptocurrency: "USDT",
       tier: "1",
       first_name: user?.firstName,

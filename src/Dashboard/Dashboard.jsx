@@ -10,28 +10,23 @@ import UserNavContent from "../MobileNavigation/UserNavContent";
 import DepositModal from "../Components/DepositModal";
 import WithdrawModal from "../Components/WithdrawModal";
 import TransactionModal from "../Components/TransactionModal";
+import UploadModal from "../Components/UploadModal";
 
 const queryClient = new QueryClient();
 
-export default function Dashboard({ 
-  isModalOpen, 
-  setIsModalOpen, 
-  isDepositModalOpen,
-  setIsDepositModalOpen,
-  isWithdrawModalOpen,
-  setIsWithdrawModalOpen,
-  }) {
+export default function Dashboard() {
   return (
     <div className={styles.mainContainer}>
       <Header />
       <div className={styles.container}>
-        <SidebarNav setIsModalOpen={setIsModalOpen} />
+        <SidebarNav />
         <QueryClientProvider client={queryClient}>
           <DashboardContainer>
             <Outlet />
-            <LogoutModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            <LogoutModal />
             <DepositModal />
             <WithdrawModal />
+            <UploadModal />
             <TransactionModal />
           </DashboardContainer>
         </QueryClientProvider>
