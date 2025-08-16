@@ -1,11 +1,11 @@
 import { createRoot } from "react-dom/client";
-import { AuthContextProvider } from "./context/AuthContext";
-import App from "./App/App";
-import WalletContextProvider from "./context/WalletContextProvider";
-import AdminContextProvider from "./context/AdminContext";
+import { AuthContextProvider } from "../src/context/AuthContext";
 import { Toaster } from "react-hot-toast";
-import  "./Components/toasts.css"
-import ModalContextProvider from "./context/modalContext";
+import WalletContextProvider from "../src/context/WalletContextProvider";
+import AdminContextProvider from "../src/context/AdminContext";
+import ModalContextProvider from "../src/context/modalContext";
+import App from "./App/App";
+
 createRoot(document.getElementById("root")).render(
   <AuthContextProvider>
     <WalletContextProvider>
