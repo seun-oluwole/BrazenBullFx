@@ -67,6 +67,11 @@
   text-decoration: none;
 }
 
+.userDetail[x-apple-data-detectors=true] {
+  color: inherit !important; /* Prevents blue link color */
+  text-decoration: none !important; /* Removes underline */
+}
+
 .logout, .editProfile {
   display: flex;
   align-items: center;
