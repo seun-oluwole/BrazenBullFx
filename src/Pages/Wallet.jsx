@@ -6,6 +6,7 @@ import QuickLinks from "../Components/QuickLinks";
 import SpiralSpinner from "../Components/SpiralSpinner";
 import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
+import walletTier from "../Utils/walletTier";
 import styles from "./wallet.module.css";
 
 export default function Wallet() {
@@ -21,7 +22,7 @@ export default function Wallet() {
           Welcome
           <div className="">{firstName}</div>
           {!isWalletLoading ? (
-            <div className={styles.accountTier}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
+            <div className={styles.accountTier}>{walletTier(tier)}</div>
           ) : (
             <div className={styles.spinner}>
               <SpiralSpinner width={15} height={15} />

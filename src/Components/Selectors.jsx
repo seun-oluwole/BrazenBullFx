@@ -20,7 +20,7 @@ export function SelectCurrency({ value, handleInput }) {
     <select value={value} name="currency" id="" className={styles.input} onChange={handleInput}>
       <option value="">Select Currency</option>
       {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
-        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
+        <option key={iso2} value={iso2}>{`${name} (${code}) ${symbol}`}</option>
       ))}
     </select>
   );
@@ -31,7 +31,7 @@ export function SelectDepositCurrency({ value, handleInput }) {
     <select value={value} name="depositCurrency" id="" className={styles.input} onChange={handleInput}>
       <option value="">Select Currency</option>
       {allCountries.map(({ name, currency: { code, symbol }, code: { iso2 } }) => (
-        <option key={iso2} value={code}>{`${name} (${code}) ${symbol}`}</option>
+        <option key={iso2} value={iso2}>{`${name} (${code}) ${symbol}`}</option>
       ))}
     </select>
   );

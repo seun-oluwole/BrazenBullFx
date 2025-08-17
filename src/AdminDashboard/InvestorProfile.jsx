@@ -10,7 +10,7 @@ import { NumericFormat } from "react-number-format";
 import { useAdmin } from "../context/AdminContext";
 import styles from "./investorprofile.module.css";
 import convertCurrency from "../Utils/convertCurrency";
-import CurrencyList from "currency-list";
+import country from 'country-list-js';
 import fetchExchangeRate from "../Utils/getExchangeRate";
 import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
 import toast from "react-hot-toast";
@@ -25,11 +25,12 @@ export default function InvestorProfile() {
     currency: "",
     depositCurrency: "",
     cryptocurrency: "",
-    currencySymbol: "",
     availableBalance: 0,
     totalDeposit: 0,
     totalWithdrawn: 0,
     withdrawableBalance: 0,
+    countryISO2: "",
+    depositISO2: ""
   });
   const [isLoading, dispatch] = useReducer(reducer, {
     investor: false,
@@ -108,18 +109,28 @@ export default function InvestorProfile() {
 
   const handleSelectInput = (e) => {
     const { name, value } = e.target
-    setInputData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-
-    if (name === "currency") {
-      const currencyValues = Object.values(CurrencyList.getAll("en_US"));
-      const filteredCurrency = currencyValues.find(({ code }) => code === value);
+    
+    if (name === "currency" ) {
+      const currencyCode = country.findByIso2(value).currency.code
       setInputData((data) => ({
         ...data,
-        currencySymbol: filteredCurrency.symbol
+        currency: currencyCode,
+        countryISO2: value,
       }))
+
+    } else if (name === "depositCurrency") {
+      const currencyCode = country.findByIso2(value).currency.code
+      setInputData((data) => ({
+        ...data,
+        depositCurrency: currencyCode,
+        depositISO2: value,
+      }))
+
+    } else {
+      setInputData((data) => ({
+        ...data,
+        [name]: value,
+        }));
     }
   }
 
@@ -356,7 +367,7 @@ export default function InvestorProfile() {
                 <div>
                   <div className={styles.subTitle}>Balance Currency: {investorData?.currency}</div>
                   <div className={styles.inputContainer}>
-                    <SelectCurrency handleInput={handleSelectInput} value={inputData.currency} />
+                    <SelectCurrency handleInput={handleSelectInput} value={inputData.countryISO2} />
                     <button className={styles.button} onClick={() => updateCurrency("currency")}>
                       {isLoading.currency ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>
@@ -365,7 +376,7 @@ export default function InvestorProfile() {
                 <div>
                   <div className={styles.subTitle}>Deposit Currency: {investorData?.country_currency}</div>
                   <div className={styles.inputContainer}>
-                    <SelectDepositCurrency handleInput={handleSelectInput} value={inputData.depositCurrency} />
+                    <SelectDepositCurrency handleInput={handleSelectInput} value={inputData.depositISO2} />
                     <button className={styles.button} onClick={() => updateDepositCurrency("country_currency")}>
                       {isLoading.depositCurrency ? <SpiralSpinner width={15} height={15} /> : "Update"}
                     </button>

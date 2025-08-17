@@ -20,7 +20,7 @@ export default function WalletContextProvider({ children }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [fetchingImage, setFetchingImage] = useState(false)
   const [walletData, setWalletData] = useState({
-    tier: "",
+    tier: null,
     availableBalance: 0,
     totalDeposit: 0,
     totalWithdrawn: 0,
@@ -45,7 +45,7 @@ export default function WalletContextProvider({ children }) {
       if (payload.new.user_id === userId) {
         setWalletData((prev) => ({
           ...prev,
-          tier: walletData?.tier,
+          tier: payload.new?.tier,
           availableBalance: payload.new?.available_balance,
           totalDeposit: payload.new?.total_deposit,
           totalWithdrawn: payload.new?.total_withdrawn,

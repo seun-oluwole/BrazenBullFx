@@ -12,6 +12,7 @@ import { userAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContextProvider";
 import { useModal } from "../context/ModalContext";
 import LoadingSpinner from "../Components/LoadingSpinner";
+import walletTier from "../Utils/walletTier";
 
 export default function Settings({ isAdmin = false }) {
   const { userData } = userAuth();
@@ -31,8 +32,8 @@ export default function Settings({ isAdmin = false }) {
               ) : (
                 <HiUser className={styles.userIcon} />
               )}
-
-              <div className={styles.tierBadge}>{tier === "V.I.P" ? tier : `TIER ${tier}`}</div>
+              
+              {tier && (<div className={styles.tierBadge}>{walletTier(tier)}</div>)}
               <div className={styles.uploadContainer}>
                 <HiCamera className={styles.icon} />
               </div>

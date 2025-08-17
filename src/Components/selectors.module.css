@@ -1,42 +1,9 @@
-.input {
-  border-radius: 8px;
-  padding: 15px;
-  width: 100%;
-  border: 1px solid rgb(133, 146, 173);
-  color: rgb(133, 146, 173);
-  background-color: transparent;
-  font-size: 1rem;
-  font-weight: 500;
-  outline: none;
-}
-
-.countryInput {
-  border-radius: 8px;
-  padding: 15px;
-  width: 100%;
-  border: 1px solid #595b61;
-  color: #666d7c;
-  font-size: 1rem;
-  background-color: transparent;
-  font-weight: 500;
-  outline: none;
-}
-
-.countryInput:focus {
-  border: 1px solid var(--green-300);
-  -webkit-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
-  -moz-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
-  box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
-}
-
-.selector {
+.input, .selector, .countryInput {
   font-weight: 500;
   font-size: 0.9rem;
   color: #666d7c;
   border: 1px solid #595b61;
   border-radius: 8px;
-  max-width: 115px;
-  width: max-content;
   padding: 10px;
   appearance: none;
   -webkit-appearance: none;
@@ -47,9 +14,26 @@
   background-size: 12px;
   cursor: pointer;
   background-color: transparent;
+  outline: none;
 }
 
-.selector:focus {
+.selector {
+  max-width: 115px;
+}
+
+.input {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  color: rgb(133, 146, 173);
+  border: 1px  solid rgb(133, 146, 173);;
+}
+
+.countryInput {
+  min-width:80%
+}
+
+.selector:focus, .countryInput:focus {
   border: 1px solid var(--green-300);
   outline: 1px solid var(--green-300);
   -webkit-box-shadow: 0px 0px 5px 1px rgba(185, 255, 102, 0.3);
