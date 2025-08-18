@@ -18,7 +18,7 @@ export default function ForgotPassword() {
     setIsLoading(true)
     try {
       const { data, error } = await supabase
-      .auth.resetPasswordForEmail(email, { redirectTo: "http://localhost:5173/new-password" })
+      .auth.resetPasswordForEmail(email, { redirectTo: "https://brazenbullfx.vercel.app/new-password" })
 
       if (error) toast.error("Failed to send link");
       toast.success("Link sent successfully");
