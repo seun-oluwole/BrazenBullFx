@@ -82,7 +82,7 @@ export const AuthContextProvider = ({ children }) => {
       toast.success("Account created successfully.")
     } catch (error) {
       setSignUpError(error.message)
-      toast.error("Error: Signup failed.")
+      toast.error(error.message)
 
     } finally {
        let timeoutId = setTimeout(() => {
@@ -112,7 +112,7 @@ export const AuthContextProvider = ({ children }) => {
       } 
     } catch (error) {
       setSignInUserError(error.message)
-      toast.error("Error: Login failed.");
+      toast.error(error.message);
 
     } finally {
       let timeoutId = setTimeout(() => {
@@ -142,7 +142,7 @@ export const AuthContextProvider = ({ children }) => {
 
     } catch (error) {
       setSignInAdminError(error.message)
-      toast.error("Error: Login failed.")
+      toast.error(error.message)
 
     } finally {
       let timeoutId = setTimeout(() => {

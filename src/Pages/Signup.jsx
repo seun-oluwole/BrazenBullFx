@@ -5,7 +5,7 @@ import { userAuth } from "../context/AuthContext";
 import { toCapitalize } from "../Utils/toCapitalize";
 import { SelectCountry, CallingCodeSelector } from "../Components/Selectors";
 import { getCurrencySymbol } from "../Utils/getCurrencySymbol";
-import country from 'country-list-js';
+import country from "country-list-js";
 import handleErrorMessages from "../Utils/errorMessages";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import styles from "./signup.module.css";
@@ -31,6 +31,7 @@ export default function Signup() {
 
   const { session, signUpNewUser, signUpError, isSessionLoading } = userAuth();
   const navigate = useNavigate();
+  const isDisabled = !userDetails.firstname || !userDetails.lastname || !userDetails.email
 
   useEffect(() => {
     if (
@@ -49,36 +50,34 @@ export default function Signup() {
     validateEmail();
   }, [userDetails.password, userDetails.confirmPassword, userDetails.email]);
 
-
   const handleUserInput = (e) => {
     const { name, value } = e.target;
     if (name === "countryCurrency") {
-      const filteredCountry = country.findByIso2(value)
-      const currencyCode = filteredCountry.currency.code
-      const countryISO3 = filteredCountry.code.iso3
-      const callingCode = filteredCountry.dialing_code
-  
-      setUserDetails((details) => ({ 
-        ...details, 
+      const filteredCountry = country.findByIso2(value);
+      const currencyCode = filteredCountry.currency.code;
+      const countryISO3 = filteredCountry.code.iso3;
+      const callingCode = filteredCountry.dialing_code;
+
+      setUserDetails((details) => ({
+        ...details,
         [name]: currencyCode,
         countryISO2: value,
         countryISO3: countryISO3,
-        callingCode: callingCode
+        callingCode: callingCode,
       }));
     } else if (name === "callingCode") {
-      const filteredCountry = country.findByIso3(value)
-      const currencyCode = filteredCountry.currency.code
-      const countryISO2 = filteredCountry.code.iso2
-      const callingCode = filteredCountry.dialing_code
-  
-      setUserDetails((details) => ({ 
-        ...details, 
+      const filteredCountry = country.findByIso3(value);
+      const currencyCode = filteredCountry.currency.code;
+      const countryISO2 = filteredCountry.code.iso2;
+      const callingCode = filteredCountry.dialing_code;
+
+      setUserDetails((details) => ({
+        ...details,
         countryCurrency: currencyCode,
         countryISO2: countryISO2,
         countryISO3: value,
-        callingCode: callingCode
+        callingCode: callingCode,
       }));
-
     } else {
       setUserDetails((details) => ({ ...details, [name]: value }));
     }
@@ -111,7 +110,7 @@ export default function Signup() {
     setIsLoading(true);
     const completePhoneNumber = `+${userDetails.callingCode}${userDetails.phonenumber}`;
     try {
-        await signUpNewUser(
+      await signUpNewUser(
         userDetails.email.toLowerCase(),
         userDetails.confirmPassword,
         toCapitalize(userDetails.firstname),
@@ -120,7 +119,6 @@ export default function Signup() {
         userDetails.countryCurrency,
         "user"
       );
-
     } finally {
       setIsLoading(false);
     }
@@ -135,128 +133,138 @@ export default function Signup() {
 
       <div className={styles.formContainer}>
         <form onSubmit={handleSignUp}>
-          <div className={styles.nameContainer}>
-            <div className={styles.authDetails}>
-              <div>First Name</div>
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  name="firstname"
-                  value={userDetails.firstname}
-                  placeholder="Enter your first name."
-                  onChange={handleUserInput}
-                  required
-                />
+          {steps === 1 && (
+            <>
+              <div className={styles.nameContainer}>
+                <div className={styles.authDetails}>
+                  <div>First Name</div>
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      name="firstname"
+                      value={userDetails.firstname}
+                      placeholder="Enter your first name."
+                      onChange={handleUserInput}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className={styles.authDetails}>
+                  <div>Last Name</div>
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      name="lastname"
+                      value={userDetails.lastname}
+                      placeholder="Enter your last name."
+                      onChange={handleUserInput}
+                      required
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className={styles.authDetails}>
-              <div>Last Name</div>
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  name="lastname"
-                  value={userDetails.lastname}
-                  placeholder="Enter your last name."
-                  onChange={handleUserInput}
-                  required
-                />
+              <div className={styles.authDetails}>
+                <div>Email Address</div>
+                <div className={styles.inputContainer}>
+                  <input
+                    type="email"
+                    name="email"
+                    value={userDetails.email}
+                    placeholder="Enter your email address."
+                    onChange={handleUserInput}
+                    required
+                  />
+                </div>
+                {!isEmailValid && <div className={styles.error}>Your email is not valid. Enter a valid email.</div>}
               </div>
-            </div>
-          </div>
-          <div className={styles.authDetails}>
-            <div>Email Address</div>
-            <div className={styles.inputContainer}>
-              <input
-                type="email"
-                name="email"
-                value={userDetails.email}
-                placeholder="Enter your email address."
-                onChange={handleUserInput}
-                required
-              />
-            </div>
-            {!isEmailValid && <div className={styles.error}>Your email is not valid. Enter a valid email.</div>}
-          </div>
-          <div className={styles.authDetails}>
-            <div className={styles.selectorContainer}>
-            <div className={styles.displayCurrency}>{getCurrencySymbol(userDetails.countryCurrency)}</div>
-            <SelectCountry
-              value={userDetails.countryISO2}
-              handleInput={handleUserInput}
-            />
-            </div>
-          </div>
-          <div className={styles.authDetails}>
-            <div>Phone Number</div>
-            <div className={styles.selectorContainer}>
-              <CallingCodeSelector
-                value={userDetails.countryISO3}
-                handleInput={handleUserInput}
-              />
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  name="phonenumber"
-                  value={userDetails.phonenumber}
-                  placeholder="Enter your phone number."
-                  onChange={handleUserInput}
-                  required
-                />
+              <button className={styles.button} disabled={isDisabled} onClick={() => setSteps(prev => prev + 1)}>
+                Next
+              </button>
+            </>
+          )}
+          {steps === 2 && (
+            <>
+              <div className={styles.authDetails}>
+                <div className={styles.selectorContainer}>
+                  <div className={styles.displayCurrency}>{getCurrencySymbol(userDetails.countryCurrency)}</div>
+                  <SelectCountry value={userDetails.countryISO2} handleInput={handleUserInput} />
+                </div>
               </div>
-            </div>
-          </div>
-          <div className={styles.authDetails}>
-            <div>Password</div>
-            <div className={styles.inputContainer}>
-              <input
-                type={isPasswordVisible ? "text" : "password"}
-                name="password"
-                minLength={6}
-                value={userDetails.password}
-                placeholder="Enter your password."
-                onChange={handleUserInput}
-                required
-              />
-              <span className={styles.iconContainer}>
-                {isPasswordVisible ? (
-                  <LuEye className={styles.icon} onClick={toggleShowPassword} />
-                ) : (
-                  <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
-                )}
-              </span>
-            </div>
-          </div>
-          <div className={styles.authDetails}>
-            <div>Confirm Password</div>
-            <div className={styles.inputContainer}>
-              <input
-                type={isPasswordVisible ? "text" : "password"}
-                name="confirmPassword"
-                minLength={6}
-                value={userDetails.confirmPassword}
-                placeholder="Enter your password again."
-                onChange={handleUserInput}
-                required
-              />
-              <span className={styles.iconContainer}>
-                {isPasswordVisible ? (
-                  <LuEye className={styles.icon} onClick={toggleShowPassword} />
-                ) : (
-                  <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
-                )}
-              </span>
-            </div>
-            {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
-          </div>
-          <button className={styles.button} disabled={!matchingPassword || isLoading}>
-            {isLoading ? <LoadingSpinner width="30" height="30" /> : "Create Account"}
-          </button>
+              <div className={styles.authDetails}>
+                <div>Phone Number</div>
+                <div className={styles.selectorContainer}>
+                  <CallingCodeSelector value={userDetails.countryISO3} handleInput={handleUserInput} />
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      name="phonenumber"
+                      value={userDetails.phonenumber}
+                      placeholder="Enter your phone number."
+                      onChange={handleUserInput}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.authDetails}>
+                <div>Password</div>
+                <div className={styles.inputContainer}>
+                  <input
+                    type={isPasswordVisible ? "text" : "password"}
+                    name="password"
+                    minLength={6}
+                    value={userDetails.password}
+                    placeholder="Enter your password."
+                    onChange={handleUserInput}
+                    required
+                  />
+                  <span className={styles.iconContainer}>
+                    {isPasswordVisible ? (
+                      <LuEye className={styles.icon} onClick={toggleShowPassword} />
+                    ) : (
+                      <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
+                    )}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.authDetails}>
+                <div>Confirm Password</div>
+                <div className={styles.inputContainer}>
+                  <input
+                    type={isPasswordVisible ? "text" : "password"}
+                    name="confirmPassword"
+                    minLength={6}
+                    value={userDetails.confirmPassword}
+                    placeholder="Enter your password again."
+                    onChange={handleUserInput}
+                    required
+                  />
+                  <span className={styles.iconContainer}>
+                    {isPasswordVisible ? (
+                      <LuEye className={styles.icon} onClick={toggleShowPassword} />
+                    ) : (
+                      <LuEyeClosed className={styles.icon} onClick={toggleShowPassword} />
+                    )}
+                  </span>
+                </div>
+                {!matchingPassword && <div className={styles.error}>Password doesn't match.</div>}
+              </div>
+              <div className={styles.buttonContainer}>
+                <button className={styles.backButton} onClick={() => setSteps(1)}>
+                 Go Back
+                </button>
+                <button className={styles.button} disabled={!matchingPassword || isLoading}>
+                  {isLoading ? <LoadingSpinner width="30" height="30" /> : "Create Account"}
+                </button>
+              </div>
+            </>
+          )}
         </form>
       </div>
       <div className={styles.resetDetails}>
         <div className={styles.error}>{signUpError ? `${signUpError}` : ""}</div>
         <NavLink to="/login" className="link">
-          <p className={styles.signupText}>Already have an account? Login.</p>
+          <p className={styles.loginText}>Already have an account? Login.</p>
         </NavLink>
       </div>
     </div>

@@ -2,12 +2,6 @@
   position: relative;
 }
 
-.xContainer {
-  position: absolute;
-  right: -5px;
-  top: -10px;
-}
-
 .title, .subtitle {
   font-family: Funnel Display, "sans-serif";
   margin-bottom: 27px;
@@ -53,9 +47,14 @@
 }
 
 .xIcon {
-  width: 1.7rem;
-  height: 1.7rem;
+  width: 2rem;
+  height: 2rem;
   color: red;
+}
+
+.xContainer {
+  position: absolute;
+  right: -5px;
 }
 
 .removePhoto {
