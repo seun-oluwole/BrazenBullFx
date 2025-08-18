@@ -18,6 +18,8 @@ import AdminLogin from "../AdminDashboard/AdminLogin";
 import AdminSignup from "../AdminDashboard/AdminSignup";
 import ProtectAdminRoute from "../Pages/ProtectAdminRoute";
 import PageNotFound from "../Pages/PageNotFound";
+import ForgotPassword from "../Pages/ForgotPassword";
+import UpdatePassword from "../Pages/updatePassword";
 import "../global.css";
 
 
@@ -57,6 +59,8 @@ export default function App() {
           <Route path="/admin/signup" element={<AdminSignup />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="forgot-password" element={<ForgotPassword />}/>
+          <Route path="new-password" element={<UpdatePassword />} />
         </Routes>
     </BrowserRouter>
   );

@@ -98,10 +98,10 @@ export default function Login() {
       </div>
       <div className={styles.resetDetails}>
         <div className={styles.error}>{signInUserError ? signInUserError : null}</div>
-        <NavLink to="/signup" className="link">
+        <NavLink to="/signup" className={styles.signUpLink}>
           <p className={styles.signupText}>Don't have an account? SignUp.</p>
         </NavLink>
-        <NavLink to="/reset-password" className={styles.resetText}>
+        <NavLink to="/forgot-password" className={styles.resetLink}>
           Forgot Password? Reset Now.
         </NavLink>
       </div>

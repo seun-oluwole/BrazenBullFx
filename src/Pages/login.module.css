@@ -127,3 +127,12 @@
   font-size: 0.9rem;
   text-align: center;
 }
+
+.signUpLink, .resetLink {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.resetLink {
+  color: var(--grey-950);
+}
