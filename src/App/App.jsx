@@ -19,7 +19,7 @@ import AdminSignup from "../AdminDashboard/AdminSignup";
 import ProtectAdminRoute from "../Pages/ProtectAdminRoute";
 import PageNotFound from "../Pages/PageNotFound";
 import ForgotPassword from "../Pages/ForgotPassword";
-import UpdatePassword from "../Pages/updatePassword";
+import UpdatePassword from "../Pages/UpdatePassword";
 import "../global.css";
 
 
