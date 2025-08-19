@@ -19,7 +19,7 @@ export default function Wallet() {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <div className={styles.greeting}>
-          Welcome
+          Welcome,
           <div className="">{firstName}</div>
           {!isWalletLoading ? (
             <div className={styles.accountTier}>{walletTier(tier)}</div>

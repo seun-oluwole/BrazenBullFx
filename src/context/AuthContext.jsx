@@ -39,7 +39,7 @@ export const AuthContextProvider = ({ children }) => {
       total_deposit: 0,
       total_withdrawn: 0,
       withdrawable_balance: 0,
-      currency: countryCurrency,
+      currency: "USD",
       country_currency: countryCurrency,
       cryptocurrency: "USDT",
       tier: "1",

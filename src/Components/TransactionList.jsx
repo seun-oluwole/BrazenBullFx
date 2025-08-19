@@ -110,7 +110,7 @@ export default function TransactionList() {
                             <div className={styles.amount}>
                               {`${getCurrencySymbol(balance_currency)}${formatAmount(converted_amount?.toFixed(2))}`}
                             </div>
-                            <Status status={transaction_status} height={19} fontSize={0.7} />
+                            <Status status={transaction_status} height={19} fontSize={0.6} />
                           </div>
                         </td>
                         <td className={styles.bodyMethod}>
